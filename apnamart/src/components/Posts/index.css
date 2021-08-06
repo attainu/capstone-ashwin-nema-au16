@@ -1,0 +1,17 @@
+.one {
+    background-color: red;
+}
+
+.two {
+    background-color: burlywood;
+    position: relative;
+    z-index: 220;
+}
+
+.hello {
+    position: absolute;
+    z-index: 89;
+    /* background-color: aqua; */
+    background-color: white;
+}
+
