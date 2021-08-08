@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getallposts } from "../../actions";
 import { useDispatch, useSelector } from "react-redux";
 import './index.css'
-import { Fragment } from "../Fragment";
+
 
 const Posts = () => {
     const posts = useSelector(state => state.Allposts)
