@@ -1,3 +1,5 @@
+import { add_item, remove_item } from "../actionTypes"
+
 const initialState = {
 
     "Cadbury 5 Star Chocolate Bar 40 g":
@@ -58,6 +60,20 @@ details: { "Brand": "Fortune", "Country of Origin": "India", "Form": "Powder","T
 
 const Itemslist = (state, action) => {
     state = state || initialState
+
+    switch (action.type) {
+        case add_item:
+            state[action.payload.item].count = state[action.payload.item].count + 1
+            break
+        
+        case remove_item:
+            state[action.payload.item].count = state[action.payload.item].count - 1
+            break
+        
+        default:
+            return state
+    }
+
     return state
 }
 

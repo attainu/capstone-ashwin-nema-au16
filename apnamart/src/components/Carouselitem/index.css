@@ -1,0 +1,34 @@
+.addingbutton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cartbutton {
+    width: 2vw;
+    height: 5vh;
+}
+
+.itemcarouselcount {
+    align-self: center;
+}
+
+.productcarousel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 30vh;
+}
+
+.productcarouselimage {
+    height: 15vh;
+}
+
+.cardimage {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.productcarouselprice {
+    align-self: center;
+}

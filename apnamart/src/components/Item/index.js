@@ -1,4 +1,7 @@
 import './index.css'
+import { add_to_Cart } from '../../actions'
+import { useDispatch } from 'react-redux'
+
 export const Item = (props) => {
     const { itemdetails } = props
     const { name, image, description, price, details } = itemdetails
