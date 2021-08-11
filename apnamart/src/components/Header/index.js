@@ -1,32 +1,40 @@
 import './index.css'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import SearchBar from 'material-ui-search-bar'
+import { useState } from 'react'
 
 const Header = ({ children }) => {
+    const [searchbar, changesearchvalue] = useState("")
+    const [count, changecount] = useState(0)
     return (
         <>
             <div className="mainwrapper">
-                <div className="row bg-warning nav">
-                    <div className="col-1 mt-3 navcol">
-                        ApnarMart
+                <div className="header bg-warning">
+                    <div className="logo">
+                        ApnaMart
                     </div>
-                    <div className="col-1 navcol"></div>
-                    <div className="col-7 searchbar mt-2 navcol">
-                        <div className="searchicon">
-                            <i className="bi bi-search"></i>
-                        </div>
-                        <input className="searchinput" type="text" />
-                    </div>
-                    <div className="col-1 mt-3 navcol">
-                        <div>
-                            Login
-                        </div>
-                    </div>
-                    <div className="col-1 mt-3 navcol">
-                        Signup
-                    </div>
-                    <div className="col-1 cartimagenav navcol">
-                        <span className="bg-danger rounded-circle cartitems">56</span>
-                        <img className="cartimage" src="https://res.cloudinary.com/ash006/image/upload/v1628411139/shopping_cart_zcyab8.png"></img>
 
+                    <div className="searchbar d-flex flex-column">
+                        <SearchBar value={searchbar} onChange={(newvalue) => changesearchvalue(newvalue)}></SearchBar>
+                        <div className="navspace"></div>
+                    </div>
+
+                    <div className="nav-item">
+                    </div>
+
+                    <div className="nav-item">
+                        Login
+                    </div>
+
+                    <div className="nav-item">
+                        Sign Up
+                    </div>
+
+                    <div className="nav-item position-relative">
+                        <ShoppingCartIcon></ShoppingCartIcon>
+                        {count > 0 && <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
+                            {count}
+                        </span>}
                     </div>
                 </div>
                 {children}
