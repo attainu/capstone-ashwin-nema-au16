@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
-import Allposts from "./allposts";
-import Post from "./posts";
+import Items from "./items";
+import Itemslist from "./allitems";
 
 export default combineReducers({
-    Allposts,
-    Post
+    Items,
+    Itemslist
 })
