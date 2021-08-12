@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import Carouselitem from "../../components/Carouselitem"
 import Carousel from 'react-elastic-carousel'
 
-const ItemsCarousel = () => {
+const ItemsCarousel = ({history}) => {
     const items = useSelector(state => state.Itemslist)
     const itemslist = Object.keys(items)
 
@@ -20,7 +20,7 @@ const ItemsCarousel = () => {
                     {
                         itemslist.map((item, index) => {
                             return (
-                                <Carouselitem key={index} itemname={item} itemdetails={items[item]} 
+                                <Carouselitem history={history} key={index} itemname={item} itemdetails={items[item]} 
                                 />
                             )
                         })

@@ -41,7 +41,7 @@ details: { "Brand": "Nirma Washing Powder, Pack Size: 1 Kg", "Country of Origin"
  description: `Amul Whole wheat Atta is made from whole wheat, selected carefully from the best of the fields and varieties. It is 100% whole wheat atta with a superior quality taste. The rotis made from this atta remains softer for a longer period. It is high in fibre and nutrients, a good source of protein, vitamins and minerals. It supports healthy digestion and overall health.`,
 details: { "Brand": "Amul", "Maximum Shelf Life (Months)": "3", "Country of Origin": "India","Is Perishable":"No","Organic":"No" } },
 
- "Aashirvaad Atta/Godihittu - Whole Wheat, 5 kg Pouch":{image: "https://res.cloudinary.com/ash006/image/upload/v1628168556/ashirvad_atta_bkjr1a.png",price: 270, count:0,category: "Staples", subcategory: "Atta",
+ "Aashirvaad Atta - Whole Wheat, 5 kg Pouch":{image: "https://res.cloudinary.com/ash006/image/upload/v1628168556/ashirvad_atta_bkjr1a.png",price: 270, count:0,category: "Staples", subcategory: "Atta",
  description: "Aashirvaad Whole Wheat Atta provides the goodness of health in every bite. This product incorporates many benefits of wheat and lets your body maintain a nutrient balance. It is made of nutritious wheat grains. Also, it has a sweet taste that gives you fuller and softer rotis, every single time. Buy Aashirvaad Whole Wheat Atta online now.",
 details: { "Brand": "Aashirvaad", "Manufacturer": "ITC Limited", "Country of Origin": "India", "Food Preference": "Vegetarian" }},
 

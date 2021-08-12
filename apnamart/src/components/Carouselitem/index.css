@@ -17,6 +17,7 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: 30vh;
+    font-size: 1vw;
 }
 
 .productcarouselimage {
@@ -29,6 +30,14 @@
     object-fit: contain;
 }
 
+.cardimage:hover {
+    transform: scale(1.2);
+}
+
 .productcarouselprice {
     align-self: center;
+}
+
+.itemcarouseltext:hover, .cardimage:hover {
+    cursor: pointer;
 }
