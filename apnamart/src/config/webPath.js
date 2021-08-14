@@ -3,7 +3,9 @@ const PATHS = {
     LOGIN:'/login',
     SIGNUP:'/signup',
     PRODUCT:'/product/:productname',
-    PRODUCTPATH:'/product/'
+    PRODUCTPATH:'/product/',
+    SUBCATEGORY:'/subcategory/:subcategoryname',
+    SUBCATEGORYPATH:'/subcategory/'
 }
 
 export default PATHS

@@ -1,15 +1,30 @@
-import { Item } from "../../components/Item"
-export const Subcategory = (props) => {
-    const { item } = props
-    const { name, items } = item
+import { useSelector } from "react-redux";
+import { useParams } from 'react-router'
+import { Redirect } from "react-router";
+import { PATHS } from '../../config'
+import Carouselitem from "../../components/Carouselitem";
+
+const Subcategory = ({history}) => {
+    const { subcategoryname } = useParams()
+    const subcategory = useSelector(state => state.Subcategory)
+    const items = useSelector(state => state.Itemslist)
+
+    if (subcategory[subcategoryname] == undefined) {
+        return <Redirect to={PATHS.HOME} />
+    }
+
     return (
         <>
-            <div className="row d-flex justify-content-center mb-3">
-                <h3 className="text-center">{name}</h3>
+            <h3 className="mt-3 ms-2">{subcategoryname}</h3>
+
+            <div className="row">
                 {
-                    items.map((itemdetails, itemno) => {
+                    subcategory[subcategoryname].items.map((item, index) => {
+                        console.log()
                         return (
-                            < Item key={itemno} itemdetails={itemdetails} />
+                            <div className="col-4 mt-2">
+                                <Carouselitem itemname={item} itemdetails={items[item]} history={history} />
+                            </div>
                         )
                     })
                 }
@@ -17,3 +32,5 @@ export const Subcategory = (props) => {
         </>
     )
 }
+
+export default Subcategory

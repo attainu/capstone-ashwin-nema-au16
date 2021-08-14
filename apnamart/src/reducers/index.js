@@ -1,8 +1,11 @@
 import { combineReducers } from "redux";
-import Items from "./items";
 import Itemslist from "./allitems";
+import Category from "./category";
+import Subcategory from "./subcategory";
+
 
 export default combineReducers({
-    Items,
-    Itemslist
+    Itemslist,
+    Category,
+    Subcategory
 })

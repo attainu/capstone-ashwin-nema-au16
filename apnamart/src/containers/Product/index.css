@@ -37,3 +37,9 @@
     display: grid;
     grid-template-columns: auto auto;
 }
+
+.smallzoomimage {
+    height: 100px;
+    object-fit: contain;
+    max-width: 100%;
+}
