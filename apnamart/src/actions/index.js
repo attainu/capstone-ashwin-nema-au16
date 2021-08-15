@@ -1,5 +1,3 @@
-import { add_item, remove_item } from "../actionTypes"
+export {add_to_cart_icon, remove_from_cart_icon} from './carticon'
 
-export const add_to_Cart = (data) => ({type:add_item, payload:data})
-
-export const remove_from_cart = (data) => ({type:remove_item, payload:data})
+export {add_to_Cart, remove_from_cart} from './cart'

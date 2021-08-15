@@ -1,2 +1,2 @@
-export const add_item = 'ADD ItEM'
-export const remove_item = 'REMOVE ITEM'
+export {carticonplus, carticonminus} from './cart'
+export {add_item, remove_item} from './item'
