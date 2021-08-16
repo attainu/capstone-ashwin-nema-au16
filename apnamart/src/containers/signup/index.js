@@ -3,20 +3,26 @@ import { useState } from 'react'
 import * as yup from 'yup'
 import * as EmailValidator from 'email-validator'
 import './index.css'
-import {phone} from 'phone';
+import { phone } from 'phone';
+import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { authsetter, profile } from '../../actions'
+import { PATHS } from '../../config'
+import { Redirect } from 'react-router'
 
-
-export const Signup = () => {
+export const Signup = ({history}) => {
+    const dispatch = useDispatch()
     const [email, changeemail] = useState("")
     const [confirmpassword, changeconfirmedpassword] = useState("")
     const [password, changepassword] = useState("")
     const [mobilenumber, changedmobilenumber] = useState("")
     const [name, changename] = useState("")
     const [errormessage, changeerrormessage] = useState("")
+    const userprofile = useSelector(state => state.Profile)
     const showerrormessage = errormessage === "" ? "" : 'text-danger'
     let schema = yup.object().shape({
-        Password:yup.string().required(),
-        Name:yup.string().required()
+        Password: yup.string().required(),
+        Name: yup.string().required()
     })
 
     const submithandler = (e) => {
@@ -27,9 +33,10 @@ export const Signup = () => {
             changeerrormessage("Please enter a valid email")
             return
         }
-
+        console.log(EmailValidator.validate(email))
         if (phone(`+91 ${mobilenumber}`).isValid === false) {
             changeerrormessage("Please provide a valid mobile number")
+
             return
         }
 
@@ -38,8 +45,29 @@ export const Signup = () => {
             return
         }
 
-        schema.validate({Name:name,Password:password}, {abortEarly:false}).then(data => {
-            console.log(data)
+        schema.validate({ Name: name, Password: password }, { abortEarly: false }).then(async data => {
+
+            const response = await axios({
+                method: 'post',
+                url: 'http://localhost:5000/signup',
+                data: {
+                    Name: name,
+                    Mobilenumber: mobilenumber,
+                    Email: email,
+                    Password: password
+                }
+            })
+
+            if (response.data.error !== "") {
+                changeerrormessage(response.data.error)
+                return
+            }
+            
+            dispatch(authsetter(response.data.token))
+            dispatch(profile())
+            history.push(PATHS.HOME)
+            return
+
         }).catch(function (err) {
             changeerrormessage(err.errors[0])
         })
@@ -48,6 +76,9 @@ export const Signup = () => {
     return (
 
         <>
+            {
+                Object.keys(userprofile).length > 0 && <Redirect to={PATHS.HOME} />
+            }
             <div className="row container-fluid mt-5">
                 <div className="col-4"></div>
                 <div className="col-6 container-fluid">

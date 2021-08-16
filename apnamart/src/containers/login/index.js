@@ -1,22 +1,52 @@
 import './index.css'
 import { useState } from 'react'
 import * as EmailValidator from 'email-validator'
+import axios from 'axios'
+import { PATHS } from '../../config'
+import { authsetter,profile } from '../../actions'
+import { useDispatch, useSelector } from 'react-redux'
+import { Redirect } from 'react-router'
 
-export const Login = () => {
+export const Login = ({ history }) => {
+    const dispatch = useDispatch()
     const [email, changeemail] = useState("")
     const [password, changepassword] = useState("")
     const [errormessage, changeerrormessage] = useState("")
     const showerrormessage = errormessage === "" ? "" : "text-danger"
+    const userprofile = useSelector(state => state.Profile)
+
     const submithandler = (e) => {
         e.preventDefault()
         changeerrormessage("")
-        if (EmailValidator.validate(email) == false) {
+
+        if (EmailValidator.validate(email) === false) {
             changeerrormessage("Please enter a valid email")
             return
         }
+
+        axios.post('http://localhost:5000/login', {
+            Email: email,
+            Password: password
+        }).then(function (response) {
+            if (response.data.error !== "") {
+                changeerrormessage(response.data.error)
+                return
+            }
+            dispatch(authsetter(response.data.token))
+            dispatch(profile())
+            history.push(PATHS.HOME)
+        })
+            .catch(function (error) {
+                console.log(error)
+            })
     }
+    
     return (
         <>
+            {
+                Object.keys(userprofile).length > 0 && <Redirect to={PATHS.HOME} />
+            }
+
             <div className="row container-fluid mt-5">
                 <div className="col-4"></div>
                 <div className="col-6 container-fluid">
@@ -44,8 +74,6 @@ export const Login = () => {
                 </div>
                 <div className="col-2"></div>
             </div>
-
-
         </>
     )
 }

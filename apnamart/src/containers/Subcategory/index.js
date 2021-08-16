@@ -9,7 +9,7 @@ const Subcategory = ({history}) => {
     const subcategory = useSelector(state => state.Subcategory)
     const items = useSelector(state => state.Itemslist)
 
-    if (subcategory[subcategoryname] == undefined) {
+    if (subcategory[subcategoryname] === undefined) {
         return <Redirect to={PATHS.HOME} />
     }
 
@@ -20,9 +20,8 @@ const Subcategory = ({history}) => {
             <div className="row">
                 {
                     subcategory[subcategoryname].items.map((item, index) => {
-                        console.log()
                         return (
-                            <div className="col-4 mt-2">
+                            <div key={index} className="col-4 mt-2">
                                 <Carouselitem itemname={item} itemdetails={items[item]} history={history} />
                             </div>
                         )

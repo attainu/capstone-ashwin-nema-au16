@@ -1,0 +1,1 @@
+export const getprofile = 'Get User Profile'

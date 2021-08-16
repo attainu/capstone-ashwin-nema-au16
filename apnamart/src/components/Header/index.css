@@ -40,3 +40,9 @@ html, body {
 .navspace {
     height: 10px;
 }
+
+.headerdropdownbutton {
+    outline: none;
+    border: none;
+    background-color: #ffc107;
+}
