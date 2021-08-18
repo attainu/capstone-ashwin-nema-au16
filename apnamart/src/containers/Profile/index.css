@@ -1,0 +1,17 @@
+.profilecontent {
+    display: flex;
+    justify-content: center;
+}
+
+
+.profilecontentdisplaycolor {
+    background-color: white;
+}
+
+.relativeimage {
+    position: relative;
+}
+
+.smalltext {
+    font-size: small;
+}

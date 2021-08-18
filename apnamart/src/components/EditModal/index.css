@@ -1,0 +1,41 @@
+.modalinput{
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    background-color: wheat;
+}
+
+.modalinput:hover{
+    cursor: pointer
+}
+
+.modalcontent {
+    background-color: wheat;
+}
+
+.userdetailsmodal {
+    position: fixed;
+    top: 10%;
+    left: 20%;
+
+    z-index: 3;
+     /* font-size: large; */
+    min-width: 20vw;
+    animation-name: usermodalcoming;
+    animation-duration: 1s;
+    transition: ease-in;
+}
+
+@keyframes usermodalcoming {
+    from{top:0%}
+    to{top: 10%}
+}
+
+.closebutton {
+    margin-left: 50%;
+}
+
+.inputerror {
+    font-size: small;
+    min-height: 20px;
+}

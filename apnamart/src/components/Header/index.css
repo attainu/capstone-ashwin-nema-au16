@@ -13,7 +13,7 @@ html, body {
     margin-bottom: 30vh;
     min-height: 100vh;
     width: 100vw;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 .header {
@@ -46,3 +46,4 @@ html, body {
     border: none;
     background-color: #ffc107;
 }
+

@@ -1,0 +1,1 @@
+export const changeopacity = 'Change Opacity'

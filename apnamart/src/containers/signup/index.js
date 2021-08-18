@@ -33,7 +33,7 @@ export const Signup = ({history}) => {
             changeerrormessage("Please enter a valid email")
             return
         }
-        console.log(EmailValidator.validate(email))
+
         if (phone(`+91 ${mobilenumber}`).isValid === false) {
             changeerrormessage("Please provide a valid mobile number")
 

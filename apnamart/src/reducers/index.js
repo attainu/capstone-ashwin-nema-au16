@@ -5,6 +5,7 @@ import Subcategory from "./subcategory";
 import cartcount from "./cartcount";
 import Auth from "./auth";
 import Profile from "./profile";
+import opacity from "./opacity";
 
 export default combineReducers({
     Itemslist,
@@ -12,5 +13,6 @@ export default combineReducers({
     Subcategory, 
     cartcount,
     Auth,
-    Profile
+    Profile,
+    opacity
 })

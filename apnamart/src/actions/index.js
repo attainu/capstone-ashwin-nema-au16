@@ -5,3 +5,5 @@ export {add_to_Cart, remove_from_cart} from './cart'
 export {profile} from './profile'
 
 export {authsetter} from './auth'
+
+export {opacitychanger} from './opacity'
