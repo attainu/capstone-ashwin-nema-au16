@@ -1,10 +1,11 @@
 import './index.css'
-import {UserAccountInformation} from '../../Profile Section Component'
+import {UserAccountInformation, LocationMap} from '../../Profile Section Component'
 
-export const Section2 = ({ showditingmodal, selectoption2display ,changeoption2display }) => {
+export const Section2 = ({ showditingmodal, selectcomponenttodisplay , changecomponenttodisplay }) => {
     return (
         <>
-         { selectoption2display === "accountinformation" && <UserAccountInformation showditingmodal={showditingmodal} /> }
+         { selectcomponenttodisplay === "accountinformation" && <UserAccountInformation showditingmodal={showditingmodal} /> }
+         { selectcomponenttodisplay === "locationmap" && <LocationMap selectcomponenttodisplay={selectcomponenttodisplay}  changecomponenttodisplay={changecomponenttodisplay} /> }
         </>
     )
 }

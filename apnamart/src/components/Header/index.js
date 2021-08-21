@@ -9,6 +9,7 @@ import { profile } from '../../actions'
 import { useRef } from 'react';
 import EditModal from '../EditModal';
 
+
 const Header = ({ children }) => {
     const dispatch = useDispatch()
     const [searchbar, changesearchvalue] = useState("")

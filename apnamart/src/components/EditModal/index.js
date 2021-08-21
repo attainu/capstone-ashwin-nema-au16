@@ -40,7 +40,9 @@ const EditModal = () => {
         const authvalue = getAuthinbrowser() || ""
         const auth = { "Auth": authvalue }
 
-
+        // url: 'http://localhost:3000/editprofile',
+        // url: 'http://localhost:5000/editprofile',
+        // url: 'https://apna-mart.herokuapp.com/editprofile'
 
         axios({
             method: 'post',

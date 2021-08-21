@@ -15,3 +15,7 @@
 .smalltext {
     font-size: small;
 }
+
+.cursorpointer {
+    cursor: pointer;
+}

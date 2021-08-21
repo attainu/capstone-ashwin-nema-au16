@@ -1,13 +1,14 @@
 import './index.css'
-import { Userintro, OrderSection, Viewlocationoption } from '../../Profile Section Component'
+import { Userintro, OrderSection, Viewlocationoption, Viewcartoption } from '../../Profile Section Component'
 
-export const Section1 = ({selectoption2display ,changeoption2display}) => {
+export const Section1 = ({selectcomponenttodisplay,  changedisplaycomponent}) => {
     return (
         <>
             <div className="profileseperator1 me-3 pe-3 ps-3 pb-3">
-                <Userintro />
+                <Userintro  selectcomponenttodisplay={selectcomponenttodisplay}  changedisplaycomponent={changedisplaycomponent} />
                 <OrderSection />
-                <Viewlocationoption />
+                <Viewlocationoption selectcomponenttodisplay={selectcomponenttodisplay}  changedisplaycomponent={changedisplaycomponent} />
+                <Viewcartoption />
             </div>
         </>
     )

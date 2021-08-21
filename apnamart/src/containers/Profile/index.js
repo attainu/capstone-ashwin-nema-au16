@@ -10,8 +10,7 @@ const Profile = ({ history }) => {
     const opacity = useSelector(state => state.opacity)
     const Auth = useSelector(state => state.Auth)
     const dispatch = useDispatch()
-    const [selectoption2display, changeoption2display] = useState("accountinformation")
-
+    const [selectcomponenttodisplay,changedisplaycomponent] = useState("accountinformation")
     const removeeditingmodal = useCallback(() => {
         dispatch(opacitychanger(1))
     }, [dispatch])
@@ -31,7 +30,7 @@ const Profile = ({ history }) => {
         else if (Object.keys(userprofile).length === 0) {
             history.push(PATHS.HOME)
         }
-
+        document.body.style.backgroundColor = "#f1f3f6"
         return () => {
             document.body.style.backgroundColor = "white"
             dispatch(opacitychanger(1))
@@ -64,9 +63,9 @@ const Profile = ({ history }) => {
                     <h4 className="mb-3 mt-3 ms-5">My Profile </h4>
 
                     <div className="profilecontent mt-5 ms-3">
-                        <Section1 selectoption2display={selectoption2display} changeoption2display={changeoption2display} />
+                        <Section1 selectcomponenttodisplay={selectcomponenttodisplay}  changedisplaycomponent={changedisplaycomponent} />
 
-                        <Section2 selectoption2display={selectoption2display} changeoption2display={changeoption2display} showditingmodal={showditingmodal} />
+                        <Section2 selectcomponenttodisplay={selectcomponenttodisplay}  changedisplaycomponent={changedisplaycomponent} showditingmodal={showditingmodal} />
                     </div>
 
                 </>

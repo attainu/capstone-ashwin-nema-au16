@@ -12,7 +12,8 @@ const routes = [
     {exact:true, path:PATHS.SIGNUP,component:Signup},
     {exact:true, path:PATHS.PRODUCT,component:Product},
     {exact:true, path:PATHS.SUBCATEGORY,component:Subcategory},
-    {exact:true, path:PATHS.PROFILE,component:Profile}
+    {exact:true, path:PATHS.PROFILE,component:Profile},
+
 ]
 
 export default routes

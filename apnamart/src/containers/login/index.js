@@ -3,7 +3,7 @@ import { useState } from 'react'
 import * as EmailValidator from 'email-validator'
 import axios from 'axios'
 import { PATHS } from '../../config'
-import { authsetter,profile } from '../../actions'
+import { authsetter, profile } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 
@@ -24,6 +24,9 @@ export const Login = ({ history }) => {
             return
         }
 
+        // url: 'http://localhost:3000/editprofile',
+        // url: 'http://localhost:5000/editprofile',
+        // url: 'https://apna-mart.herokuapp.com/editprofile'
         axios.post('http://localhost:5000/login', {
             Email: email,
             Password: password
@@ -32,6 +35,7 @@ export const Login = ({ history }) => {
                 changeerrormessage(response.data.error)
                 return
             }
+
             dispatch(authsetter(response.data.token))
             dispatch(profile())
             history.push(PATHS.HOME)
@@ -40,7 +44,7 @@ export const Login = ({ history }) => {
                 console.log(error)
             })
     }
-    
+
     return (
         <>
             {

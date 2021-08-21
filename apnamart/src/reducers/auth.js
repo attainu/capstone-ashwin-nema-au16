@@ -1,16 +1,18 @@
 import {setauth} from './../actionTypes'
 import {setAuthinbrowser, getAuthinbrowser} from '../utils'
 
-const initialstate = ""
+const initialstate = "  "
 
 const Auth = (state, action) => {
     state = getAuthinbrowser() || initialstate
-    
+    if (getAuthinbrowser() === null) {
+        setAuthinbrowser("")
+    }
+
     if (action.type === setauth) {
         setAuthinbrowser(action.payload)
         return action.payload
     }
-
     return state
 }
 

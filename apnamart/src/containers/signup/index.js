@@ -46,7 +46,9 @@ export const Signup = ({history}) => {
         }
 
         schema.validate({ Name: name, Password: password }, { abortEarly: false }).then(async data => {
-
+ // url: 'http://localhost:3000/editprofile',
+        // url: 'http://localhost:5000/editprofile',
+        // url: 'https://apna-mart.herokuapp.com/editprofile'
             const response = await axios({
                 method: 'post',
                 url: 'http://localhost:5000/signup',
