@@ -8,6 +8,7 @@ const { verify_mobile_number, verify_email, accesstokengenerator, validate_email
 const bcrypt = require('bcrypt')
 const UserModel = require('./models/user')
 const jwt = require('jsonwebtoken')
+const opencage = require('opencage-api-client');
 
 app.use(
     cors({
@@ -15,7 +16,8 @@ app.use(
     })
 )
 
-const { MONGODB_URL, SECRET_KEY } = process.env
+const { MONGODB_URL, SECRET_KEY, OPENCAGE_API_KEY } = process.env
+
 mongoose.connect(MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -60,13 +62,13 @@ app.post("/signup", async (req, res) => {
 app.post("/getprofile", async (req, res) => {
     try {
         const token = req.headers.auth
-        if (!token) return { error: true }
+        if (!token) return { error: "Token is not provided" }
         const verifieduser = jwt.verify(token, SECRET_KEY)
         let user = await UserModel.findById(verifieduser.id)
-        const { Name, Mobilenumber, Email } = user
-        return res.json({ Name, Mobilenumber, Email, error: "" })
+        const { Name, Mobilenumber, Email, Location } = user
+        return res.json({ Name, Mobilenumber, Email, error: "", Location })
     } catch {
-        console.log("Error occurred")
+        console.log("Error occurred while gettung profile")
         return res.json({ error: "User has not loggin in" })
     }
 })
@@ -93,39 +95,60 @@ app.post("/editprofile", async (req, res) => {
         if (!token) return { error: "Please provide a valid token" }
         const verifieduser = jwt.verify(token, SECRET_KEY)
 
-        if (Object.keys(req.body).length !== 5 || req.body.Pasword === undefined || req.body.NewPassword === undefined) {
+        if (Object.keys(req.body).length !== 5 || req.body.Password === undefined || req.body.NewPassword === undefined) {
             return res.json({ error: "Inputs provided are not of valid format" })
         }
 
         if (req.body.Name === undefined || req.body.Name.length === 0) return res.json({ errror: "Name is not valid" })
 
         const email = await validate_email(req.body.Email, verifieduser.id)
-        const mobilenumber = await validate_email(req.body.Mobilenumber, verifieduser.id)
+        const mobilenumber = await validate_mobile_number(req.body.Mobilenumber, verifieduser.id)
 
-        if (verifieduser.id !== email) {
+        if (verifieduser.id != email) {
             return res.json({ error: "Another user with this email exists" })
         }
 
-        if (verifieduser.id !== mobilenumber) {
+        if (verifieduser.id != mobilenumber) {
             return res.json({ error: "Another user with this mobile number exists" })
         }
 
         let editeduser = {}
+
+
         if (req.body.Password !== "" && req.body.NewPassword !== "" && typeof req.body.NewPassword === "string") {
+            console.log("Password edited")
             const oldpassword = await validate_password(req.body.Password, verifieduser.id)
             if (oldpassword === true) {
                 const salt = await bcrypt.genSalt(10)
-                const hash = await bcrypt.hash(req.body.Password, salt)
+                const hash = await bcrypt.hash(req.body.NewPassword, salt)
                 editeduser.Password = hash
             }
         }
+
         delete req.body.NewPassword
         delete req.body.Password
-        editeduser = [...editeduser, ...req.body]
+        editeduser = {...editeduser, ...req.body}
+
         updateduser = await UserModel.updateOne({ _id:verifieduser.id}, {$set:editeduser})
+        return res.json({error:""})
 
     } catch (error) {
+        console.log("Error occurred while editing profile")
         return res.json({ error: "Error occurred at backend" })
+    }
+})
+
+app.post("/getuserlocation", async (req, res) => {
+
+    try {
+        const token = req.headers.auth
+        if (!token) return { error: "Token is not provided" }
+        jwt.verify(token, SECRET_KEY)
+        const location = await opencage.geocode({q:req.body.location})
+        return res.json({useraddress:location.results[0].components,error:""})
+
+    } catch (error) {
+        return res.json({error:"Sorry your location cannot be fetched"})
     }
 })
 

@@ -29,7 +29,8 @@ async function verify_email(Email) {
         return "Please provide a valid email"
     }
     const regx = /^([a-z0-9\.-]+)@([a-z0-9-]+).([a-z]{2,8})(.[a-z]{2,8})?$/
-
+    console.log(user)
+    
     if (user) {
         return "User with the same email is already present"
     }
@@ -49,13 +50,25 @@ async function validate_mobile_number(Mobilenumber, id) {
             return false
         }
 
-        const user = await UserModel.findById(id)
-        if (user != null) {
-            return user._id
+        const user = await UserModel.find({Mobilenumber:Mobilenumber})
+        console.log(user)
+        switch (user.length) {
+            case 0:
+                return id
+            
+            case 1:
+                if (user[0]._id == id) {
+                    return id
+                }
+                return false
+            
+            default:
+                return false
         }
-        return id
+
     
     } catch {
+        console.log("Error occurred while validating molbile number")
         return false
     }
 }
@@ -67,16 +80,26 @@ async function validate_email(Email, id) {
             return false
         }
 
-        const user = await UserModel.findById(id)
-        if (user != null) {
-            return user._id
+        const user = await UserModel.find({Email:Email})
+        
+        switch (user.length) {
+            case 0:
+                return id
+
+            case 1:
+                if (user[0]._id == id) {
+                    return id
+                }
+                return false
+            
+            default:
+                return false
         }
-        return id
+
     } catch {
         return false
     }
 }
-
 
 async function validate_password(Password, id) {
     try {
