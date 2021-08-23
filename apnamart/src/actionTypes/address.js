@@ -1,0 +1,1 @@
+export const setaddress = 'Set current address'
