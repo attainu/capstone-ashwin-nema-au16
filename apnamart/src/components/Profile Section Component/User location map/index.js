@@ -1,72 +1,126 @@
-import { useSelector } from 'react-redux'
-import { useEffect, useRef } from 'react'
-import { useState } from 'react'
 import './index.css'
+import { setlocationcoordinates, getuseraddress } from '../../../actions'
 import L from 'leaflet'
+import React from 'react'
+import { connect } from 'react-redux'
 
-export const LocationMap = () => {
-    const leafletmap = useRef()
-    const { Location } = useSelector(state => state.Profile)
-    const [mapset, mapisset] = useState(false)
-    const [currentlocation, changefulllocation] = useState({})
-    const {suburb,city_district, city, state} = currentlocation
 
-    
-    let usermap
-    let customer 
-    let usercircle
-    let latitude = Location[0]
-    let longtitude = Location[1]
-    
-
-    useEffect(() => {
-        if (leafletmap.current !== undefined && leafletmap.current !== null && mapset === false) {
-            mapisset(true)
-            usermap = L.map(leafletmap.current).setView(Location, 16)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(usermap)
-            customer = L.marker(Location)
-            customer.addTo(usermap)
-
-            usercircle = L.circle(Location, {radius: 100}).addTo(usermap)
-            function centermarker() {
-                var newLatLng = new L.LatLng(usermap.getCenter().lat, usermap.getCenter().lng);
-                latitude = newLatLng.lat
-                longtitude = newLatLng.lng
-                customer.setLatLng(newLatLng)
-                usercircle.setLatLng(newLatLng)
-            }
-            
-            usermap.addEventListener('move', centermarker)
-            fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longtitude}&key=263b2cff3cb04499a101034d9817aa17`).then(res => res.json()).then(data => changefulllocation(data.results[0].components))
-            function getcurrentaddress() {
-                fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longtitude}&key=263b2cff3cb04499a101034d9817aa17`).then(res => res.json()).then(data => changefulllocation(data.results[0].components))
-            }
-            usermap.addEventListener('dragend', getcurrentaddress)
-        }
-
-    }, [mapisset, Location, mapset, usermap])
-
-    return (
-        <>
-
-            <div  className="profileseperator2 pe-3 me-3 ps-3 pb-3  ">
-                <h3>Select your location</h3>
-                <div ref={leafletmap} className="leafletmap ">
-                </div>
-                <div className="mt-3 p-3 profilecontentdisplaycolor currentaddress">
-                    <p>Current Location:</p>
-                    {suburb !== undefined && <p className="lead smalltext"> { suburb},{city_district}, {city}, {state} </p>}
-                </div>
-                <div className="d-flex justify-content-center mt-3">
-                    <button className="btn btn-primary">
-                        Save Location
-                    </button>
-                </div>
-            </div>
-
-        </>
-    )
+const mapStatetoprops = state => {
+    return {
+        coordinates: state.Usercoordinates,
+        profilelocation: state.Profile.Location,
+        address: state.Useraddress
+    }
 }
 
+const mapdispatchtoprops = (dispatch) => {
+    return {
+        getusercoordinates: (latitude, longtitude) => dispatch(setlocationcoordinates([latitude, longtitude])),
+        getuseraddress: (latitude, longtitude) => dispatch(getuseraddress(latitude, longtitude))
+    }
+}
+
+class LocationMap extends React.Component {
+    constructor() {
+        super()
+        this.leafletmap = React.createRef()
+    }
+
+    componentDidMount() {
+        let coordinatesofmap = this.props.profilelocation
+        this.props.getusercoordinates(coordinatesofmap[0], coordinatesofmap[1])
+        this.props.getuseraddress(coordinatesofmap[0], coordinatesofmap[1])
+        const usermap = L.map(this.leafletmap.current).setView(coordinatesofmap, 16)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(usermap)
+
+        const customermarker = L.marker(coordinatesofmap)
+        customermarker.addTo(usermap)
+        const customercircle = L.circle(coordinatesofmap, { radius: 100 }).addTo(usermap)
+        const centermarker = () => {
+            const newLatLng = new L.LatLng(usermap.getCenter().lat, usermap.getCenter().lng);
+            customermarker.setLatLng(newLatLng)
+            customercircle.setLatLng(newLatLng)
+        }
+        usermap.addEventListener('move', centermarker)
+
+        const getuserlocation = () => {
+            this.props.getusercoordinates(usermap.getCenter().lat, usermap.getCenter().lng)
+            this.props.getuseraddress(usermap.getCenter().lat, usermap.getCenter().lng)
+        }
+
+        usermap.addEventListener('dragend', getuserlocation)
+        usermap.addEventListener('zoomend', () => {
+            this.props.getusercoordinates(usermap.getCenter().lat, usermap.getCenter().lng)
+            this.props.getuseraddress(usermap.getCenter().lat, usermap.getCenter().lng)
+            usermap.removeEventListener('move', centermarker)
+            usermap.addEventListener('move', centermarker)
+            usermap.removeEventListener('dragend', getuserlocation)
+            usermap.addEventListener('dragend', getuserlocation)
+
+        })
+    }
+
+    componentDidUpdate() {
+        console.log(this.props.address)
+    }
+
+    render() {
+        return (
+            <>
+                <div className="profileseperator2 pe-3 me-3 ps-3 pb-3  ">
+                    <h3>Select your location</h3>
+                    <div ref={this.leafletmap} className="leafletmap">
+                    </div>
+
+
+                    <div className="mt-3 p-3 profilecontentdisplaycolor ">
+                        {this.props.address.length > 1 &&
+                            this.props.address.map((item, index) => {
+                                if (index !== this.props.address.length - 1) {
+                                    return (
+                                        <span key={index}>
+                                            {item},
+                                        </span>
+                                    )
+                                }
+
+                                else {
+                                    return (
+                                        <span key={index}>
+                                            {item}
+                                        </span>
+                                    )
+                                }
+
+                            })
+                        }
+
+
+                        {this.props.address.length === 1 && this.props.address[0] === "Sorry we do not serve your area" ?
+                            <span className="text-danger">Sorry we do not serve your area</span> : <></>
+                        }
+                    </div>
+
+                    <div className="d-flex justify-content-center mt-3">
+                        {this.props.address[0] === "Sorry we do not serve your area" ?
+                            <button className="btn btn-primary rounded-pill disabled">
+                                Save Location
+                            </button> :
+                            
+                            <button className="btn rounded-pill btn-primary">
+                                Save Location
+                            </button>
+                        }
+
+                    </div>
+
+
+                </div>
+            </>
+        )
+    }
+}
+
+export default connect(mapStatetoprops, mapdispatchtoprops)(LocationMap)

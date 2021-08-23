@@ -6,6 +6,9 @@ import cartcount from "./cartcount";
 import Auth from "./auth";
 import Profile from "./profile";
 import opacity from "./opacity";
+import Usercoordinates from "./usercoordinates";
+import Useraddress from "./useraddress";
+import Mapmountstate from "./mapmountstate";
 
 export default combineReducers({
     Itemslist,
@@ -14,5 +17,8 @@ export default combineReducers({
     cartcount,
     Auth,
     Profile,
-    opacity
+    opacity,
+    Usercoordinates,
+    Useraddress,
+    Mapmountstate
 })
