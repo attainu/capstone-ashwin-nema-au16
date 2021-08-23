@@ -1,3 +1,7 @@
 .leafletmap {
     min-height: 40vh ;
+    /* width: 100%;
+    z-index: 10;
+    background-color: transparent; */
+    /* background: transparent; */
 }
