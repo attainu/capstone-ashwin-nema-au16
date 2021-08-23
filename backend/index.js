@@ -92,7 +92,7 @@ app.post("/login", async (req, res) => {
 app.post("/editprofile", async (req, res) => {
     try {
         const token = req.headers.auth
-        if (!token) return { error: "Please provide a valid token" }
+        if (!token) return res.json({ error: "Please provide a valid token" })
         const verifieduser = jwt.verify(token, SECRET_KEY)
 
         if (Object.keys(req.body).length !== 5 || req.body.Password === undefined || req.body.NewPassword === undefined) {
@@ -139,7 +139,6 @@ app.post("/editprofile", async (req, res) => {
 })
 
 app.post("/getuserlocation", async (req, res) => {
-
     try {
         const token = req.headers.auth
         if (!token) return { error: "Token is not provided" }
@@ -149,6 +148,32 @@ app.post("/getuserlocation", async (req, res) => {
 
     } catch (error) {
         return res.json({error:"Sorry your location cannot be fetched"})
+    }
+})
+
+app.post("/saveuserlocation", async (req, res) => {
+
+    try {
+        const token = req.headers.auth
+        if (!token) return res.json({ error: "Token is not provided" })
+        const verifieduser = jwt.verify(token, SECRET_KEY)
+        let user = await UserModel.findById(verifieduser.id)
+        if (user === null) {
+            return res.json({error:"No such user present"})
+        }
+
+        const location = await opencage.geocode({q:req.body.location})
+        if (location.results[0].components.country !== "India" || location.results[0].components.state === undefined) {
+            console.log(req.body.location)
+            return res.json({error:"Sorry we do not serve this area"})
+        }
+
+        await UserModel.updateOne({ _id:verifieduser.id}, {$set:{Location: req.body.Location}})
+        return res.json({error:""})
+    }
+
+    catch {
+        return res.json({error:"Location not saved"})
     }
 })
 
