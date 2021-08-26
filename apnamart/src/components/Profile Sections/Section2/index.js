@@ -1,5 +1,5 @@
 import './index.css'
-import {UserAccountInformation, LocationMap} from '../../Profile Section Component'
+import {UserAccountInformation, LocationMap} from '../../Profile Section Components'
 
 export const Section2 = ({ showditingmodal, selectcomponenttodisplay , changecomponenttodisplay }) => {
     return (

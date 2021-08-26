@@ -27,6 +27,7 @@
     "react-use-measure": "^2.0.4",
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
+    "simplebar-react": "^2.3.5",
     "styled-components": "^5.3.0",
     "web-vitals": "^1.1.2",
     "yup": "^0.32.9"

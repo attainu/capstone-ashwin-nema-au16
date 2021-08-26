@@ -1,6 +1,4 @@
-export {carticonplus, carticonminus} from './cart'
-
-export {add_item, remove_item} from './item'
+export { product_count} from './item'
 
 export {getprofile} from './profile'
 
@@ -12,4 +10,6 @@ export {setcoordinates} from './coordinates'
 
 export {setaddress} from './address'
 
-export {changemapstate} from './mapstate'
+export {cartitemscount} from './cartcount'
+
+export {cart} from './cartitems'

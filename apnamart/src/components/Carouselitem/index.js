@@ -1,39 +1,45 @@
 import './index.css'
-import { add_to_Cart, remove_from_cart, add_to_cart_icon, remove_from_cart_icon } from '../../actions'
-import { useDispatch } from 'react-redux'
+import { changeitemcountincart, changeproductcount, changecartstate } from '../../actions'
+import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { PATHS } from '../../config'
 
 const Carouselitem = (props) => {
     const dispatch = useDispatch()
     const { itemname, itemdetails, history } = props
+    const {increase_count, decrease_count} = changeitemcountincart
+    const {product_added, product_removed} = changeproductcount
+    const {new_item, remove_cart_item, new_price} = changecartstate
+    const cartprice = useSelector(state => state.CartPrice)
 
     const { count, price, image } = itemdetails
     const [itemcount, setitemcount] = useState(count)
     const disabled = itemcount < 20 ? "" : "disabled"
-
     const Add_to_cart = () => {
-        dispatch(add_to_Cart({ item: itemname }))
+        dispatch(product_added({ item: itemname }))
         setitemcount(itemcount + 1)
+        dispatch(new_price(cartprice + price))
         if (itemcount === 0) {
-            dispatch(add_to_cart_icon())
+            dispatch(increase_count())
+            dispatch(new_item(itemname))
         }
     }
 
     const Remove_from_cart = () => {
-        dispatch(remove_from_cart({ item: itemname }))
+        dispatch(product_removed({ item: itemname }))
         setitemcount(itemcount - 1)
-
+        dispatch(new_price(cartprice - price))
         if (itemcount === 1) {
-            dispatch(remove_from_cart_icon())
+            dispatch(decrease_count())
+            dispatch(remove_cart_item(itemname))
         }
+        
     }
 
     const Redirect = (productname) => {
         history.push(`${PATHS.PRODUCTPATH}${productname}`)
     }
     
-
     return (
         <>
             <div className="productcarousel border ms-2">

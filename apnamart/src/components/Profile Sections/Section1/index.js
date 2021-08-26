@@ -1,5 +1,5 @@
 import './index.css'
-import { Userintro, OrderSection, Viewlocationoption, Viewcartoption } from '../../Profile Section Component'
+import { Userintro, OrderSection, Viewlocationoption, Viewcartoption } from '../../Profile Section Components'
 
 export const Section1 = ({selectcomponenttodisplay,  changedisplaycomponent}) => {
     return (

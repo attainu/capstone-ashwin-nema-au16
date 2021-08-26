@@ -1,7 +1,7 @@
 import {setauth} from './../actionTypes'
 import {setAuthinbrowser, getAuthinbrowser} from '../utils'
 
-const initialstate = "  "
+const initialstate = " "
 
 const Auth = (state, action) => {
     state = getAuthinbrowser() || initialstate
@@ -10,6 +10,7 @@ const Auth = (state, action) => {
         setAuthinbrowser(action.payload)
         return action.payload
     }
+    setAuthinbrowser(state)
     return state
 }
 

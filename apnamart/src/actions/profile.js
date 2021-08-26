@@ -7,6 +7,7 @@ import { authsetter } from './auth'
 // url: 'http://localhost:5000/getprofile',
 export const profile = () => (dispatch) => {
     const authvalue = getAuthinbrowser() || ""
+    
     const auth = { "Auth": authvalue }
     return axios({
         method: 'post',
@@ -14,12 +15,15 @@ export const profile = () => (dispatch) => {
         data: {},
         headers: auth
     }).then(resp => {
+        
         if (resp.data.error === "") {
             dispatch({ type: getprofile, payload: resp.data })
             return
         }
-        dispatch(authsetter(""))
+        
+        dispatch(authsetter(" "))
     }).catch(()=> {
+        console.log("Profile not fetched")
         console.log("Get profile request failed")
     } )
 }

@@ -20,7 +20,6 @@ const Header = ({ children }) => {
     const dropdown = useRef()
     const opacity = useSelector(state => state.opacity)
     const headerref = useRef()
-    
 
     const AddToggleclass = () => {
         dropdown.current.classList.add("show")
@@ -44,7 +43,7 @@ const Header = ({ children }) => {
         }
     }, [Auth, dispatch, userprofile])
 
-    const { Name} = userprofile
+    const { Name } = userprofile
 
     useEffect(() => {
         if (headerref.current !== undefined && opacity === 1) {
@@ -58,10 +57,10 @@ const Header = ({ children }) => {
     }, [opacity, headerref])
     return (
         <>
-             {
-                 opacity === 0.5 && Object.keys(userprofile).length === 5 && <EditModal />
-             }
-             
+            {
+                opacity === 0.5 && Object.keys(userprofile).length === 5 && <EditModal />
+            }
+
             <div className="mainwrapper">
                 <div ref={headerref} className="header bg-warning">
                     <div className="logo">
@@ -108,10 +107,12 @@ const Header = ({ children }) => {
                     }
 
                     <div className="nav-item position-relative">
-                        <ShoppingCartIcon style={{ color: "white" }}></ShoppingCartIcon>
-                        {count > 0 && <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
-                            {count}
-                        </span>}
+                        <Link to={PATHS.CART} className="text-decoration-none">
+                            <ShoppingCartIcon style={{ color: "white" }}></ShoppingCartIcon>
+                            {count > 0 && <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
+                                {count}
+                            </span>}
+                        </Link>
                     </div>
                 </div>
 

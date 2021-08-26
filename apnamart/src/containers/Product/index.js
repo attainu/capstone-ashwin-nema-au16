@@ -2,7 +2,7 @@ import './index.css'
 import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
-import { add_to_Cart, remove_from_cart, add_to_cart_icon, remove_from_cart_icon } from '../../actions'
+import { changeproductcount, changeitemcountincart, changecartstate } from '../../actions'
 import { Redirect } from 'react-router-dom'
 import { PATHS } from '../../config'
 import { Fragment } from 'react'
@@ -11,7 +11,10 @@ const Product = () => {
     const { productname } = useParams()
     const dispatch = useDispatch()
     const itemlist = useSelector(state => state.Itemslist)
-
+    const cartprice = useSelector(state => state.CartPrice)
+    const {increase_count, decrease_count} = changeitemcountincart
+    const {product_added, product_removed} = changeproductcount
+    const {new_item, remove_cart_item, new_price} = changecartstate
     let renderproduct = {}
 
     if (itemlist[productname] !== undefined) {
@@ -29,18 +32,22 @@ const Product = () => {
 
 
     const Add_to_cart = () => {
-        dispatch(add_to_Cart({ item: productname }))
+        dispatch(product_added({ item: productname }))
         setitemcount(itemcount + 1)
+        dispatch(new_price(cartprice + price))
         if (itemcount === 0) {
-            dispatch(add_to_cart_icon())
+            dispatch(increase_count())
+            dispatch(new_item(productname))
         }
     }
 
     const Remove_from_cart = () => {
-        dispatch(remove_from_cart({ item: productname }))
+        dispatch(product_removed({ item: productname }))
         setitemcount(itemcount - 1)
+        dispatch(new_price(cartprice - price))
         if (itemcount === 1) {
-            dispatch(remove_from_cart_icon())
+            dispatch(decrease_count())
+            dispatch(remove_cart_item(productname))
         }
     }
 

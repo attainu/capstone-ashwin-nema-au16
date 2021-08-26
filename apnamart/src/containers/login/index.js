@@ -32,6 +32,7 @@ export const Login = ({ history }) => {
             Password: password
         }).then(function (response) {
             if (response.data.error !== "") {
+                dispatch(authsetter(" "))
                 changeerrormessage(response.data.error)
                 return
             }

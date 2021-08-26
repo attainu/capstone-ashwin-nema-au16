@@ -1,6 +1,6 @@
-export {add_to_cart_icon, remove_from_cart_icon} from './carticon'
+export {changeitemcountincart} from './cartcount'
 
-export {add_to_Cart, remove_from_cart} from './cart'
+export {changeproductcount} from './product'
 
 export {profile} from './profile'
 
@@ -12,4 +12,4 @@ export {setlocationcoordinates} from './coordinates'
 
 export {getuseraddress} from './address'
 
-export {changemapstateaction} from './mapmountaction'
+export {changecartstate} from './cartitems'

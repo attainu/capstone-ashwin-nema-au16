@@ -1,5 +1,5 @@
-import { add_item, remove_item } from "../actionTypes"
-
+import { product_count } from "../actionTypes"
+const {increase_product, decrease_product, set_count_zero} = product_count
 const initialState = {
 
     "Cadbury 5 Star Chocolate Bar 40 g":
@@ -86,12 +86,16 @@ const Itemslist = (state, action) => {
     state = state || initialState
 
     switch (action.type) {
-        case add_item:
+        case increase_product:
             state[action.payload.item].count = state[action.payload.item].count + 1
             break
 
-        case remove_item:
+        case decrease_product:
             state[action.payload.item].count = state[action.payload.item].count - 1
+            break
+        
+        case set_count_zero:
+            state[action.payload].count = 0
             break
 
         default:

@@ -23,7 +23,8 @@ const Profile = ({ history }) => {
     }, [dispatch, removeeditingmodal])
 
     useEffect(() => {
-        if (Auth !== "" && Object.keys(userprofile).length === 0) {
+        if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
+            console.log("dfsdfs")
             dispatch(profile())
         }
 

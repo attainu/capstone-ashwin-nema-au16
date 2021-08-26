@@ -1,1 +1,0 @@
-export const changemapstate = 'Change map state'
