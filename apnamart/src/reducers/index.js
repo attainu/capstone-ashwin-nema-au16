@@ -10,6 +10,7 @@ import Usercoordinates from "./usercoordinates";
 import Useraddress from "./useraddress";
 import Cart from "./cartitems";
 import CartPrice from "./cartprice";
+import Mapstate from "./mapmountstate";
 
 export default combineReducers({
     Itemslist,
@@ -22,5 +23,6 @@ export default combineReducers({
     Usercoordinates,
     Useraddress,
     Cart,
-    CartPrice
+    CartPrice,
+    Mapstate
 })

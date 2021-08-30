@@ -7,7 +7,8 @@ const PATHS = {
     SUBCATEGORY:'/subcategory/:subcategoryname',
     SUBCATEGORYPATH:'/subcategory/',
     PROFILE:'/profile',
-    CART:'/cart'
+    CART:'/cart',
+    CHECKOUT:'/checkout'
 }
 
 export default PATHS

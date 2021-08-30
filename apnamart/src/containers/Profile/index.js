@@ -24,7 +24,6 @@ const Profile = ({ history }) => {
 
     useEffect(() => {
         if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
-            console.log("dfsdfs")
             dispatch(profile())
         }
 

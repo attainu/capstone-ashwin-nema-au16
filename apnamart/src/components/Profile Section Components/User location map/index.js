@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import axios from 'axios'
 import { getAuthinbrowser } from '../../../utils'
-import {profile} from '../../../actions'
+import { profile } from '../../../actions'
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 
 const mapStatetoprops = state => {
@@ -21,7 +21,7 @@ const mapdispatchtoprops = (dispatch) => {
     return {
         getusercoordinates: (latitude, longtitude) => dispatch(setlocationcoordinates([latitude, longtitude])),
         getuseraddress: (latitude, longtitude) => dispatch(getuseraddress(latitude, longtitude)),
-        getuserprofile:() => dispatch(profile())
+        getuserprofile: () => dispatch(profile())
     }
 }
 
@@ -31,7 +31,7 @@ class LocationMap extends React.Component {
         this.leafletmap = React.createRef()
         this.state = {
             displaymodaltouser: false,
-            modalmessage:""
+            modalmessage: ""
         }
     }
 
@@ -74,22 +74,22 @@ class LocationMap extends React.Component {
 
     render() {
         const setmodalmessage = (message) => {
-            this.setState({...this.state,modalmessage:message})
+            this.setState({ ...this.state, modalmessage: message })
         }
 
 
         const showmodal = () => {
-            this.setState({...this.state,displaymodaltouser:true,modalmessage:""})
+            this.setState({ ...this.state, displaymodaltouser: true, modalmessage: "" })
             const authvalue = getAuthinbrowser() || ""
-            const auth = {"Auth":authvalue}
+            const auth = { "Auth": authvalue }
             return axios({
-                method:'post',
-                url:'http://localhost:5000/saveuserlocation',
-                data:{
-                    location:`${this.props.coordinates[0]},${this.props.coordinates[1]}`,
-                    Location:this.props.coordinates
+                method: 'post',
+                url: 'http://localhost:5000/saveuserlocation',
+                data: {
+                    location: `${this.props.coordinates[0]},${this.props.coordinates[1]}`,
+                    Location: this.props.coordinates
                 },
-                headers:auth
+                headers: auth
 
             }).then((resp) => {
                 if (resp.data.error !== "") {
@@ -98,6 +98,9 @@ class LocationMap extends React.Component {
                 }
                 setmodalmessage("Location saved")
                 this.props.getuserprofile()
+                 if (this.props.setaddress !== undefined) {
+                    this.props.setaddress(currentstate => !currentstate)
+                 }
                 return
             }).catch(() => {
                 setmodalmessage("Your Location cannot be saved. Some error occurred at backend")
@@ -105,66 +108,66 @@ class LocationMap extends React.Component {
         }
 
         const hidemodal = () => {
-            this.setState({...this.state,displaymodaltouser:false })
+            this.setState({ ...this.state, displaymodaltouser: false })
         }
 
         return (
             <>
-                <div className="profileseperator2 pe-3 me-3 ps-3 pb-3  w-50">
-                    <h3>Select your location</h3>
-                    <div ref={this.leafletmap} className="leafletmap">
-                    </div>
 
-
-                    <div className="mt-3 p-3 profilecontentdisplaycolor ">
-                        {this.props.address.length > 1 &&
-                            this.props.address.map((item, index) => {
-                                if (index !== this.props.address.length - 1) {
-                                    return (
-                                        <span key={index}>
-                                            {item},
-                                        </span>
-                                    )
-                                }
-
-                                else {
-                                    return (
-                                        <span key={index}>
-                                            {item}
-                                        </span>
-                                    )
-                                }
-
-                            })
-                        }
-
-
-                        {this.props.address.length === 1 && this.props.address[0] === "Sorry we do not serve your area" ?
-                            <span className="text-danger">Sorry we do not serve your area</span> : <></>
-                        }
-                    </div>
-
-                    <div className="d-flex justify-content-center mt-3">
-                        {this.props.address[0] === "Sorry we do not serve your area" ?
-                            <button className="btn btn-primary rounded-pill disabled">
-                                Save Location
-                            </button> :
-
-                            <>
-                                <button onClick={showmodal} className="btn rounded-pill btn-primary">
-                                    Save Location
-                                </button>
-
-                                <Modal  centered show={this.state.displaymodaltouser} onHide={hidemodal}>
-                                    <Modal.Body>
-                                        {  this.state.modalmessage === "Location saved" && <span className="d-flex justify-content-center"> <CheckCircleOutlinedIcon style={{ color: "green" }} />  
-                                        {this.state.modalmessage} </span>  }
-                                    </Modal.Body>
-                                </Modal>
-                            </>
-                        }
-                    </div>
+                <h3>Select your location</h3>
+                <div ref={this.leafletmap} className="leafletmap">
                 </div>
+
+
+                <div className="mt-3 p-3 profilecontentdisplaycolor ">
+                    {this.props.address.length > 1 &&
+                        this.props.address.map((item, index) => {
+                            if (index !== this.props.address.length - 1) {
+                                return (
+                                    <span key={index}>
+                                        {item},
+                                    </span>
+                                )
+                            }
+
+                            else {
+                                return (
+                                    <span key={index}>
+                                        {item}
+                                    </span>
+                                )
+                            }
+
+                        })
+                    }
+
+
+                    {this.props.address.length === 1 && this.props.address[0] === "Sorry we do not serve your area" ?
+                        <span className="text-danger">Sorry we do not serve your area</span> : <></>
+                    }
+                </div>
+
+                <div className="d-flex justify-content-center mt-3">
+                    {this.props.address[0] === "Sorry we do not serve your area" ?
+                        <button className="btn btn-primary rounded-pill disabled">
+                            Save Location
+                        </button> :
+
+                        <>
+                            <button onClick={showmodal} className="btn rounded-pill btn-primary">
+                                Save Location
+                            </button>
+
+                            <Modal centered show={this.state.displaymodaltouser} onHide={hidemodal}>
+                                <Modal.Body>
+                                    {this.state.modalmessage === "Location saved" && <span className="d-flex justify-content-center"> <CheckCircleOutlinedIcon style={{ color: "green" }} />
+                                        {this.state.modalmessage} </span>}
+                                </Modal.Body>
+                            </Modal>
+                        </>
+                    }
+                </div>
+
             </>
         )
     }

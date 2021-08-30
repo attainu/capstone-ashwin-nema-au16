@@ -14,7 +14,7 @@ export const getuseraddress = (latitude, longtitude) => (dispatch) => {
         headers: auth
     }).then(resp => {
         if (resp.data.error !== "") {
-            dispatch({ type: setaddress, payload: {} })
+            dispatch({ type: setaddress, payload: [] })
             return
         }
         const finaluserlocationaddress = []

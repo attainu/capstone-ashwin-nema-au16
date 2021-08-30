@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 import { useState } from 'react'
 
-export const Cartitem = ({ item, deliverydate, currentstate, changecurrentstate }) => {
+export const Cartitem = ({ item, deliverydate }) => {
     const allitems = useSelector(state => state.Itemslist)
     const { product_added, product_removed, make_count_zero } = changeproductcount
     const { new_price, remove_cart_item } = changecartstate
@@ -27,7 +27,7 @@ export const Cartitem = ({ item, deliverydate, currentstate, changecurrentstate 
         if (count < 20) {
             dispatch(product_added({ item }))
             dispatch(new_price(totalprice + price))
-            changecurrentstate(!currentstate)
+
             return
         }
         setmodalmessage(`You cannot order more than 20 items of ${item}`)
@@ -38,7 +38,7 @@ export const Cartitem = ({ item, deliverydate, currentstate, changecurrentstate 
         if (count > 1) {
             dispatch(product_removed({ item }))
             dispatch(new_price(totalprice - price))
-            changecurrentstate(!currentstate)
+
 
             return
         }
@@ -47,7 +47,7 @@ export const Cartitem = ({ item, deliverydate, currentstate, changecurrentstate 
     }
 
     const removeitemfromcart = () => {
-        changecurrentstate(!currentstate)
+
         const itemprice = count * price
         dispatch(new_price(totalprice - itemprice))
         dispatch(decrease_count())

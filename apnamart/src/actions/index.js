@@ -13,3 +13,5 @@ export {setlocationcoordinates} from './coordinates'
 export {getuseraddress} from './address'
 
 export {changecartstate} from './cartitems'
+
+export {changemapstate} from './changemapstate'

@@ -13,3 +13,5 @@ export {setaddress} from './address'
 export {cartitemscount} from './cartcount'
 
 export {cart} from './cartitems'
+
+export {mapmountstate} from './mapstate'

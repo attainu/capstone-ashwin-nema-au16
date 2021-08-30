@@ -42,3 +42,11 @@
     font-size: small;
     justify-content: space-between;
 }
+
+.checkoutbutton {
+    background-color: #f0ad4e;
+}
+
+.checkoutbutton:hover {
+    background-color: #f87d2a;
+}
