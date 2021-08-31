@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { profile } from '../../actions'
 import { useRef } from 'react';
-import EditModal from '../EditModal';
+import EditModal from '../Edit Modal';
 
 
 const Header = ({ children }) => {
@@ -97,7 +97,7 @@ const Header = ({ children }) => {
                                         {Name.slice(0, 12)}
                                     </button>
                                     <ul onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
-                                        <li><p className="dropdown-item" >Action</p></li>
+                                        <Link to={PATHS.PROFILE}><li><p className="dropdown-item" >Action</p></li></Link>
                                         <li><p className="dropdown-item" >Another action</p></li>
                                         <li><p className="dropdown-item" >Something else here</p></li>
                                     </ul>

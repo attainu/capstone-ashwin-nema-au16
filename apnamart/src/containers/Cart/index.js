@@ -3,34 +3,27 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
-import { Cartitem } from '../../components/Cart item';
+import { Cartitem, Ordersummary } from '../../components';
 import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 
-const Usercart = () => {
+const Usercart = ({nomargin}) => {
     const cart = useSelector(state => state.Cart)
     const count = useSelector(state => state.cartcount)
-    const allitems = useSelector(state => state.Itemslist)
-    const totalcost = useSelector(state => state.CartPrice)
 
-    let date = new Date()
-    date.setDate(date.getDate() + 3)
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-
-    const deliverydate = days[date.getDay()] + " " + date.getDate() + " " + month[date.getMonth()]
     useEffect(() => {
         document.body.style.backgroundColor = "#f1f3f6"
         return () => {
-            document.body.style.backgroundColor = "white"
+            if (nomargin === undefined) {
+                document.body.style.backgroundColor = "white"
+            }
         }
-    }, [])
+    }, [nomargin])
 
     return (
         <>
-            <div className="usercart mt-3">
+            <div className={`usercart ${nomargin === undefined ? `mt-3` : ``} `}>
                 <div className="usercartsection"></div>
                 <div className="profilecontentdisplaycolor usercartsectionitems ps-3 me-3 py-3 pe-3">
                     <h5>My Cart{count > 0 ? <>({count}) </> : <></>}</h5>
@@ -52,7 +45,7 @@ const Usercart = () => {
                             {Object.keys(cart).map((item, index) => {
 
                                 return (
-                                    <Cartitem key={index} deliverydate={deliverydate} item={item}  />
+                                    <Cartitem key={index}  item={item}  />
                                 )
                             })}
                         </SimpleBar>
@@ -70,31 +63,9 @@ const Usercart = () => {
                             <strong>Price</strong>
                         </div>
                     </div>
-                    <SimpleBar style={{ height: "20vh" }}>
-                        {Object.keys(cart).map((item, index) => {
-                            return (
-                                <div className="paymentdetailsitem" key={index}>
-                                    <div>
-                                        {item} X {allitems[item].count}
-                                    </div>
-
-                                    <div>
-                                        {allitems[item].count * allitems[item].price}
-                                    </div>
-                                </div>
-                            )
-                        })}
-
-                        <div className="paymentdetailsitem">
-                            <div>
-                                <strong>Total Price</strong>
-                            </div>
-
-                            <div>
-                                <strong>{totalcost}</strong>
-                            </div>
-                        </div>
-                    </SimpleBar>
+                    
+                    <Ordersummary ordersummaryclass="paymentdetailsitem" />
+ 
                     <div className="d-flex justify-content-center mt-3">
                         <Link to={PATHS.CHECKOUT} >
                             <button className="bordernone p-2 rounded-pill checkoutbutton">Checkout </button>

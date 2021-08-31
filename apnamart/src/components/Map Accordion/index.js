@@ -1,8 +1,21 @@
 import { useState } from "react";
 import { Card } from "react-bootstrap";
-import './index.css'
 import { useTransition, animated } from 'react-spring'
-import CheckoutMap from "../../components/Checkout Map";
+import React from "react";
+import LocationMap from '../User location map'
+
+class CheckoutMap extends React.Component {
+    render() {
+        return (
+            <>
+            {this.props.isvisible === true ? 
+            <div className="profilecontentdisplaycolor">
+                <LocationMap setaddress={this.props.setaddress}/> 
+            </div>:<></> }
+            </>
+        )
+    }
+}
 
 const MapAccordion = ({userlocationaddress, setaddress}) => {
     const [isvisible, changevisibility] = useState(false)

@@ -1,10 +1,9 @@
 import axios from "axios";
 import Radio from '@material-ui/core/Radio';
-import { RadioGroup } from '@material-ui/core'
-import { FormControlLabel } from '@material-ui/core'
-import { FormControl } from '@material-ui/core'
+import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector } from "react-redux";
+import { Alert } from "react-bootstrap";
 
 export default function PaymentSection() {
     const {Name, Email, Mobilenumber} = useSelector(state => state.Profile)
@@ -75,12 +74,24 @@ export default function PaymentSection() {
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();
     }
+
+
+    let date = new Date()
+    date.setDate(date.getDate() + 3)
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+    const deliverydate = days[date.getDay()] + " " + date.getDate() + " " + month[date.getMonth()]
+
     return (
         <>
             <div className="checkoutaccordion mt-5">
                 <div className="w-75 profilecontentdisplaycolor">
+                    <Alert variant="info" className="w-25">
+                        Delivery by {deliverydate}
+                    </Alert>
                     <h5>Select mode of payment</h5>
-                    <FormControl className="w-100 " component="fieldset">
+                    <FormControl className="w-100 profilecontentdisplaycolor" component="fieldset">
                         <RadioGroup row aria-label="position" name="position" defaultValue="Cash">
                             <FormControlLabel
                                 label="Cash on delivery"

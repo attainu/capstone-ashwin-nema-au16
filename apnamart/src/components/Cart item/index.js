@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 import { useState } from 'react'
 
-export const Cartitem = ({ item, deliverydate }) => {
+export const Cartitem = ({ item }) => {
     const allitems = useSelector(state => state.Itemslist)
     const { product_added, product_removed, make_count_zero } = changeproductcount
     const { new_price, remove_cart_item } = changecartstate
@@ -18,6 +18,12 @@ export const Cartitem = ({ item, deliverydate }) => {
     const totalprice = useSelector(state => state.CartPrice)
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, changeshowmodalmessage] = useState(false)
+    
+    let date = new Date()
+    date.setDate(date.getDate() + 3)
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const deliverydate = days[date.getDay()] + " " + date.getDate() + " " + month[date.getMonth()]
 
     const hidemodal = () => {
         changeshowmodalmessage(false)

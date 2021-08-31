@@ -1,12 +1,12 @@
 import './index.css'
-import { setlocationcoordinates, getuseraddress } from '../../../actions'
+import { setlocationcoordinates, getuseraddress } from '../../actions'
 import L from 'leaflet'
 import React from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import axios from 'axios'
-import { getAuthinbrowser } from '../../../utils'
-import { profile } from '../../../actions'
+import { getAuthinbrowser } from '../../utils'
+import { profile } from '../../actions'
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 
 const mapStatetoprops = state => {

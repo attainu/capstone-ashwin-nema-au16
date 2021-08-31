@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useParams } from 'react-router'
 import { Redirect } from "react-router";
 import { PATHS } from '../../config'
-import Carouselitem from "../../components/Carouselitem";
+import {Carouselitem} from "../../components";
 
 const Subcategory = ({history}) => {
     const { subcategoryname } = useParams()
