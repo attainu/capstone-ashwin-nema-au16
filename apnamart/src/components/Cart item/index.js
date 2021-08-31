@@ -5,7 +5,7 @@ import { Modal } from 'react-bootstrap'
 import { Alert } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
-
+import {deliverydate} from '../../utils'
 import { useState } from 'react'
 
 export const Cartitem = ({ item }) => {
@@ -18,13 +18,6 @@ export const Cartitem = ({ item }) => {
     const totalprice = useSelector(state => state.CartPrice)
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, changeshowmodalmessage] = useState(false)
-    
-    let date = new Date()
-    date.setDate(date.getDate() + 3)
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    const deliverydate = days[date.getDay()] + " " + date.getDate() + " " + month[date.getMonth()]
-
     const hidemodal = () => {
         changeshowmodalmessage(false)
     }
@@ -44,10 +37,9 @@ export const Cartitem = ({ item }) => {
         if (count > 1) {
             dispatch(product_removed({ item }))
             dispatch(new_price(totalprice - price))
-
-
             return
         }
+
         setmodalmessage(`You cannot order less than 1 item of ${item}`)
         changeshowmodalmessage(true)
     }

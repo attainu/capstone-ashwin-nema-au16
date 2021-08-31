@@ -4,7 +4,7 @@ import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector } from "react-redux";
 import { Alert } from "react-bootstrap";
-
+import {deliverydate} from '../../utils'
 export default function PaymentSection() {
     const {Name, Email, Mobilenumber} = useSelector(state => state.Profile)
     function loadScript(src) {
@@ -74,15 +74,7 @@ export default function PaymentSection() {
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();
     }
-
-
-    let date = new Date()
-    date.setDate(date.getDate() + 3)
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-    const deliverydate = days[date.getDay()] + " " + date.getDate() + " " + month[date.getMonth()]
-
+    
     return (
         <>
             <div className="checkoutaccordion mt-5">
