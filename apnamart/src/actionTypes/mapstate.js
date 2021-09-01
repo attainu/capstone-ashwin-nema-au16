@@ -1,1 +1,0 @@
-export const mapmountstate = 'Map mounting state'

@@ -14,7 +14,8 @@ const Header = ({ children }) => {
     const dispatch = useDispatch()
     const [searchbar, changesearchvalue] = useState("")
     const [count, changecount] = useState(0)
-    const cartcount = useSelector(state => state.cartcount)
+    const cart = useSelector(state => state.Cart)
+    const cartcount = Object.keys(cart).length
     const Auth = useSelector(state => state.Auth)
     const userprofile = useSelector(state => state.Profile)
     const dropdown = useRef()

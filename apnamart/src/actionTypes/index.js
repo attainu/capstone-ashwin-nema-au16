@@ -1,4 +1,4 @@
-export { product_count} from './item'
+// export { product_count} from './item'
 
 export {getprofile} from './profile'
 
@@ -10,8 +10,10 @@ export {setcoordinates} from './coordinates'
 
 export {setaddress} from './address'
 
-export {cartitemscount} from './cartcount'
+// export {cartitemscount} from './cartcount'
 
-export {cart} from './cartitems'
+// export {cart} from './cartitems'
 
-export {mapmountstate} from './mapstate'
+export {cartstate} from './cart'
+
+export {cartprice} from './cartprice'

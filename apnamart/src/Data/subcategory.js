@@ -1,4 +1,4 @@
-const initialState = {
+export const Subcategorydata = {
     "Chocolate":{
         items:["Cadbury 5 Star Chocolate Bar 40 g", "Nestle Kitkat Bars  (37.3 g)"], 
         imageurl:"https://res.cloudinary.com/ash006/image/upload/v1628828193/chocolate_fhrehb.jpg"
@@ -29,11 +29,3 @@ const initialState = {
         imageurl:"https://res.cloudinary.com/ash006/image/upload/v1628828194/Edible-Oil_baeeft.jpg"
     }
 }
-
-const Subcategory = (state, action) => {
-    state = state || initialState
-
-    return state
-}
-
-export default Subcategory

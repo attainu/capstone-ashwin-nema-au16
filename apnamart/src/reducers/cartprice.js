@@ -1,12 +1,11 @@
-import {cart} from '../actionTypes'
-const {change_price} = cart
+import {cartprice} from '../actionTypes'
 
 const initialstate = 0
 
 const CartPrice = (state, action) => {
     state = state || initialstate
 
-    if (action.type === change_price) {
+    if (action.type === cartprice) {
         return action.payload
     }
 

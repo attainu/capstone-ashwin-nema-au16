@@ -1,15 +1,12 @@
-import { useSelector } from "react-redux";
 import { useParams } from 'react-router'
 import { Redirect } from "react-router";
 import { PATHS } from '../../config'
 import {Carouselitem} from "../../components";
+import {Subcategorydata, Productsdata} from '../../Data'
 
 const Subcategory = ({history}) => {
     const { subcategoryname } = useParams()
-    const subcategory = useSelector(state => state.Subcategory)
-    const items = useSelector(state => state.Itemslist)
-
-    if (subcategory[subcategoryname] === undefined) {
+    if (Subcategorydata[subcategoryname] === undefined) {
         return <Redirect to={PATHS.HOME} />
     }
 
@@ -19,10 +16,10 @@ const Subcategory = ({history}) => {
 
             <div className="row">
                 {
-                    subcategory[subcategoryname].items.map((item, index) => {
+                    Subcategorydata[subcategoryname].items.map((item, index) => {
                         return (
                             <div key={index} className="col-4 mt-2">
-                                <Carouselitem itemname={item} itemdetails={items[item]} history={history} />
+                                <Carouselitem itemname={item} itemdetails={Productsdata[item]} history={history} />
                             </div>
                         )
                     })

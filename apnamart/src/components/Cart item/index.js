@@ -1,32 +1,32 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { changeproductcount, changecartstate, changeitemcountincart } from '../../actions'
+import {changecartstate, changecartprice} from '../../actions'
 import { Modal } from 'react-bootstrap'
 import { Alert } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
 import {deliverydate} from '../../utils'
 import { useState } from 'react'
+import {Productsdata} from '../../Data'
 
 export const Cartitem = ({ item }) => {
-    const allitems = useSelector(state => state.Itemslist)
-    const { product_added, product_removed, make_count_zero } = changeproductcount
-    const { new_price, remove_cart_item } = changecartstate
-    const { decrease_count } = changeitemcountincart
     const dispatch = useDispatch()
-    const { count, image, price } = allitems[item]
+    const { remove_item, increase_item_count, decrease_item_count } = changecartstate
+    const cartitems = useSelector(state => state.Cart)
+    const count = cartitems[item] === undefined ? 0 : cartitems[item].count
+    const { image, price } = Productsdata[item]
     const totalprice = useSelector(state => state.CartPrice)
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, changeshowmodalmessage] = useState(false)
+    
     const hidemodal = () => {
         changeshowmodalmessage(false)
     }
 
     const increaseitemcount = () => {
         if (count < 20) {
-            dispatch(product_added({ item }))
-            dispatch(new_price(totalprice + price))
-
+            dispatch(increase_item_count(item))
+            dispatch(changecartprice(totalprice + price))
             return
         }
         setmodalmessage(`You cannot order more than 20 items of ${item}`)
@@ -35,22 +35,18 @@ export const Cartitem = ({ item }) => {
 
     const decreaseitemcount = () => {
         if (count > 1) {
-            dispatch(product_removed({ item }))
-            dispatch(new_price(totalprice - price))
+            dispatch(decrease_item_count(item))
+            dispatch(changecartprice(totalprice - price))
             return
         }
-
         setmodalmessage(`You cannot order less than 1 item of ${item}`)
         changeshowmodalmessage(true)
     }
 
     const removeitemfromcart = () => {
-
         const itemprice = count * price
-        dispatch(new_price(totalprice - itemprice))
-        dispatch(decrease_count())
-        dispatch(remove_cart_item(item))
-        dispatch(make_count_zero(item))
+        dispatch(changecartprice(totalprice - itemprice))
+        dispatch(remove_item(item))
     }
 
     return (

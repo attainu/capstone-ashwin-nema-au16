@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux"
 import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css';
+import {Productsdata} from '../../Data'
 export const Ordersummary = ({ordersummaryclass}) => {
-    const allitems = useSelector(state => state.Itemslist)
     const totalcost = useSelector(state => state.CartPrice)
     const cart = useSelector(state => state.Cart)
     const mainclass = ordersummaryclass !== undefined ? ordersummaryclass : ""
+    
     return (
         <>
         <SimpleBar style={{ height: "20vh" }}>
@@ -13,11 +14,11 @@ export const Ordersummary = ({ordersummaryclass}) => {
                             return (
                                 <div className={`${mainclass}`} key={index}>
                                     <div>
-                                        {item} X {allitems[item].count}
+                                        {item} X {cart[item].count}
                                     </div>
 
                                     <div>
-                                        {allitems[item].count * allitems[item].price}
+                                        {cart[item].count * Productsdata[item].price}
                                     </div>
                                 </div>
                             )

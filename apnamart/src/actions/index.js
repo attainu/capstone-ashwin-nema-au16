@@ -1,7 +1,3 @@
-export {changeitemcountincart} from './cartcount'
-
-export {changeproductcount} from './product'
-
 export {profile} from './profile'
 
 export {authsetter} from './auth'
@@ -12,6 +8,6 @@ export {setlocationcoordinates} from './coordinates'
 
 export {getuseraddress} from './address'
 
-export {changecartstate} from './cartitems'
+export {changecartstate} from './cart'
 
-export {changemapstate} from './changemapstate'
+export {changecartprice} from './cartprice'

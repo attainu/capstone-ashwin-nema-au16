@@ -10,7 +10,7 @@ import { PATHS } from '../../config';
 
 const Usercart = ({nomargin}) => {
     const cart = useSelector(state => state.Cart)
-    const count = useSelector(state => state.cartcount)
+    const count = Object.keys(cart).length
 
     useEffect(() => {
         document.body.style.backgroundColor = "#f1f3f6"
@@ -43,7 +43,6 @@ const Usercart = ({nomargin}) => {
                     {count > 0 && <>
                         <SimpleBar style={{ height: "60vh" }}>
                             {Object.keys(cart).map((item, index) => {
-
                                 return (
                                     <Cartitem key={index}  item={item}  />
                                 )

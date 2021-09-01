@@ -1,15 +1,12 @@
-import { useSelector } from 'react-redux'
 import { Carouselitem } from '../../components'
 import Carousel from 'react-elastic-carousel'
 import { PATHS } from '../../config'
 import './index.css'
+import {Productsdata, Subcategorydata} from '../../Data'
 
 export const Home = ({ history }) => {
-    const items = useSelector(state => state.Itemslist)
-    const itemslist = Object.keys(items)
-    const subcategory = useSelector(state => state.Subcategory)
-    const subcategorylist = Object.keys(subcategory)
-
+    const itemslist = Object.keys(Productsdata)
+    const subcategorylist = Object.keys(Subcategorydata)
     const breakpoints = [
         { width: 500, itemsToShow: 3 },
         { width: 760, itemsToShow: 4 },
@@ -27,7 +24,7 @@ export const Home = ({ history }) => {
                     {
                         itemslist.map((item, index) => {
                             return (
-                                <Carouselitem history={history} key={index} itemname={item} itemdetails={items[item]}
+                                <Carouselitem history={history} key={index} itemname={item} itemdetails={Productsdata[item]}
                                 />
                             )
                         })
@@ -43,7 +40,7 @@ export const Home = ({ history }) => {
                 <Carousel breakPoints={breakpoints}>
                     {
                         subcategorylist.map((item, index) => {
-                            const image = subcategory[item].imageurl
+                            const image = Subcategorydata[item].imageurl
                             const Redirect = () => {
                                 history.push(`${PATHS.SUBCATEGORYPATH}${item}`)
                             }

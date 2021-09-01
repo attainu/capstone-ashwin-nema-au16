@@ -1,4 +1,3 @@
-import './index.css'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux';

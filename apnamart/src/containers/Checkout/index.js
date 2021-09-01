@@ -13,7 +13,8 @@ const CheckoutPage = ({ history }) => {
     const { Location } = userprofile
     const [userlocationaddress, setcurrentaddress] = useState([])
     const [isaddressset, setaddress] = useState(false)
-    const count = useSelector(state => state.cartcount)
+    const cart = useSelector(state => state.Cart)
+    const count = Object.keys(cart).length
 
     useEffect(() => {
         if (useraddress.length === 0 && Object.keys(userprofile).length > 0) {
