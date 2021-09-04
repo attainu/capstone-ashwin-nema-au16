@@ -1,0 +1,9 @@
+.leafletmap {
+    min-height: 40vh ;
+}
+
+.modalsuccess {
+    background-color: #d1e7dd;
+    color: darkcyan;
+    border: none;
+}

@@ -1,62 +1,34 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { PATHS } from '../../config'
-import { useEffect, useCallback, useState } from 'react'
-import { profile, opacitychanger } from '../../actions'
-import {Section1 ,Section2} from '../../components/Profile Sections'
+import { useEffect, useState } from 'react'
+import { profile } from '../../actions'
+import { Userintro, OrderSection, Viewcartoption, Viewlocationoption, UserAccountInformation, LocationMap } from '../../components'
+import Usercart from '../Cart'
 
 const Profile = ({ history }) => {
-    const userprofile = useSelector(state => state.Profile)
-    const opacity = useSelector(state => state.opacity)
-    const Auth = useSelector(state => state.Auth)
     const dispatch = useDispatch()
-    const [selectoption2display, changeoption2display] = useState("accountinformation")
 
-    const removeeditingmodal = useCallback(() => {
-        dispatch(opacitychanger(1))
-    }, [dispatch])
+    const userprofile = useSelector(state => state.Profile)
+    const { Name } = userprofile
+    const Auth = useSelector(state => state.Auth)
 
-    const showditingmodal = useCallback((e) => {
-        e.stopPropagation()
-        dispatch(opacitychanger(0.5))
-
-        document.body.addEventListener('click', removeeditingmodal)
-    }, [dispatch, removeeditingmodal])
+    const [selectcomponenttodisplay, changedisplaycomponent] = useState("accountinformation")
 
     useEffect(() => {
-        if (Auth !== "" && Object.keys(userprofile).length === 0) {
+        if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
             dispatch(profile())
         }
 
         else if (Object.keys(userprofile).length === 0) {
             history.push(PATHS.HOME)
         }
-
+        document.body.style.backgroundColor = "#f1f3f6"
         return () => {
             document.body.style.backgroundColor = "white"
-            dispatch(opacitychanger(1))
-            document.body.removeEventListener('click', showditingmodal)
         }
-    }, [userprofile, history, dispatch, Auth, showditingmodal])
+    }, [userprofile, history, dispatch, Auth])
 
-    useEffect(() => {
-
-        switch (opacity) {
-            case 1:
-                document.body.style.backgroundColor = "#f1f3f6"
-                document.body.removeEventListener('click', removeeditingmodal)
-                return
-
-            case 0.5:
-                document.body.style.backgroundColor = "rgb(0, 0, 0,0.5)"
-                return
-
-            default:
-                return
-        }
-    }, [opacity, removeeditingmodal])
-
-    const { Name } = userprofile
     return (
         <>
             {Name !== undefined &&
@@ -64,9 +36,30 @@ const Profile = ({ history }) => {
                     <h4 className="mb-3 mt-3 ms-5">My Profile </h4>
 
                     <div className="profilecontent mt-5 ms-3">
-                        <Section1 selectoption2display={selectoption2display} changeoption2display={changeoption2display} />
+                        <div className="profileseperator1 me-3 pe-3 ps-3 pb-3">
+                            <Userintro selectcomponenttodisplay={selectcomponenttodisplay} changedisplaycomponent={changedisplaycomponent} />
+                            <OrderSection />
+                            <Viewlocationoption selectcomponenttodisplay={selectcomponenttodisplay} changedisplaycomponent={changedisplaycomponent} />
+                            <Viewcartoption selectcomponenttodisplay={selectcomponenttodisplay} changedisplaycomponent={changedisplaycomponent} />
+                        </div>
 
-                        <Section2 selectoption2display={selectoption2display} changeoption2display={changeoption2display} showditingmodal={showditingmodal} />
+                        {selectcomponenttodisplay === "accountinformation" && <UserAccountInformation />}
+
+                        {selectcomponenttodisplay === "locationmap" &&
+                            <div className="profileseperator2 pe-3 me-3 ps-3 pb-3  w-50">
+                                <LocationMap />
+                            </div>}
+
+                        {selectcomponenttodisplay === "mycart" &&
+                            <div className="profileseperator2 w-50">
+                                <Usercart nomargin={true} />
+                            </div>
+                        }
+
+                        <div className="profileseperator1">
+
+                        </div>
+
                     </div>
 
                 </>

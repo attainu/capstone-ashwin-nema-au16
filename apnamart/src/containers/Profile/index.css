@@ -15,3 +15,20 @@
 .smalltext {
     font-size: small;
 }
+
+.cursorpointer {
+    cursor: pointer;
+}
+
+.profileseperator1 {
+    flex-grow: 1;
+}
+
+.profileseperator2 {
+    flex-grow: 4;
+    min-height: 45vh;
+}
+
+.ultrasmalltext {
+    font-size: xx-small;
+}

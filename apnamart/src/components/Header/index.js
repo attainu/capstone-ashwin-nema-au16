@@ -5,33 +5,24 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
-import { profile } from '../../actions'
+import { profile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
-import EditModal from '../EditModal';
+
 
 const Header = ({ children }) => {
     const dispatch = useDispatch()
     const [searchbar, changesearchvalue] = useState("")
     const [count, changecount] = useState(0)
-    const cartcount = useSelector(state => state.cartcount)
+
     const Auth = useSelector(state => state.Auth)
     const userprofile = useSelector(state => state.Profile)
+    const Productsdata = useSelector(state => state.Productsdata)
+    const cart = useSelector(state => state.Cart)
+
+    const cartcount = Object.keys(cart).length
+    const { Name } = userprofile
+
     const dropdown = useRef()
-    const opacity = useSelector(state => state.opacity)
-    const headerref = useRef()
-    
-
-    const AddToggleclass = () => {
-        dropdown.current.classList.add("show")
-    }
-    const RemoveToggleclass = () => {
-        dropdown.current.classList.remove("show")
-    }
-
-    const ClickToggle = () => {
-        if (dropdown.current.classList.contains("show") === true) dropdown.current.classList.remove("show")
-        else dropdown.current.classList.add("show")
-    }
 
     useEffect(() => {
         changecount(cartcount)
@@ -43,26 +34,30 @@ const Header = ({ children }) => {
         }
     }, [Auth, dispatch, userprofile])
 
-    const { Name} = userprofile
-
     useEffect(() => {
-        if (headerref.current !== undefined && opacity === 1) {
-            headerref.current.style.filter = "brightness(1)"
-            return
+        if (Object.keys(Productsdata.subcategories).length === 0 && Object.keys(Productsdata.products).length === 0) {
+            dispatch(getproductsdata())
         }
+    }, [Productsdata, dispatch])
 
-        if (headerref.current !== undefined && opacity === 0.5) {
-            headerref.current.style.filter = "brightness(0.3)"
-        }
-    }, [opacity, headerref])
+    const AddToggleclass = () => {
+        dropdown.current.classList.add("show")
+    }
+
+    const RemoveToggleclass = () => {
+        dropdown.current.classList.remove("show")
+    }
+
+    const ClickToggle = () => {
+        if (dropdown.current.classList.contains("show") === true) dropdown.current.classList.remove("show")
+        else dropdown.current.classList.add("show")
+    }
+
     return (
         <>
-             {
-                 opacity === 0.5 && Object.keys(userprofile).length === 5 && <EditModal />
-             }
-             
+
             <div className="mainwrapper">
-                <div ref={headerref} className="header bg-warning">
+                <div  className="header bg-warning">
                     <div className="logo">
                         <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
                     </div>
@@ -97,7 +92,7 @@ const Header = ({ children }) => {
                                         {Name.slice(0, 12)}
                                     </button>
                                     <ul onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
-                                        <li><p className="dropdown-item" >Action</p></li>
+                                        <Link to={PATHS.PROFILE}><li><p className="dropdown-item" >Action</p></li></Link>
                                         <li><p className="dropdown-item" >Another action</p></li>
                                         <li><p className="dropdown-item" >Something else here</p></li>
                                     </ul>
@@ -107,10 +102,12 @@ const Header = ({ children }) => {
                     }
 
                     <div className="nav-item position-relative">
-                        <ShoppingCartIcon style={{ color: "white" }}></ShoppingCartIcon>
-                        {count > 0 && <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
-                            {count}
-                        </span>}
+                        <Link to={PATHS.CART} className="text-decoration-none">
+                            <ShoppingCartIcon style={{ color: "white" }}></ShoppingCartIcon>
+                            {count > 0 && <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger">
+                                {count}
+                            </span>}
+                        </Link>
                     </div>
                 </div>
 

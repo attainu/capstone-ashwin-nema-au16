@@ -1,0 +1,33 @@
+.cartitem {
+    display: grid;
+    grid-template-columns: 1fr 5fr 2fr;
+    min-height: 15vh;
+    column-gap: 0.5vw;
+}
+
+.cartimagecontainer {
+    position: relative;
+}
+
+.cartimage {
+    width:100%;
+    height: 100%;
+    object-fit: contain; 
+    position: absolute;
+}
+
+.addremovecartitem {
+    display: flex;
+    justify-content: space-between;
+}
+
+.increasedecreasecartitem {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.buttondisplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
