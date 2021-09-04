@@ -33,7 +33,7 @@ export default function PaymentSection() {
             return;
         }
 
-        const result = await axios.post("http://localhost:5000/orders");
+        const result = await axios.post("http://localhost:5000/user/order/payment/razorpay");
 
         if (!result) {
             alert("Server error. Are you online?");
@@ -57,7 +57,7 @@ export default function PaymentSection() {
                     razorpaySignature: response.razorpay_signature,
                 };
 
-                await axios.post("http://localhost:5000/success", data);
+                await axios.post("http://localhost:5000/user/order/payment/razorpay/success", data);
             },
             prefill: {
                 name: Name,

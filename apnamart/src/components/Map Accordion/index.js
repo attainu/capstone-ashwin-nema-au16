@@ -31,7 +31,7 @@ const MapAccordion = ({userlocationaddress, setaddress}) => {
                 <Card.Header>
                     <div className="checkoutaccordionheader">
                         <div className="me-3">
-                            Current Address
+                            <h6>Current delivery address</h6>
                             <div>
                                 {
                                     userlocationaddress.map((item, index) => {
@@ -60,7 +60,7 @@ const MapAccordion = ({userlocationaddress, setaddress}) => {
                                 style={{ backgroundColor: '#ffc107' }}
                                 onClick={() => changevisibility(currenvisbility => !currenvisbility)}
                             >
-                                Changecurrentlocation
+                                Change address
                             </button>
                         </div>
                     </div>

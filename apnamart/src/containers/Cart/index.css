@@ -35,6 +35,8 @@
 
 .modalalert {
     background-color: #f8d7da;
+    border: 1px solid  #f6ccd0;
+    color: #bb787e;
 }
 
 .paymentdetailsitem {

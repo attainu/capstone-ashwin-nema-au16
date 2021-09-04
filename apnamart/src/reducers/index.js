@@ -6,6 +6,7 @@ import Usercoordinates from "./usercoordinates";
 import Useraddress from "./useraddress";
 import Cart from "./cart";
 import CartPrice from "./cartprice";
+import Productsdata from "./data";
 
 export default combineReducers({
     Auth,
@@ -14,5 +15,6 @@ export default combineReducers({
     Usercoordinates,
     Useraddress,
     Cart,
-    CartPrice
+    CartPrice,
+    Productsdata
 })

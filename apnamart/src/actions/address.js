@@ -7,7 +7,7 @@ export const getuseraddress = (latitude, longtitude) => (dispatch) => {
     const auth = { "Auth": authvalue }
     return axios({
         method: 'post',
-        url: 'http://localhost:5000/getuserlocation',
+        url: 'http://localhost:5000/user/location',
         data: {
             location: `${latitude},${longtitude}`
         },

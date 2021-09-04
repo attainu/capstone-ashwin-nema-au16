@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
-import { profile } from '../../actions'
+import { profile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
 import EditModal from '../Edit Modal';
 
@@ -21,19 +21,7 @@ const Header = ({ children }) => {
     const dropdown = useRef()
     const opacity = useSelector(state => state.opacity)
     const headerref = useRef()
-
-    const AddToggleclass = () => {
-        dropdown.current.classList.add("show")
-    }
-    const RemoveToggleclass = () => {
-        dropdown.current.classList.remove("show")
-    }
-
-    const ClickToggle = () => {
-        if (dropdown.current.classList.contains("show") === true) dropdown.current.classList.remove("show")
-        else dropdown.current.classList.add("show")
-    }
-
+    const Productsdata = useSelector(state => state.Productsdata)
     useEffect(() => {
         changecount(cartcount)
     }, [cartcount])
@@ -56,6 +44,24 @@ const Header = ({ children }) => {
             headerref.current.style.filter = "brightness(0.3)"
         }
     }, [opacity, headerref])
+
+    useEffect(() => {
+        if (Object.keys(Productsdata.subcategories).length === 0 && Object.keys(Productsdata.products).length === 0) {
+            dispatch(getproductsdata())
+        } 
+    }, [Productsdata, dispatch])
+
+    const AddToggleclass = () => {
+        dropdown.current.classList.add("show")
+    }
+    const RemoveToggleclass = () => {
+        dropdown.current.classList.remove("show")
+    }
+
+    const ClickToggle = () => {
+        if (dropdown.current.classList.contains("show") === true) dropdown.current.classList.remove("show")
+        else dropdown.current.classList.add("show")
+    }
     return (
         <>
             {

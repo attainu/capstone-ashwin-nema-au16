@@ -45,8 +45,8 @@ const EditModal = () => {
         // url: 'https://apna-mart.herokuapp.com/editprofile'
 
         axios({
-            method: 'post',
-            url: 'http://localhost:5000/editprofile',
+            method: 'put',
+            url: 'http://localhost:5000/user/profile',
             data: {
                 Name: name,
                 Email: email,

@@ -2,11 +2,14 @@ import { Carouselitem } from '../../components'
 import Carousel from 'react-elastic-carousel'
 import { PATHS } from '../../config'
 import './index.css'
-import {Productsdata, Subcategorydata} from '../../Data'
+import { useSelector } from 'react-redux'
 
 export const Home = ({ history }) => {
-    const itemslist = Object.keys(Productsdata)
-    const subcategorylist = Object.keys(Subcategorydata)
+    const items = useSelector(state => state.Productsdata.products)
+    const itemslist = Object.keys(items)
+    const subcategories = useSelector(state => state.Productsdata.subcategories)
+    const subcategorylist = Object.keys(subcategories)
+
     const breakpoints = [
         { width: 500, itemsToShow: 3 },
         { width: 760, itemsToShow: 4 },
@@ -24,8 +27,7 @@ export const Home = ({ history }) => {
                     {
                         itemslist.map((item, index) => {
                             return (
-                                <Carouselitem history={history} key={index} itemname={item} itemdetails={Productsdata[item]}
-                                />
+                                <Carouselitem history={history} key={index} index={index} itemdetails={items[item]} />
                             )
                         })
                     }
@@ -40,16 +42,17 @@ export const Home = ({ history }) => {
                 <Carousel breakPoints={breakpoints}>
                     {
                         subcategorylist.map((item, index) => {
-                            const image = Subcategorydata[item].imageurl
+                            const image = subcategories[item].imageurl
+                            const name = subcategories[item].name
                             const Redirect = () => {
                                 history.push(`${PATHS.SUBCATEGORYPATH}${item}`)
                             }
 
                             return (
                                 <div key={index} className="card carouselcategorycontent ms-2">
-                                    <img onClick={Redirect} src={image} className="card-img-top carouselcategoryimage" alt={item} />
+                                    <img onClick={Redirect} src={image} className="card-img-top carouselcategoryimage" alt={name} />
                                     <div className="card-body">
-                                        <p onClick={Redirect} className="card-text">{item}</p>
+                                        <p onClick={Redirect} className="card-text">{name}</p>
                                     </div>
                                 </div>
                             )

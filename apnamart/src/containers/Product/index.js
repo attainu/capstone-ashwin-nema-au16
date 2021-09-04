@@ -4,37 +4,38 @@ import { useDispatch, useSelector } from 'react-redux'
 import { changecartstate, changecartprice } from '../../actions'
 import { PATHS } from '../../config'
 import { Fragment } from 'react'
-import { Productsdata } from '../../Data'
 
 const Product = ({ history }) => {
     const { add_new_item, remove_item, increase_item_count, decrease_item_count } = changecartstate
     const { itemname } = useParams()
     const dispatch = useDispatch()
+    const Productsdata = useSelector(state => state.Productsdata.products)
     const cartprice = useSelector(state => state.CartPrice)
     const cartitems = useSelector(state => state.Cart)
+    const { name, image, price, details, description, _id } = Productsdata[itemname]
     const count = cartitems[itemname] === undefined ? 0 : cartitems[itemname].count
-    
-    const { image, price, details, description } = Productsdata[itemname]
+
     const disabled = count < 20 ? "" : "disabled"
     const detailitems = Object.keys(details)
 
 
     const Add_to_cart = () => {
+        
         dispatch(changecartprice(cartprice + price))
         if (count === 0) {
-            dispatch(add_new_item({ itemname, price }))
+            dispatch(add_new_item({ _id, price}))
             return
         }
-        dispatch(increase_item_count(itemname))
+        dispatch(increase_item_count(_id))
 
     }
     const Remove_from_cart = () => {
         dispatch(changecartprice(cartprice - price))
         if (count === 1) {
-            dispatch(remove_item(itemname))
+            dispatch(remove_item(_id))
             return
         }
-        dispatch(decrease_item_count(itemname))
+        dispatch(decrease_item_count(_id))
     }
 
     if (Productsdata[itemname] === undefined) {
@@ -49,12 +50,12 @@ const Product = ({ history }) => {
                 <>
                     <div className="productcontent mt-3">
                         <div className="productimage">
-                            <img src={image} alt={itemname} />
+                            <img src={image} alt={name} />
                         </div>
 
                         <div className="productinformation">
                             <div>
-                                <h5>{itemname}</h5>
+                                <h5>{name}</h5>
                                 <p>M.R.P. ₹ {price}</p>
                             </div>
 
@@ -101,7 +102,6 @@ const Product = ({ history }) => {
                 </>
             }
         </>
-
 
     )
 

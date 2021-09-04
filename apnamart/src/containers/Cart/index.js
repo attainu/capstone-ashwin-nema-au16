@@ -43,8 +43,9 @@ const Usercart = ({nomargin}) => {
                     {count > 0 && <>
                         <SimpleBar style={{ height: "60vh" }}>
                             {Object.keys(cart).map((item, index) => {
+                                const count = cart[item].count
                                 return (
-                                    <Cartitem key={index}  item={item}  />
+                                    <Cartitem key={index}  item={item} count={count}  />
                                 )
                             })}
                         </SimpleBar>

@@ -7,14 +7,12 @@ import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
 import {deliverydate} from '../../utils'
 import { useState } from 'react'
-import {Productsdata} from '../../Data'
 
-export const Cartitem = ({ item }) => {
+export const Cartitem = ({ item, count }) => {
     const dispatch = useDispatch()
+    const Productsdata = useSelector(state => state.Productsdata.products)
     const { remove_item, increase_item_count, decrease_item_count } = changecartstate
-    const cartitems = useSelector(state => state.Cart)
-    const count = cartitems[item] === undefined ? 0 : cartitems[item].count
-    const { image, price } = Productsdata[item]
+    const { image, price, name } = Productsdata[item]
     const totalprice = useSelector(state => state.CartPrice)
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, changeshowmodalmessage] = useState(false)
@@ -29,7 +27,7 @@ export const Cartitem = ({ item }) => {
             dispatch(changecartprice(totalprice + price))
             return
         }
-        setmodalmessage(`You cannot order more than 20 items of ${item}`)
+        setmodalmessage(`You cannot order more than 20 items of ${name}`)
         changeshowmodalmessage(true)
     }
 
@@ -39,7 +37,7 @@ export const Cartitem = ({ item }) => {
             dispatch(changecartprice(totalprice - price))
             return
         }
-        setmodalmessage(`You cannot order less than 1 item of ${item}`)
+        setmodalmessage(`You cannot order less than 1 item of ${name}`)
         changeshowmodalmessage(true)
     }
 
@@ -52,11 +50,11 @@ export const Cartitem = ({ item }) => {
     return (
         <div className="mb-5 cartitem" >
             <div className="cartimagecontainer">
-                <Link to={`${PATHS.PRODUCTPATH}${item}`} ><img className="cartimage" src={image} alt={item} /></Link>
+                <Link to={`${PATHS.PRODUCTPATH}${item}`} ><img className="cartimage" src={image} alt={name} /></Link>
             </div>
             <div>
                 <h6>
-                    <Link className="text-decoration-none text-dark" to={`${PATHS.PRODUCTPATH}${item}`} >{item}</Link>
+                    <Link className="text-decoration-none text-dark" to={`${PATHS.PRODUCTPATH}${item}`} >{name}</Link>
                 </h6>
                 <p>₹ {price}</p>
                 <div className="addremovecartitem">

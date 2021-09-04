@@ -11,3 +11,5 @@ export {getuseraddress} from './address'
 export {changecartstate} from './cart'
 
 export {changecartprice} from './cartprice'
+
+export {getproductsdata} from './data'

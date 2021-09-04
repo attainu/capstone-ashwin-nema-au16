@@ -11,7 +11,7 @@ export const profile = () => (dispatch) => {
     const auth = { "Auth": authvalue }
     return axios({
         method: 'post',
-        url: 'http://localhost:5000/getprofile',
+        url: 'http://localhost:5000/user/profile',
         data: {},
         headers: auth
     }).then(resp => {

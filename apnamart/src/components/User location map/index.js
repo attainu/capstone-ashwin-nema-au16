@@ -31,7 +31,8 @@ class LocationMap extends React.Component {
         this.leafletmap = React.createRef()
         this.state = {
             displaymodaltouser: false,
-            modalmessage: ""
+            modalmessage: "",
+            modalvariant: "success"
         }
     }
 
@@ -79,12 +80,11 @@ class LocationMap extends React.Component {
 
 
         const showmodal = () => {
-            this.setState({ ...this.state, displaymodaltouser: true, modalmessage: "" })
             const authvalue = getAuthinbrowser() || ""
             const auth = { "Auth": authvalue }
             return axios({
-                method: 'post',
-                url: 'http://localhost:5000/saveuserlocation',
+                method: 'put',
+                url: 'http://localhost:5000/user/location',
                 data: {
                     location: `${this.props.coordinates[0]},${this.props.coordinates[1]}`,
                     Location: this.props.coordinates
@@ -92,17 +92,19 @@ class LocationMap extends React.Component {
                 headers: auth
 
             }).then((resp) => {
+                this.setState({ ...this.state, displaymodaltouser: true, modalmessage: "" })
                 if (resp.data.error !== "") {
-                    setmodalmessage(resp.data.error)
                     return
                 }
                 setmodalmessage("Location saved")
+
                 this.props.getuserprofile()
-                 if (this.props.setaddress !== undefined) {
+                if (this.props.setaddress !== undefined) {
                     this.props.setaddress(currentstate => !currentstate)
-                 }
+                }
                 return
             }).catch(() => {
+                console.log("Location could not be saved some error occurred")
                 setmodalmessage("Your Location cannot be saved. Some error occurred at backend")
             })
         }
@@ -157,13 +159,32 @@ class LocationMap extends React.Component {
                             <button onClick={showmodal} className="btn rounded-pill btn-primary">
                                 Save Location
                             </button>
+                            {
+                                this.state.modalmessage === "Location saved" &&
+                                <Modal centered show={this.state.displaymodaltouser} contentClassName="modalsuccess py-5" onHide={hidemodal}>
 
-                            <Modal centered show={this.state.displaymodaltouser} onHide={hidemodal}>
-                                <Modal.Body>
-                                    {this.state.modalmessage === "Location saved" && <span className="d-flex justify-content-center"> <CheckCircleOutlinedIcon style={{ color: "green" }} />
-                                        {this.state.modalmessage} </span>}
-                                </Modal.Body>
-                            </Modal>
+                                    <span className="d-flex justify-content-center ">
+                                        <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
+                                        <h5>
+                                        {this.state.modalmessage}
+                                        </h5>
+                                    </span>
+
+                                </Modal>
+
+                            }
+
+                            {
+                                this.state.modalmessage !== "Location saved" &&
+                                <Modal centered show={this.state.displaymodaltouser} contentClassName="modalalert text-danger py-5" onHide={hidemodal}>
+                                    <span className="d-flex justify-content-center ">
+                                        <h5>The location is not saved. Please try again</h5>
+                                    </span>
+
+                                </Modal>
+
+                            }
+
                         </>
                     }
                 </div>

@@ -8,7 +8,7 @@ const Cart = (state, action) => {
     const newcart = {...state}
     switch (action.type) {
         case new_item:
-            newcart[action.payload.itemname] = {count:1, price:action.payload.price}
+            newcart[action.payload._id] = {count:1, price:action.payload.price}
             return newcart
         
         case delete_item:
