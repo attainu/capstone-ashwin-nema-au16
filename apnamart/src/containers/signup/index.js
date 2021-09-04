@@ -12,11 +12,11 @@ import { mobilenumber_validator } from '../../utils'
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
-    const [Email, changeemail] = useState("")
-    const [Confirmedpassword, Changeconfirmedpassword] = useState("")
-    const [Password, changepassword] = useState("")
-    const [Mobilenumber, changedmobilenumber] = useState("")
-    const [Name, changename] = useState("")
+    const [Email, Changeemail] = useState("")
+    const [Confirmedpassword, ChangeConfirmedPassword] = useState("")
+    const [Password, ChangePassword] = useState("")
+    const [Mobilenumber, ChangeMobilenumber] = useState("")
+    const [Name, Changename] = useState("")
     const [errormessage, changeerrormessage] = useState("")
     const userprofile = useSelector(state => state.Profile)
     const [modal, showmodal] = useState(false)
@@ -42,7 +42,7 @@ export const Signup = ({ history }) => {
             return
         }
 
-        changedmobilenumber(e.target.value)
+        ChangeMobilenumber(e.target.value)
     }
 
     const hidemodal = () => {
@@ -108,22 +108,22 @@ export const Signup = ({ history }) => {
                         <form onSubmit={submithandler}>
 
                             <label className="form-label">Name</label>
-                            <input value={Name} onChange={(e) => changename(e.target.value)} className="form-control mb-3" type="text" />
+                            <input value={Name} onChange={(e) => Changename(e.target.value)} className="form-control mb-3" type="text" />
 
                             <label className="form-label">Email</label>
-                            <input value={Email} onChange={(e) => changeemail(e.target.value)} className="form-control mb-3" type="email" />
+                            <input value={Email} onChange={(e) => Changeemail(e.target.value)} className="form-control mb-3" type="email" />
 
                             <label className="form-label">Mobile Number</label>
                             <input value={Mobilenumber} onChange={setmobilenumber} className="form-control mb-3" type="tel" />
 
                             <label className="form-label">Password</label>
-                            <input value={Password} onChange={(e) => changepassword(e.target.value)} className="form-control mb-3" type="password" />
+                            <input value={Password} onChange={(e) => ChangePassword(e.target.value)} className="form-control mb-3" type="password" />
 
                             <label className="form-label">Confirm Password</label>
-                            <input value={Confirmedpassword} onChange={(e) => Changeconfirmedpassword(e.target.value)} className="form-control mb-3" type="password" />
+                            <input value={Confirmedpassword} onChange={(e) => ChangeConfirmedPassword(e.target.value)} className="form-control mb-3" type="password" />
 
                             <div className="d-flex justify-content-center">
-                                <button onClick={submithandler} className='btn btn-info text-center rounded-pill container-fluid signupbutton'>
+                                <button type="submit" className='btn btn-info text-center rounded-pill container-fluid signupbutton'>
                                     Submit
                                 </button>
                             </div>

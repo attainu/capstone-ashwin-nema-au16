@@ -7,21 +7,23 @@ import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { profile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
-import EditModal from '../Edit Modal';
 
 
 const Header = ({ children }) => {
     const dispatch = useDispatch()
     const [searchbar, changesearchvalue] = useState("")
     const [count, changecount] = useState(0)
-    const cart = useSelector(state => state.Cart)
-    const cartcount = Object.keys(cart).length
+
     const Auth = useSelector(state => state.Auth)
     const userprofile = useSelector(state => state.Profile)
-    const dropdown = useRef()
-    const opacity = useSelector(state => state.opacity)
-    const headerref = useRef()
     const Productsdata = useSelector(state => state.Productsdata)
+    const cart = useSelector(state => state.Cart)
+
+    const cartcount = Object.keys(cart).length
+    const { Name } = userprofile
+
+    const dropdown = useRef()
+
     useEffect(() => {
         changecount(cartcount)
     }, [cartcount])
@@ -32,28 +34,16 @@ const Header = ({ children }) => {
         }
     }, [Auth, dispatch, userprofile])
 
-    const { Name } = userprofile
-
-    useEffect(() => {
-        if (headerref.current !== undefined && opacity === 1) {
-            headerref.current.style.filter = "brightness(1)"
-            return
-        }
-
-        if (headerref.current !== undefined && opacity === 0.5) {
-            headerref.current.style.filter = "brightness(0.3)"
-        }
-    }, [opacity, headerref])
-
     useEffect(() => {
         if (Object.keys(Productsdata.subcategories).length === 0 && Object.keys(Productsdata.products).length === 0) {
             dispatch(getproductsdata())
-        } 
+        }
     }, [Productsdata, dispatch])
 
     const AddToggleclass = () => {
         dropdown.current.classList.add("show")
     }
+
     const RemoveToggleclass = () => {
         dropdown.current.classList.remove("show")
     }
@@ -62,14 +52,12 @@ const Header = ({ children }) => {
         if (dropdown.current.classList.contains("show") === true) dropdown.current.classList.remove("show")
         else dropdown.current.classList.add("show")
     }
+
     return (
         <>
-            {
-                opacity === 0.5 && Object.keys(userprofile).length === 5 && <EditModal />
-            }
 
             <div className="mainwrapper">
-                <div ref={headerref} className="header bg-warning">
+                <div  className="header bg-warning">
                     <div className="logo">
                         <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
                     </div>

@@ -79,7 +79,7 @@ export const Login = ({ history }) => {
                             <input value={Password} onChange={(e) => Changepassword(e.target.value)} className="form-control mb-3" type="password" />
 
                             <div className="d-flex justify-content-center">
-                                <button onClick={submithandler} className='btn btn-info text-center rounded-pill container-fluid loginupbutton'>
+                                <button type="submit" className='btn btn-info text-center rounded-pill container-fluid loginupbutton'>
                                     Submit
                                 </button>
                             </div>

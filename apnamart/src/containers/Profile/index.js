@@ -2,15 +2,17 @@ import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { PATHS } from '../../config'
 import { useEffect, useState } from 'react'
-import { profile, opacitychanger } from '../../actions'
+import { profile } from '../../actions'
 import { Userintro, OrderSection, Viewcartoption, Viewlocationoption, UserAccountInformation, LocationMap } from '../../components'
 import Usercart from '../Cart'
 
 const Profile = ({ history }) => {
-    const userprofile = useSelector(state => state.Profile)
-    const opacity = useSelector(state => state.opacity)
-    const Auth = useSelector(state => state.Auth)
     const dispatch = useDispatch()
+
+    const userprofile = useSelector(state => state.Profile)
+    const { Name } = userprofile
+    const Auth = useSelector(state => state.Auth)
+
     const [selectcomponenttodisplay, changedisplaycomponent] = useState("accountinformation")
 
     useEffect(() => {
@@ -24,27 +26,8 @@ const Profile = ({ history }) => {
         document.body.style.backgroundColor = "#f1f3f6"
         return () => {
             document.body.style.backgroundColor = "white"
-            dispatch(opacitychanger(1))
         }
     }, [userprofile, history, dispatch, Auth])
-
-    useEffect(() => {
-
-        switch (opacity) {
-            case 1:
-                document.body.style.backgroundColor = "#f1f3f6"
-                return
-
-            case 0.5:
-                document.body.style.backgroundColor = "rgb(0, 0, 0,0.5)"
-                return
-
-            default:
-                return
-        }
-    }, [opacity])
-
-    const { Name } = userprofile
 
     return (
         <>
