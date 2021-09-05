@@ -2,7 +2,7 @@ import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { PATHS } from '../../config'
 import { useEffect, useState } from 'react'
-import { profile } from '../../actions'
+import { getuserprofile } from '../../actions'
 import { Userintro, OrderSection, Viewcartoption, Viewlocationoption, UserAccountInformation, LocationMap } from '../../components'
 import Usercart from '../Cart'
 
@@ -17,12 +17,13 @@ const Profile = ({ history }) => {
 
     useEffect(() => {
         if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
-            dispatch(profile())
+            dispatch(getuserprofile())
         }
 
         else if (Object.keys(userprofile).length === 0) {
             history.push(PATHS.HOME)
         }
+        
         document.body.style.backgroundColor = "#f1f3f6"
         return () => {
             document.body.style.backgroundColor = "white"

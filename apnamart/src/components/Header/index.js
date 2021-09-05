@@ -5,9 +5,8 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
-import { profile, getproductsdata } from '../../actions'
+import { getuserprofile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
-
 
 const Header = ({ children }) => {
     const dispatch = useDispatch()
@@ -29,8 +28,8 @@ const Header = ({ children }) => {
     }, [cartcount])
 
     useEffect(() => {
-        if (Auth !== "" && Object.keys(userprofile).length === 0) {
-            dispatch(profile())
+        if (Auth !== " " && Object.keys(userprofile).length === 0) {
+            dispatch(getuserprofile())
         }
     }, [Auth, dispatch, userprofile])
 

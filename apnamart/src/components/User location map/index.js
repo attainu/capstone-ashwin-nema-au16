@@ -5,15 +5,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import axios from 'axios'
-import { getAuthinbrowser } from '../../utils'
-import { profile } from '../../actions'
+import { setprofile } from '../../actions'
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 
 const mapStatetoprops = state => {
     return {
         coordinates: state.Usercoordinates,
         profilelocation: state.Profile.Location,
-        address: state.Useraddress
+        address: state.Useraddress,
+        auth:state.Auth,
+        userprofile:state.Profile
     }
 }
 
@@ -21,7 +22,7 @@ const mapdispatchtoprops = (dispatch) => {
     return {
         getusercoordinates: (latitude, longtitude) => dispatch(setlocationcoordinates([latitude, longtitude])),
         getuseraddress: (latitude, longtitude) => dispatch(getuseraddress(latitude, longtitude)),
-        getuserprofile: () => dispatch(profile())
+        setuserprofile: (userdata) => dispatch(setprofile(userdata))
     }
 }
 
@@ -31,23 +32,22 @@ class LocationMap extends React.Component {
         this.leafletmap = React.createRef()
         this.state = {
             displaymodaltouser: false,
-            modalmessage: "",
-            modalvariant: "success"
+            modalmessage: ""
         }
     }
 
     componentDidMount() {
-        let coordinatesofmap = this.props.profilelocation
-        this.props.getusercoordinates(coordinatesofmap[0], coordinatesofmap[1])
-        this.props.getuseraddress(coordinatesofmap[0], coordinatesofmap[1])
-        const usermap = L.map(this.leafletmap.current).setView(coordinatesofmap, 16)
+        const [userlatitude, userlongtitude] = this.props.userprofile.Location
+        this.props.getusercoordinates(userlatitude, userlongtitude)
+        this.props.getuseraddress(userlatitude, userlongtitude)
+        const usermap = L.map(this.leafletmap.current).setView([userlatitude, userlongtitude], 16)
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(usermap)
 
-        const customermarker = L.marker(coordinatesofmap)
+        const customermarker = L.marker([userlatitude, userlongtitude])
         customermarker.addTo(usermap)
-        const customercircle = L.circle(coordinatesofmap, { radius: 100 }).addTo(usermap)
+        const customercircle = L.circle([userlatitude, userlongtitude], { radius: 100 }).addTo(usermap)
         const centermarker = () => {
             const newLatLng = new L.LatLng(usermap.getCenter().lat, usermap.getCenter().lng);
             customermarker.setLatLng(newLatLng)
@@ -78,10 +78,8 @@ class LocationMap extends React.Component {
             this.setState({ ...this.state, modalmessage: message })
         }
 
-
         const showmodal = () => {
-            const authvalue = getAuthinbrowser() || ""
-            const auth = { "Auth": authvalue }
+            const auth = { "Auth": this.props.auth  }
             return axios({
                 method: 'put',
                 url: 'http://localhost:5000/user/location',
@@ -93,16 +91,18 @@ class LocationMap extends React.Component {
 
             }).then((resp) => {
                 this.setState({ ...this.state, displaymodaltouser: true, modalmessage: "" })
+
                 if (resp.data.error !== "") {
                     return
                 }
-                setmodalmessage("Location saved")
 
-                this.props.getuserprofile()
+                setmodalmessage("Location saved")
+                const {Name, Mobilenumber,Email} = this.props.userprofile
+                this.props.setuserprofile({Name, Mobilenumber, Email, Location:this.props.coordinates})
+
                 if (this.props.setaddress !== undefined) {
                     this.props.setaddress(currentstate => !currentstate)
                 }
-                return
             }).catch(() => {
                 console.log("Location could not be saved some error occurred")
                 setmodalmessage("Your Location cannot be saved. Some error occurred at backend")
@@ -115,11 +115,9 @@ class LocationMap extends React.Component {
 
         return (
             <>
-
                 <h3>Select your location</h3>
                 <div ref={this.leafletmap} className="leafletmap">
                 </div>
-
 
                 <div className="mt-3 p-3 profilecontentdisplaycolor ">
                     {this.props.address.length > 1 &&
@@ -142,7 +140,6 @@ class LocationMap extends React.Component {
 
                         })
                     }
-
 
                     {this.props.address.length === 1 && this.props.address[0] === "Sorry we do not serve your area" ?
                         <span className="text-danger">Sorry we do not serve your area</span> : <></>

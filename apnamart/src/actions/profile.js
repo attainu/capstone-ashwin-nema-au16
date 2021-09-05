@@ -1,11 +1,11 @@
 import axios from "axios"
-import { getprofile } from "../actionTypes"
+import { profile } from "../actionTypes"
 import { getAuthinbrowser } from '../utils'
 import { authsetter } from './auth'
 // url: 'https://apna-mart.herokuapp.com/getprofile',
 // url: 'http://localhost:3000/getprofile',
 // url: 'http://localhost:5000/getprofile',
-export const profile = () => (dispatch) => {
+export const getuserprofile = () => (dispatch) => {
     const authvalue = getAuthinbrowser() || ""
     
     const auth = { "Auth": authvalue }
@@ -17,7 +17,7 @@ export const profile = () => (dispatch) => {
     }).then(resp => {
         
         if (resp.data.error === "") {
-            dispatch({ type: getprofile, payload: resp.data })
+            dispatch({ type: profile, payload: resp.data })
             return
         }
         
@@ -27,3 +27,5 @@ export const profile = () => (dispatch) => {
         console.log("Get profile request failed")
     } )
 }
+
+export const setprofile =  (profiledata) => ({type:profile,payload:profiledata})

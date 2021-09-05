@@ -33,7 +33,8 @@ user_router.post("/signup", async (req, res) => {
         const newuser = new UserModel(req.body)
         const finaluser = await newuser.save()
         const token = accesstokengenerator(finaluser._id)
-        return res.json({ error: "", token })
+        const {Name, Email, Mobilenumber, Location} = finaluser
+        return res.json({ error: "", token,Name, Email, Mobilenumber, Location })
 
     } catch (error) {
         return res.json({ error: "Inputs provided are not valid" })
@@ -46,11 +47,12 @@ user_router.post("/login", async (req, res) => {
         const isMatching = await bcrypt.compare(req.body.Password, user.Password)
         if (user != null && isMatching) {
             const token = accesstokengenerator(user._id)
-            return res.json({ error: "", token })
+            const {Name, Email, Mobilenumber, Location} = user
+            return res.json({ error: "", token, Name, Email, Mobilenumber, Location })
         }
 
     } catch (error) {
-        return res.json({ error: "Please signup to continue" })
+        return res.json({ error: "Please SignUp to continue" })
     }
 
     return res.json({ error: "Password provided was not correct" })
@@ -77,21 +79,21 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
 
         if (req.body.Name === undefined || req.body.Name.length === 0) return res.json({ errror: "Name is not valid" })
 
-        const email = await validate_email(req.body.Email, verifieduser.id)
-        const mobilenumber = await validate_mobile_number(req.body.Mobilenumber, verifieduser.id)
+        const email = await validate_email(req.body.Email, req.verifieduser.id)
+        const mobilenumber = await validate_mobile_number(req.body.Mobilenumber, req.verifieduser.id)
 
         if (req.verifieduser.id != email) {
-            return res.json({ error: "Another user with this email exists" })
+            return res.json({ error: "Sorry another user with this email already exists" })
         }
 
         if (req.verifieduser.id != mobilenumber) {
-            return res.json({ error: "Another user with this mobile number exists" })
+            return res.json({ error: "Sorry another user with this mobile number already exists" })
         }
 
         let editeduser = {}
 
         if (req.body.Password !== "" && req.body.NewPassword !== "" && typeof req.body.NewPassword === "string") {
-            const oldpassword = await validate_password(req.body.Password, verifieduser.id)
+            const oldpassword = await validate_password(req.body.Password, req.verifieduser.id)
             if (oldpassword === true) {
                 const salt = await bcrypt.genSalt(10)
                 const hash = await bcrypt.hash(req.body.NewPassword, salt)
@@ -107,7 +109,7 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
         return res.json({ error: "" })
 
     } catch (error) {
-        console.log("Error occurred while editing profile")
+        console.log("Error occurred while saving profile data")
         return res.json({ error: "Error occurred at backend" })
     }
 })
@@ -140,6 +142,7 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
     }
 
     catch(error) {
+        console.log("Error occurred while saving new user location")
         return res.json({ error: "Location not saved" })
     }
 })

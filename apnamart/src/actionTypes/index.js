@@ -1,4 +1,4 @@
-export {getprofile} from './profile'
+export {profile} from './profile'
 
 export {setauth} from './auth'
 

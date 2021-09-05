@@ -1,1 +1,1 @@
-export const getprofile = 'Get User Profile'
+export const profile = 'User profile data'

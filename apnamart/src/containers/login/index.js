@@ -2,7 +2,7 @@ import './index.css'
 import { useState } from 'react'
 import axios from 'axios'
 import { PATHS } from '../../config'
-import { authsetter, profile } from '../../actions'
+import { authsetter, setprofile } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 import { Modal } from 'react-bootstrap'
@@ -10,11 +10,15 @@ import * as yup from 'yup'
 
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
+
     const [Email, Changeemail] = useState("")
     const [Password, Changepassword] = useState("")
     const [errormessage, changeerrormessage] = useState("")
+
     const userprofile = useSelector(state => state.Profile)
+
     const [modal, showmodal] = useState(false)
+
     const schema = yup.object().shape({
         Password: yup.string().required(),
         Email: yup.string().email().required()
@@ -48,8 +52,9 @@ export const Login = ({ history }) => {
                 return
             }
 
+            const {Name, Email, Mobilenumber, Location} = response.data
             dispatch(authsetter(response.data.token))
-            dispatch(profile())
+            dispatch(setprofile({Name, Email, Mobilenumber, Location}))
             history.push(PATHS.HOME)
             return
 
@@ -88,12 +93,14 @@ export const Login = ({ history }) => {
                 </div>
                 <div className="col-2"></div>
             </div>
+
             <Modal centered show={modal} contentClassName="modalalert text-danger py-5" onHide={hidemodal}>
                 <span className="d-flex justify-content-center ">
                     <h5>{errormessage}</h5>
                 </span>
 
             </Modal>
+
         </>
     )
 }

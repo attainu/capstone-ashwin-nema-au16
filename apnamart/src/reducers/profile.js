@@ -1,11 +1,11 @@
-import {getprofile} from '../actionTypes'
+import {profile} from '../actionTypes'
 
 const initialstate = {}
 
 const Profile = (state, action) => {
     state = state || initialstate
 
-    if (action.type === getprofile) {
+    if (action.type === profile) {
         return action.payload
     }
 

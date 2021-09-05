@@ -4,7 +4,7 @@ import * as yup from 'yup'
 import './index.css'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import { authsetter, profile } from '../../actions'
+import { authsetter,  setprofile } from '../../actions'
 import { PATHS } from '../../config'
 import { Redirect } from 'react-router'
 import { Modal } from 'react-bootstrap'
@@ -84,7 +84,8 @@ export const Signup = ({ history }) => {
             }
 
             dispatch(authsetter(response.data.token))
-            dispatch(profile())
+            const {Name, Email, Location} = response.data
+            dispatch(setprofile({Name, Email, Location, Mobilenumber:response.data.Mobilenumber}))
             history.push(PATHS.HOME)
             return
 
