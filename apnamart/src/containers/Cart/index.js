@@ -54,7 +54,7 @@ const Usercart = ({nomargin}) => {
                 {count > 0 && <div className="profilecontentdisplaycolor pe-3 ps-3 py-3 usercartpaymentsection">
                     <h5>Price details(Summary)</h5>
                     <hr />
-                    <div className="paymentdetailsitem">
+                    <div className="space-between smalltext">
                         <div>
                             <strong>Item</strong>
                         </div>
@@ -64,7 +64,7 @@ const Usercart = ({nomargin}) => {
                         </div>
                     </div>
                     
-                    <Ordersummary ordersummaryclass="paymentdetailsitem" />
+                    <Ordersummary ordersummaryclass="space-between smalltext" />
  
                     <div className="d-flex justify-content-center mt-3">
                         <Link to={PATHS.CHECKOUT} >

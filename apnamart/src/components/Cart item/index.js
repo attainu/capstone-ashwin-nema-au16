@@ -56,7 +56,7 @@ export const Cartitem = ({ item, count }) => {
                     <Link className="text-decoration-none text-dark" to={`${PATHS.PRODUCTPATH}${item}`} >{name}</Link>
                 </h6>
                 <p>₹ {price}</p>
-                <div className="addremovecartitem">
+                <div className="space-between">
                     <div className="increasedecreasecartitem w-25">
                         <div>
                             <button onClick={decreaseitemcount} className={`w-50 rounded-circle buttondisplay bordernone bg-warning

@@ -51,12 +51,12 @@ const CheckoutPage = ({ history }) => {
                                     </div>
                                 </Accordion.Header>
                                 <Accordion.Body>
-                                    <div className="checkoutsummary">
+                                    <div className="space-between">
                                         <div><strong>Items({count})</strong> </div>
                                         <div><strong>Price</strong> </div>
                                     </div>
 
-                                    <Ordersummary ordersummaryclass="checkoutsummary" />
+                                    <Ordersummary ordersummaryclass="space-between" />
                                 </Accordion.Body>
                             </Accordion.Item>
 

@@ -35,7 +35,7 @@ const Carouselitem = ({ itemdetails, history }) => {
     }
     return (
         <>
-            <div className="productcarousel border ms-2">
+            <div className="productcarousel space-between border ms-2 w-100">
                 <div className="productcarouselimage text-center">
                     <img onClick={Redirect} alt={name}  src={image} className="cardimage" />
                 </div>
@@ -43,7 +43,7 @@ const Carouselitem = ({ itemdetails, history }) => {
                 <span className="text-center">Rs. {price}</span>
 
                 {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning">Add to cart</button> : <>
-                    <div className="addingbutton">
+                    <div className="space-between">
                         <button onClick={Remove_from_cart} className="btn btn-warning cartbutton rounded-circle d-flex justify-content-center">-</button>
                         <div className="itemcarouselcount">{count}</div>
                         <button onClick={Add_to_cart} className={`btn btn-warning cartbutton rounded-circle d-flex justify-content-center ${disabled}`}>+</button>

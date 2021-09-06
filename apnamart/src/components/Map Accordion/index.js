@@ -29,7 +29,7 @@ const MapAccordion = ({userlocationaddress, setaddress}) => {
         <div className="checkoutaccordion mt-5">
             <Card>
                 <Card.Header>
-                    <div className="checkoutaccordionheader">
+                    <div className="space-between checkoutaccordionheader">
                         <div className="me-3">
                             <h6>Current delivery address</h6>
                             <div>

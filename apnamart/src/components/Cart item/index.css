@@ -16,10 +16,6 @@
     position: absolute;
 }
 
-.addremovecartitem {
-    display: flex;
-    justify-content: space-between;
-}
 
 .increasedecreasecartitem {
     display: grid;

@@ -14,11 +14,6 @@
     cursor: pointer;
 }
 
-.editingmodal {
-    background-color: transparent;
-    border: none;
-}
-
 .modalinput{
     border: none;
     outline: none;

@@ -10,35 +10,44 @@ const Subcategory = ({ history }) => {
     const Productsdata = useSelector(state => state.Productsdata.products)
     const Subcategories = useSelector(state => state.Productsdata.subcategories)
     const [Subcategorydata, changeSubcategorydata ] = useState([])
-    const [errormessage, seterrormessage] = useState("")
+    const [currenid, changecurrenid] = useState("")
 
     useEffect(() => {
-        if (Subcategories[subcategoryname] === undefined) {
-            history.push(PATHS.HOME)
-            return
-        }
-
+        let flag
         if (Subcategorydata.length === 0) {
-            return axios({
+            axios({
                 method:'post',
                 url:`http://localhost:5000/subcategory/${subcategoryname}`,
             }).then(resp => {
                 if (resp.data.error !== "") {
-                    seterrormessage("Sorry data could not be loaded. Please refresh the page")
-                    return
+                    history.push(PATHS.HOME)
                 }
                 changeSubcategorydata([...resp.data.result])
+                changecurrenid(subcategoryname)
+                flag = true
+                return
             }).catch(() => {
-                seterrormessage("Sorry data could not be loaded. Please refresh the page")
+                flag = false
+                history.push(PATHS.HOME)
             })
         }
 
+        if (flag !== undefined && flag !== true) {
+            history.push(PATHS.HOME)  
+        }
+        
     }, [Subcategories, Subcategorydata, history, subcategoryname])
 
+    useEffect(() => {
+        if (currenid.length > 0 && subcategoryname !== currenid) {
+            changeSubcategorydata([])
+            console.log("Data will get changed")
+        }
+    }, [currenid, subcategoryname])
     return (
         <>
             {
-                Subcategories[subcategoryname] !== undefined && errormessage === "" &&
+                Subcategories[subcategoryname] !== undefined  &&
                 <>
                     <h3 className="mt-3 ms-2">{Subcategories[subcategoryname].name}</h3>
 

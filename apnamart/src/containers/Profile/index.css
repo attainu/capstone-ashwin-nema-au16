@@ -32,3 +32,8 @@
 .ultrasmalltext {
     font-size: xx-small;
 }
+
+.modalwithoutcolor {
+    background-color: transparent;
+    border: none;
+}

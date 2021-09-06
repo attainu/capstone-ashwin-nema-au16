@@ -133,7 +133,7 @@ export const UserAccountInformation = () => {
                             Edit
                         </div>
 
-                        <Modal centered show={modal} contentClassName="editingmodal" onHide={hidemodal}>
+                        <Modal centered show={modal} contentClassName="modalwithoutcolor" onHide={hidemodal}>
                             <div className="d-flex justify-content-center mb-3">
                                 <CancelRoundedIcon className="closeeditingbutton" onClick={hidemodal} />
                             </div>
@@ -180,7 +180,7 @@ export const UserAccountInformation = () => {
                             </Alert>
                         </Modal>
 
-                        <Modal show={errormodal} contentClassName="editingmodal" onHide={hideerrormodal}>
+                        <Modal show={errormodal} contentClassName="modalwithoutcolor" onHide={hideerrormodal}>
                             <Alert variant="danger">
                                 <h6>
                                     {errormessage}
@@ -188,7 +188,7 @@ export const UserAccountInformation = () => {
                             </Alert>
                         </Modal>
 
-                        <Modal show={datasavedmodal} contentClassName="editingmodal" onHide={hidedatesavedmodal}>
+                        <Modal show={datasavedmodal} contentClassName="modalwithoutcolor" onHide={hidedatesavedmodal}>
                             <Alert variant="success">
                                 <h6>
                                     Your profile has successfully been updated <CheckCircleIcon style={{ color: "green" }} />

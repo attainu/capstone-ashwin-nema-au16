@@ -7,14 +7,16 @@ import { Modal } from 'react-bootstrap'
 import axios from 'axios'
 import { setprofile } from '../../actions'
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
+import { Alert } from 'react-bootstrap'
+import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 
 const mapStatetoprops = state => {
     return {
         coordinates: state.Usercoordinates,
         profilelocation: state.Profile.Location,
         address: state.Useraddress,
-        auth:state.Auth,
-        userprofile:state.Profile
+        auth: state.Auth,
+        userprofile: state.Profile
     }
 }
 
@@ -32,7 +34,8 @@ class LocationMap extends React.Component {
         this.leafletmap = React.createRef()
         this.state = {
             displaymodaltouser: false,
-            modalmessage: ""
+            modalmessage: "",
+            modalvariant: "success"
         }
     }
 
@@ -74,12 +77,17 @@ class LocationMap extends React.Component {
     }
 
     render() {
-        const setmodalmessage = (message) => {
-            this.setState({ ...this.state, modalmessage: message })
+
+
+        const showmodalwithmessage = (message, showmodal, variant) => {
+            const displaymessage = message || this.state.modalmessage
+            const displaymodal = showmodal || this.state.displaymodaltouser
+            const modalvariant = variant || this.state.modalvariant
+            this.setState({ ...this.state, displaymodaltouser: displaymodal, modalmessage: displaymessage, modalvariant: modalvariant })
         }
 
         const showmodal = () => {
-            const auth = { "Auth": this.props.auth  }
+            const auth = { "Auth": this.props.auth }
             return axios({
                 method: 'put',
                 url: 'http://localhost:5000/user/location',
@@ -90,22 +98,21 @@ class LocationMap extends React.Component {
                 headers: auth
 
             }).then((resp) => {
-                this.setState({ ...this.state, displaymodaltouser: true, modalmessage: "" })
-
                 if (resp.data.error !== "") {
+                    showmodalwithmessage(resp.data.error, true, "danger")
                     return
                 }
 
-                setmodalmessage("Location saved")
-                const {Name, Mobilenumber,Email} = this.props.userprofile
-                this.props.setuserprofile({Name, Mobilenumber, Email, Location:this.props.coordinates})
+                showmodalwithmessage("Location saved", true, "warning")
+                const { Name, Mobilenumber, Email } = this.props.userprofile
+                this.props.setuserprofile({ Name, Mobilenumber, Email, Location: this.props.coordinates })
 
                 if (this.props.setaddress !== undefined) {
                     this.props.setaddress(currentstate => !currentstate)
                 }
             }).catch(() => {
                 console.log("Location could not be saved some error occurred")
-                setmodalmessage("Your Location cannot be saved. Some error occurred at backend")
+                showmodalwithmessage("Sorry you location could not be saved. Please try again later", true, "danger")
             })
         }
 
@@ -115,7 +122,9 @@ class LocationMap extends React.Component {
 
         return (
             <>
-                <h3>Select your location</h3>
+                <div className="space-between">
+                    <h3>Select your location</h3>
+                </div>
                 <div ref={this.leafletmap} className="leafletmap">
                 </div>
 
@@ -156,32 +165,37 @@ class LocationMap extends React.Component {
                             <button onClick={showmodal} className="btn rounded-pill btn-primary">
                                 Save Location
                             </button>
-                            {
-                                this.state.modalmessage === "Location saved" &&
-                                <Modal centered show={this.state.displaymodaltouser} contentClassName="modalsuccess py-5" onHide={hidemodal}>
 
+                            <Modal centered show={this.state.displaymodaltouser} contentClassName="modalwithoutcolor py-5" onHide={hidemodal}>
+                                <Alert variant={`${this.state.modalvariant}`}>
                                     <span className="d-flex justify-content-center ">
-                                        <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
-                                        <h5>
-                                        {this.state.modalmessage}
-                                        </h5>
+                                        {
+                                            this.state.modalmessage === "Location saved" ?
+                                                <>
+                                                    <div className="d-flex flex-column">
+                                                        <div className="d-flex justify-content-center">
+                                                            <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
+                                                        </div>
+
+                                                        <div >
+                                                            <h5>
+                                                                {this.state.modalmessage}
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <ErrorRoundedIcon style={{ color: "red" }} />
+                                                    <h5>
+                                                        {this.state.modalmessage}
+                                                    </h5>
+                                                </>
+                                        }
+
                                     </span>
-
-                                </Modal>
-
-                            }
-
-                            {
-                                this.state.modalmessage !== "Location saved" &&
-                                <Modal centered show={this.state.displaymodaltouser} contentClassName="modalalert text-danger py-5" onHide={hidemodal}>
-                                    <span className="d-flex justify-content-center ">
-                                        <h5>The location is not saved. Please try again</h5>
-                                    </span>
-
-                                </Modal>
-
-                            }
-
+                                </Alert>
+                            </Modal>
                         </>
                     }
                 </div>

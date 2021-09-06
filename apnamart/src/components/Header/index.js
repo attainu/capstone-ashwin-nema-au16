@@ -1,6 +1,6 @@
 import './index.css'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import SearchBar from 'material-ui-search-bar'
+import {InputSearchBar} from '../Search bar'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,6 @@ import { useRef } from 'react';
 
 const Header = ({ children }) => {
     const dispatch = useDispatch()
-    const [searchbar, changesearchvalue] = useState("")
     const [count, changecount] = useState(0)
 
     const Auth = useSelector(state => state.Auth)
@@ -56,14 +55,14 @@ const Header = ({ children }) => {
         <>
 
             <div className="mainwrapper">
-                <div  className="header bg-warning">
+                <div  className="header space-between bg-warning pb-2">
                     <div className="logo">
                         <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
                     </div>
 
                     <div className="searchbar d-flex flex-column">
-                        <SearchBar value={searchbar} onChange={(newvalue) => changesearchvalue(newvalue)}></SearchBar>
-                        <div className="navspace"></div>
+                        <InputSearchBar />
+
                     </div>
 
                     <div className="nav-item">
@@ -91,9 +90,9 @@ const Header = ({ children }) => {
                                         {Name.slice(0, 12)}
                                     </button>
                                     <ul onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
-                                        <Link to={PATHS.PROFILE}><li><p className="dropdown-item" >Action</p></li></Link>
-                                        <li><p className="dropdown-item" >Another action</p></li>
-                                        <li><p className="dropdown-item" >Something else here</p></li>
+                                        <Link className="text-decoration-none" to={PATHS.PROFILE}><li><p className="dropdown-item" >Profile</p></li></Link>
+                                        <li><p className="dropdown-item" >Logout</p></li>
+                                        <li><p className="dropdown-item" >Delete Account</p></li>
                                     </ul>
                                 </div>
                             </div>
