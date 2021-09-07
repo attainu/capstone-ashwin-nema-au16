@@ -6,6 +6,6 @@ export {email_validator, mobilenumber_validator} from './validator'
 
 export {deliverydate} from './deliverydate'
 
-export {covertarraytoobject} from './arraytoobject'
+export {covertarraytoobject, searchdatafilter} from './array operations'
 
 export {SetAddressContext} from './contexts'

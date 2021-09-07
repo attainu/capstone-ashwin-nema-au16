@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { PATHS } from '../../config'
 import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css';
+import {searchdatafilter} from '../../utils'
 
 export const InputSearchBar = () => {
     const [searchbar, changesearchvalue] = useState("")
@@ -48,26 +49,8 @@ export const InputSearchBar = () => {
 
     useEffect(() => {
         if (searchbar !== "" && searchbar.trim() !== "") {
-            const regx = new RegExp(searchbar.trim(), 'i')
-
-            const productslist = Object.keys(products).reduce((totalproducts, item) => {
-                if (regx.test(products[item].name) === true) {
-                    const productobject = { name: products[item].name, id: products[item]._id, image: products[item].image }
-                    totalproducts.push(productobject)
-                }
-                return totalproducts
-            }, [])
-            changeproductresults([...productslist])
-
-            const subcategorylist = Object.keys(subcategories).reduce((totalsubcategories, item) => {
-                if (regx.test(subcategories[item].name) === true) {
-                    const subcategoryobject = { name: subcategories[item].name, id: subcategories[item]._id, image: subcategories[item].imageurl }
-                    totalsubcategories.push(subcategoryobject)
-                }
-                return totalsubcategories
-            }, [])
-
-            changesubcategoryresults([...subcategorylist])
+            searchdatafilter(products, searchbar, changeproductresults)
+            searchdatafilter(subcategories, searchbar, changesubcategoryresults)
             return
         }
         changeproductresults([])

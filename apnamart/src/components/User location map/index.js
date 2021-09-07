@@ -66,14 +66,14 @@ export default function LocationMap() {
     const Auth = useSelector(state => state.Auth)
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState('warning')
-    const [modalmessage, changemodalmessage] = useState('')
+    const modalmessage = useRef("")
 
     const hidemodal = () => {
         showmodal(false)
     }
 
     const displaymodaltouser = (message) => {
-        changemodalmessage(message)
+        modalmessage.current = message
         showmodal(true)
         if (message === "Location saved") {
             changemodalvariant('warning')
@@ -99,7 +99,7 @@ export default function LocationMap() {
             .then(
                 ({ state }) => {
                     if (state === "denied") {
-                        displaymodaltouser("You have to enable location access in the browser first")
+                        displaymodaltouser("You have to enable location access in the browser first in order to enable map to find your location")
                     }
                 }
             )
@@ -211,7 +211,7 @@ export default function LocationMap() {
                                 <Alert variant={`${modalvariant}`}>
                                     <span className="d-flex justify-content-center ">
                                         {
-                                            modalmessage === "Location saved" ?
+                                            modalmessage.current === "Location saved" ?
                                                 <>
                                                     <div className="d-flex flex-column">
                                                         <div className="d-flex justify-content-center">
@@ -220,7 +220,7 @@ export default function LocationMap() {
 
                                                         <div >
                                                             <h5>
-                                                                {modalmessage}
+                                                                {modalmessage.current}
                                                             </h5>
                                                         </div>
                                                     </div>
@@ -229,7 +229,7 @@ export default function LocationMap() {
                                                 <>
                                                     <ErrorRoundedIcon style={{ color: "red" }} />
                                                     <h5>
-                                                        {modalmessage}
+                                                        {modalmessage.current}
                                                     </h5>
                                                 </>
                                         }

@@ -6,6 +6,7 @@ import { getuserprofile } from '../../actions'
 import { Userintro, OrderSection, Viewcartoption, Viewlocationoption, UserAccountInformation, LocationMap } from '../../components'
 import Usercart from '../Cart'
 
+
 const Profile = ({ history }) => {
     const dispatch = useDispatch()
 

@@ -8,6 +8,7 @@ import Profile from '../containers/Profile'
 import Usercart from '../containers/Cart'
 import CheckoutPage from '../containers/Checkout'
 
+
 const routes = [
     {exact:true, path:PATHS.HOME, component:Home},
     {exact:true, path:PATHS.LOGIN, component:Login},

@@ -4,7 +4,7 @@ import { useTransition, animated } from 'react-spring'
 import React from "react";
 import LocationMap from '../User location map'
 
-const MapAccordion = ({userlocationaddress, setaddress}) => {
+const MapAccordion = ({userlocationaddress}) => {
     const [isvisible, changevisibility] = useState(false)
     const transition = useTransition(isvisible, {
         from: { height: "0vh" },

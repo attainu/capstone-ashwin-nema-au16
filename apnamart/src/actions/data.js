@@ -4,13 +4,9 @@ import {covertarraytoobject} from '../utils'
 
 const { products_data, subcategory_data} = data
 
-<<<<<<< HEAD
-
-=======
 // url: 'https://apna-mart.herokuapp.com/getprofile',
 // url: 'http://localhost:3000/getprofile',
 // url: 'http://localhost:5000/getprofile',
->>>>>>> 6a54792ca00c8a1960946eeb77baea50ca0d03c9
 export const getproductsdata = () => (dispatch) => {
     return axios({
         method: 'post',

@@ -80,6 +80,7 @@ export const Signup = ({ history }) => {
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
                 changeerrormessage(response.data.error)
+                showmodal(true)
                 return
             }
 
