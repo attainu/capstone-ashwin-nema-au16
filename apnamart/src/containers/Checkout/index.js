@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { getuseraddress } from '../../actions'
 import { Accordion } from 'react-bootstrap'
 import { PATHS } from '../../config'
-import {Ordersummary, MapAccordion, PaymentSection} from '../../components'
+import { Ordersummary, MapAccordion, PaymentSection } from '../../components'
+import { SetAddressContext } from '../../utils'
 
 const CheckoutPage = ({ history }) => {
     const dispatch = useDispatch()
@@ -38,7 +39,9 @@ const CheckoutPage = ({ history }) => {
         <>
             {Location !== undefined && count > 0 &&
                 <>
-                    <MapAccordion userlocationaddress={userlocationaddress} setaddress={setaddress} />
+                    <SetAddressContext.Provider value={setaddress} >
+                        <MapAccordion userlocationaddress={userlocationaddress} setaddress={setaddress} />
+                    </SetAddressContext.Provider>
 
                     <div className="checkoutaccordion mt-5">
                         <Accordion className="w-75" defaultActiveKey="0">

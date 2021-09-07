@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
+// url: 'https://apna-mart.herokuapp.com/getprofile',
+// url: 'http://localhost:3000/getprofile',
+// url: 'http://localhost:5000/getprofile',
+
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
 

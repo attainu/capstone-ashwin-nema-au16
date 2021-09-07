@@ -1,9 +1,11 @@
 .leafletmap {
-    min-height: 40vh ;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
 }
 
-.modalsuccess {
-    background-color: #d1e7dd;
-    color: darkcyan;
-    border: none;
+.leafletend {
+    display: flex;
+    justify-content: flex-end;
+    cursor: pointer;
 }

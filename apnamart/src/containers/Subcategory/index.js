@@ -11,13 +11,15 @@ const Subcategory = ({ history }) => {
     const Subcategories = useSelector(state => state.Productsdata.subcategories)
     const [Subcategorydata, changeSubcategorydata ] = useState([])
     const [currenid, changecurrenid] = useState("")
-
+// url: 'https://apna-mart.herokuapp.com/getprofile',
+// url: 'http://localhost:3000/getprofile',
+// url: 'http://localhost:5000/getprofile',
     useEffect(() => {
         let flag
         if (Subcategorydata.length === 0) {
             axios({
                 method:'post',
-                url:`http://localhost:5000/subcategory/${subcategoryname}`,
+                url:`http://localhost:5000/${subcategoryname}`,
             }).then(resp => {
                 if (resp.data.error !== "") {
                     history.push(PATHS.HOME)

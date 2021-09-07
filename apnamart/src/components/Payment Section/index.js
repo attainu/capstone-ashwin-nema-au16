@@ -5,6 +5,9 @@ import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector } from "react-redux";
 import { Alert } from "react-bootstrap";
 import {deliverydate} from '../../utils'
+// url: 'https://apna-mart.herokuapp.com/getprofile',
+// url: 'http://localhost:3000/getprofile',
+// url: 'http://localhost:5000/getprofile',
 export default function PaymentSection() {
     const {Name, Email, Mobilenumber} = useSelector(state => state.Profile)
     function loadScript(src) {

@@ -16,7 +16,7 @@ export const InputSearchBar = () => {
     const [currentclass, changecurrenclass] = useState(false)
     const Searchbaref = useRef()
     
-    const productslength = productresults.length + subcategoryresults.length > 0
+    const productslength = (productresults.length + subcategoryresults.length) > 0
 
     const setsearchvbarvalue = (newvalue) => {
         changesearchvalue(newvalue)

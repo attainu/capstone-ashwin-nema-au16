@@ -1,7 +1,9 @@
 import { setaddress } from '../actionTypes'
 import { getAuthinbrowser } from '../utils'
 import axios from 'axios'
-
+// url: 'https://apna-mart.herokuapp.com/getprofile',
+// url: 'http://localhost:3000/getprofile',
+// url: 'http://localhost:5000/getprofile',
 export const getuseraddress = (latitude, longtitude) => (dispatch) => {
     const authvalue = getAuthinbrowser() || ""
     const auth = { "Auth": authvalue }
@@ -14,11 +16,11 @@ export const getuseraddress = (latitude, longtitude) => (dispatch) => {
         headers: auth
     }).then(resp => {
         if (resp.data.error !== "") {
-            dispatch({ type: setaddress, payload: [] })
+            dispatch({ type: setaddress, payload: ["Sorry we do not serve your area"] })
             return
         }
         const finaluserlocationaddress = []
-
+       
         if (resp.data.useraddress.country === "India" && resp.data.useraddress.state !== undefined) {
             
             if (resp.data.useraddress._type !== "suburb" &&
@@ -79,7 +81,8 @@ export const getuseraddress = (latitude, longtitude) => (dispatch) => {
 
         dispatch({ type: setaddress, payload: finaluserlocationaddress })
         return
-    }).catch(() => {
+    }).catch((error) => {
+        console.log(error)
         console.log("Error occurred in the backend")
         return
     })

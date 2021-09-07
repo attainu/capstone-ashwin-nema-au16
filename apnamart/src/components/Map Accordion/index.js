@@ -4,24 +4,11 @@ import { useTransition, animated } from 'react-spring'
 import React from "react";
 import LocationMap from '../User location map'
 
-class CheckoutMap extends React.Component {
-    render() {
-        return (
-            <>
-            {this.props.isvisible === true ? 
-            <div className="profilecontentdisplaycolor">
-                <LocationMap setaddress={this.props.setaddress}/> 
-            </div>:<></> }
-            </>
-        )
-    }
-}
-
 const MapAccordion = ({userlocationaddress, setaddress}) => {
     const [isvisible, changevisibility] = useState(false)
     const transition = useTransition(isvisible, {
         from: { height: "0vh" },
-        enter: { height: "60vh" },
+        enter: {minHeight: "65vh" },
         leave: { height: "0vh", display: null }
     })
 
@@ -64,10 +51,9 @@ const MapAccordion = ({userlocationaddress, setaddress}) => {
                             </button>
                         </div>
                     </div>
-
                 </Card.Header>
                 {transition((style, item) =>
-                    item ? <animated.div style={style} className="checkoutmapcontainer"><CheckoutMap isvisible={isvisible} setaddress={setaddress} /> </animated.div> : <></>)}
+                    item ? <animated.div style={style} className="checkoutmapcontainer"> {isvisible === true && <LocationMap />} </animated.div> : <></>)}
             </Card>
 
         </div>
