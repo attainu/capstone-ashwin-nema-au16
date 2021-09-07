@@ -7,8 +7,5 @@
 .leafletend {
     display: flex;
     justify-content: flex-end;
-}
-
-.leafletend {
     cursor: pointer;
 }
