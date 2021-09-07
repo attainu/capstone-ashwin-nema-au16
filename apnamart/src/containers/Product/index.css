@@ -1,8 +1,5 @@
 .productcontent {
-    display: flex;
-    justify-content: space-between;
     height: 40vh;
-
 }
 
 .productimage {
@@ -22,7 +19,6 @@
     display: grid;
 }
 
-
 .productbutton {
     align-self: flex-end;
     width: 25%;
@@ -31,7 +27,6 @@
 .productdetaildescription {
     display: flex;
 }
-
 
 .productdetails {
     display: grid;

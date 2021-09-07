@@ -1,0 +1,14 @@
+.leafletmap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+.leafletend {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.leafletend {
+    cursor: pointer;
+}

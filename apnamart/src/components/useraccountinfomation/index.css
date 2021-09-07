@@ -1,0 +1,30 @@
+.accountinformation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.editinglink {
+    font-size: x-small;
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+.editinglink:hover {
+    cursor: pointer;
+}
+
+.modalinput{
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    background-color: #fff3cd;
+}
+
+.modalinput:hover{
+    cursor: pointer
+}
+
+.closeeditingbutton:hover {
+    cursor: pointer;
+}

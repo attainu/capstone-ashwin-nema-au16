@@ -17,8 +17,6 @@ html, body {
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
     padding-top: 1vh;
     padding-left: 1vh;
     padding-right: 1vh;
@@ -47,3 +45,7 @@ html, body {
     background-color: #ffc107;
 }
 
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}
