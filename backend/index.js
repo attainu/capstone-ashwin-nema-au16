@@ -11,11 +11,13 @@ const products_router = require('./routes/products')
 const user_router = require('./routes/user')
 const order_router = require('./routes/order')
 
+
 app.use(
     cors({
         origin: 'http://localhost:3000' || process.env.PORT
     })
 )
+
 
 mongoose.connect(MONGODB_URL, {
     useNewUrlParser: true,
@@ -25,7 +27,9 @@ mongoose.connect(MONGODB_URL, {
 }, async (err) => {
     if (err) throw err
     console.log("connected")
+
 })
+
 
 app.use("", products_router)
 app.use("/user", user_router)

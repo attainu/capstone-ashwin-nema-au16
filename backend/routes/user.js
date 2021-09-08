@@ -7,7 +7,7 @@ user_router.use(express.urlencoded({ extended: true }))
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const { validate_email, validate_mobile_number, validate_password, verify_mobile_number, verify_email } = require('../middlewares/verification')
-const {authenticatetoken, accesstokengenerator} = require('../Middlewares/token')
+const {authenticatetoken, accesstokengenerator} = require('../middlewares/token')
 
 user_router.post("/signup", async (req, res) => {
     const verifyemail = await verify_email(req.body.Email)
@@ -120,6 +120,7 @@ user_router.post("/location", authenticatetoken,async (req, res) => {
         return res.json({ useraddress: location.results[0].components, error: "" })
 
     } catch (error) {
+        console.log(error)
         return res.json({ error: "Sorry your location cannot be fetched" })
     }
 })
@@ -143,7 +144,7 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
 
     catch(error) {
         console.log("Error occurred while saving new user location")
-        return res.json({ error: "Location not saved" })
+        return res.json({ error: "Sorry your location could not be saved some error occurred. Please try again later" })
     }
 })
 
