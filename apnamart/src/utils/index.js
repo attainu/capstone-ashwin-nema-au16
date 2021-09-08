@@ -6,6 +6,8 @@ export {email_validator, mobilenumber_validator} from './validator'
 
 export {deliverydate} from './deliverydate'
 
-export {covertarraytoobject, searchdatafilter} from './array operations'
+export {convertarraytoobject, searchdatafilter} from './array operations'
 
 export {SetAddressContext} from './contexts'
+
+export {default as ScrollToTop} from './topscroll'

@@ -1,10 +1,12 @@
 import { Switch, Route } from "react-router-dom"
 import routes from "./routes"
 import { Layout } from "./components"
+import { ScrollToTop } from './utils'
+
 const App = () => {
   return (
     <Layout>
-
+      <ScrollToTop >
         <Switch>
           {
             routes.map((route, idx) => {
@@ -14,7 +16,7 @@ const App = () => {
             })
           }
         </Switch>
-
+      </ScrollToTop>
     </Layout>
 
   )

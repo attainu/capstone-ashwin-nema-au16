@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const Subcategory = ({ history }) => {
-    const { subcategoryname } = useParams()
+    const { subcategoryid } = useParams()
     const Productsdata = useSelector(state => state.Productsdata.products)
     const Subcategories = useSelector(state => state.Productsdata.subcategories)
     const [Subcategorydata, changeSubcategorydata ] = useState([])
@@ -19,13 +19,13 @@ const Subcategory = ({ history }) => {
         if (Subcategorydata.length === 0) {
             axios({
                 method:'post',
-                url:`http://localhost:5000/${subcategoryname}`,
+                url:`http://localhost:5000/subcategory/${subcategoryid}`,
             }).then(resp => {
                 if (resp.data.error !== "") {
                     history.push(PATHS.HOME)
                 }
                 changeSubcategorydata([...resp.data.result])
-                changecurrenid(subcategoryname)
+                changecurrenid(subcategoryid)
                 flag = true
                 return
             }).catch(() => {
@@ -38,20 +38,20 @@ const Subcategory = ({ history }) => {
             history.push(PATHS.HOME)  
         }
         
-    }, [Subcategories, Subcategorydata, history, subcategoryname])
+    }, [Subcategories, Subcategorydata, history, subcategoryid])
 
     useEffect(() => {
-        if (currenid.length > 0 && subcategoryname !== currenid) {
+        if (currenid.length > 0 && subcategoryid !== currenid) {
             changeSubcategorydata([])
             console.log("Data will get changed")
         }
-    }, [currenid, subcategoryname])
+    }, [currenid, subcategoryid])
     return (
         <>
             {
-                Subcategories[subcategoryname] !== undefined  &&
+                Subcategories[subcategoryid] !== undefined  &&
                 <>
-                    <h3 className="mt-3 ms-2">{Subcategories[subcategoryname].name}</h3>
+                    <h3 className="mt-3 ms-2">{Subcategories[subcategoryid].name}</h3>
 
                     <div className="row">
                         {

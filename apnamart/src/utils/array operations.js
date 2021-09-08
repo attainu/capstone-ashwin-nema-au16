@@ -1,32 +1,25 @@
-export const covertarraytoobject = (Originalarray) => {
+export const convertarraytoobject = (Originalarray, Path) => {
     const result = Originalarray.reduce((object, item) => {
         const {_id} = item
         object[_id] = item
+        object[_id].link = `${Path}${_id}`
         return object
     }, {})
     return result
 }
 
-export const searchdatafilter = (originaldata, searchparameter, setfiltereddata) => {
+export const searchdatafilter = (originaldata, searchparameter) => {
     const itemslist = Object.keys(originaldata)
     const regx = new RegExp(searchparameter.trim(), 'i')
 
     const filtereddata = itemslist.reduce((filteredlist, item) => {
-        if (regx.test(originaldata[item].name) === true) {
-
-            const filteredresult = {name:originaldata[item].name, id:originaldata[item]._id}
-            if (originaldata[item].image !== undefined) {
-                filteredresult.image = originaldata[item].image
-            }
-
-            if (originaldata[item].imageurl !== undefined) {
-                filteredresult.image = originaldata[item].imageurl
-            }
-
+        const {name, _id, image, link} = originaldata[item]
+        if (regx.test(name) === true) {
+            const filteredresult = {name, id:_id, image, link}
             filteredlist.push(filteredresult)
-
         }
+        
         return filteredlist
     },[] )
-    setfiltereddata([...filtereddata])
+    return filtereddata
 }

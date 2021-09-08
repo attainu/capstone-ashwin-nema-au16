@@ -1,7 +1,7 @@
 import {data} from '../actionTypes'
-const {products_data, subcategory_data} = data
+const {products_data, subcategory_data, category_data} = data
 
-const initialstate = {products:{}, subcategories:{}}
+const initialstate = {products:{}, subcategories:{}, categories:{}}
 
 const Productsdata = (state, action) => {
     state = state || initialstate
@@ -15,6 +15,10 @@ const Productsdata = (state, action) => {
             state.subcategories = action.payload
             return state
         
+        case category_data:
+            state.categories = action.payload
+            return state
+
         default:
             return state
     }

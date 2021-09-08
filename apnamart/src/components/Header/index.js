@@ -7,11 +7,18 @@ import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { getuserprofile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
+import useMeasure from 'react-use-measure'
+
 
 const Header = ({ children }) => {
     const dispatch = useDispatch()
     const [count, changecount] = useState(0)
+    const [ref, bounds] = useMeasure()
+    const [childrenmargin, changemargin] = useState("80px")
 
+    useEffect(() => {
+        changemargin(`${bounds.height}px`) 
+    }, [bounds])
     const Auth = useSelector(state => state.Auth)
     const userprofile = useSelector(state => state.Profile)
     const Productsdata = useSelector(state => state.Productsdata)
@@ -33,9 +40,9 @@ const Header = ({ children }) => {
     }, [Auth, dispatch, userprofile])
 
     useEffect(() => {
-        if (Object.keys(Productsdata.subcategories).length === 0 && Object.keys(Productsdata.products).length === 0) {
+        if (Object.keys(Productsdata.subcategories).length === 0 && Object.keys(Productsdata.products).length === 0 && Object.keys(Productsdata.categories).length === 0 ) {
             dispatch(getproductsdata())
-        }
+        }   
     }, [Productsdata, dispatch])
 
     const AddToggleclass = () => {
@@ -55,7 +62,7 @@ const Header = ({ children }) => {
         <>
 
             <div className="mainwrapper">
-                <div  className="header space-between bg-warning pb-2">
+                <div ref={ref}  className="header space-between bg-warning pb-2">
                     <div className="logo">
                         <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
                     </div>
@@ -109,7 +116,9 @@ const Header = ({ children }) => {
                     </div>
                 </div>
 
+                <div style={{marginTop:childrenmargin} } className="children">
                 {children}
+                </div>
 
                 <div className="push"></div>
 

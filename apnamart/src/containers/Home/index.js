@@ -1,14 +1,13 @@
 import { Carouselitem } from '../../components'
 import Carousel from 'react-elastic-carousel'
-import { PATHS } from '../../config'
 import './index.css'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 export const Home = ({ history }) => {
     const items = useSelector(state => state.Productsdata.products)
-    const itemslist = Object.keys(items)
     const subcategories = useSelector(state => state.Productsdata.subcategories)
-    const subcategorylist = Object.keys(subcategories)
+    const categories = useSelector(state => state.Productsdata.categories)
 
     const breakpoints = [
         { width: 500, itemsToShow: 3 },
@@ -21,11 +20,11 @@ export const Home = ({ history }) => {
         <>
             <div className="mt-3 pt-3">
                 <div className="ms-3 mb-2">
-                    Search by items
+                    Search by item
                 </div>
                 <Carousel breakPoints={breakpoints}>
                     {
-                        itemslist.map((item, index) => {
+                        Object.keys(items).map((item, index) => {
                             return (
                                 <Carouselitem history={history} key={index} index={index} itemdetails={items[item]} />
                             )
@@ -41,11 +40,10 @@ export const Home = ({ history }) => {
 
                 <Carousel breakPoints={breakpoints}>
                     {
-                        subcategorylist.map((item, index) => {
-                            const image = subcategories[item].imageurl
-                            const name = subcategories[item].name
+                        Object.keys(subcategories).map((item, index) => {
+                            const { image, name, link } = subcategories[item]
                             const Redirect = () => {
-                                history.push(`${PATHS.SUBCATEGORYPATH}${item}`)
+                                history.push(`${link}`)
                             }
 
                             return (
@@ -56,10 +54,36 @@ export const Home = ({ history }) => {
                                     </div>
                                 </div>
                             )
-                            
+
                         })
                     }
                 </Carousel>
+
+
+            </div>
+
+            <div className="mt-3 pt-3 ms-2 row">
+                {
+                    Object.keys(categories).map((item, index) => {
+                        const { image, name, link } = categories[item]
+                        const Redirect = () => {
+                            history.push(`${link}`)
+                        }
+
+                        return (
+                            <div key={index} className="col-3 card ms-2">
+    
+                                <img onClick={Redirect} src={image} className="card-img-top carouselcategoryimage" alt={name} />
+                                <div className="card-body">
+                                <p onClick={Redirect} className="card-text text-center"><Link className="text-decoration-none text-dark" to={link}>{name}</Link> </p> 
+                                </div>
+                            </div>
+                        )
+
+                    })
+                }
+
+
             </div>
         </>
     )
