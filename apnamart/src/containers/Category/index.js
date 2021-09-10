@@ -1,8 +1,7 @@
-import { PATHS } from '../../config'
+import { PATHS, axiosinstance } from '../../config'
 import { useParams } from 'react-router'
 import { Carouselitem } from "../../components";
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 export const Category = ({ history }) => {
@@ -15,10 +14,7 @@ export const Category = ({ history }) => {
     useEffect(() => {
         let flag
         if (Categorydata.length === 0) {
-            axios({
-                method: 'post',
-                url: `http://localhost:5000/category/${categoryid}`,
-            }).then(resp => {
+            axiosinstance.post(`/category/${categoryid}`).then(resp => {
                 if (resp.data.error !== "") {
                     history.push(PATHS.HOME)
                 }

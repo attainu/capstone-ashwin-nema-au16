@@ -2,8 +2,8 @@ import { useParams } from 'react-router'
 import { PATHS } from '../../config'
 import { Carouselitem } from "../../components";
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import { useState, useEffect } from 'react';
+import {axiosinstance} from '../../config'
 
 const Subcategory = ({ history }) => {
     const { subcategoryid } = useParams()
@@ -11,16 +11,11 @@ const Subcategory = ({ history }) => {
     const Subcategories = useSelector(state => state.Productsdata.subcategories)
     const [Subcategorydata, changeSubcategorydata ] = useState([])
     const [currenid, changecurrenid] = useState("")
-// url: 'https://apna-mart.herokuapp.com/getprofile',
-// url: 'http://localhost:3000/getprofile',
-// url: 'http://localhost:5000/getprofile',
+
     useEffect(() => {
         let flag
         if (Subcategorydata.length === 0) {
-            axios({
-                method:'post',
-                url:`http://localhost:5000/subcategory/${subcategoryid}`,
-            }).then(resp => {
+            axiosinstance.post(`/subcategory/${subcategoryid}`).then(resp => {
                 if (resp.data.error !== "") {
                     history.push(PATHS.HOME)
                 }
@@ -32,6 +27,7 @@ const Subcategory = ({ history }) => {
                 flag = false
                 history.push(PATHS.HOME)
             })
+
         }
 
         if (flag !== undefined && flag !== true) {

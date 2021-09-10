@@ -9,13 +9,11 @@ import { getuserprofile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
 import useMeasure from 'react-use-measure'
 
-
 const Header = ({ children }) => {
     const dispatch = useDispatch()
     const [count, changecount] = useState(0)
     const [ref, bounds] = useMeasure()
     const [childrenmargin, changemargin] = useState("80px")
-
     useEffect(() => {
         changemargin(`${bounds.height + 20}px`) 
     }, [bounds])
@@ -35,6 +33,7 @@ const Header = ({ children }) => {
 
     useEffect(() => {
         if (Auth !== " " && Object.keys(userprofile).length === 0) {
+            console.log("Response came here")
             dispatch(getuserprofile())
         }
     }, [Auth, dispatch, userprofile])

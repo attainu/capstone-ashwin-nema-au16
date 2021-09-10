@@ -1,26 +1,31 @@
 import './index.css'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import * as yup from 'yup'
 import './index.css'
-import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { authsetter, setprofile } from '../../actions'
-import { PATHS } from '../../config'
+import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
 import { Modal } from 'react-bootstrap'
 import { mobilenumber_validator } from '../../utils'
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
+import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded'
+
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
+
     const [Email, Changeemail] = useState("")
     const [Confirmedpassword, ChangeConfirmedPassword] = useState("")
     const [Password, ChangePassword] = useState("")
     const [Mobilenumber, ChangeMobilenumber] = useState("")
     const [Name, Changename] = useState("")
     const [errormessage, changeerrormessage] = useState("")
-    const userprofile = useSelector(state => state.Profile)
     const [modal, showmodal] = useState(false)
+
+    const mobilenumber = useRef("")
+
+    const userprofile = useSelector(state => state.Profile)
+    
     const schema = yup.object().shape({
         Password: yup.string().required(),
         Name: yup.string().required(),
@@ -48,6 +53,7 @@ export const Signup = ({ history }) => {
             return
         }
 
+        mobilenumber.current = e.target.value
         ChangeMobilenumber(e.target.value)
     }
 
@@ -67,33 +73,29 @@ export const Signup = ({ history }) => {
             showmodalwithmessage("Password and Confirm password do not match")
             return
         }
-        // url: 'http://localhost:3000/editprofile',
-        // url: 'http://localhost:5000/editprofile',
-        // url: 'https://apna-mart.herokuapp.com/editprofile'
-        schema.validate({ Name, Password, Email }, { abortEarly: false }).then(async userdata => {
-            const response = await axios({
-                method: 'post',
-                url: 'http://localhost:5000/user/signup',
-                data: {
-                    ...userdata,
-                    Mobilenumber,
-                }
-            })
 
+
+        schema.validate({ Name, Password, Email }, { abortEarly: false }).then(async userdata => {
+            const response = await axiosinstance.post('/user/signup',{...userdata, Mobilenumber:mobilenumber.current})
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
                 showmodalwithmessage(response.data.error)
                 return
             }
-
+            const { Name, Email, Location, token, Mobilenumber } = response.data
+            const auth = { "Auth": token }
+            axiosinstance.defaults.headers = auth
+            dispatch(setprofile({ Name, Email, Location, Mobilenumber }))
             dispatch(authsetter(response.data.token))
-            const { Name, Email, Location } = response.data
-            dispatch(setprofile({ Name, Email, Location, Mobilenumber: response.data.Mobilenumber }))
             history.push(PATHS.HOME)
             return
-
         }).catch(function (err) {
-            showmodalwithmessage(err.errors[0])
+            if (err.errors !== undefined) {
+                showmodalwithmessage(err.errors[0])
+                return
+            }
+
+            showmodalwithmessage("Sorry some error occurred. Please try again later")
         })
     }
 

@@ -50,11 +50,18 @@ export default function PaymentSection() {
         });
     }
 
+    const setloginerror = (error) => {
+        if (error === "Token is not provided" || error === "Please provide a valid token") {
+            showmodalwithmessageandvariant("Sorry you have been logged out. Please login again to continue", "danger")
+            return true
+        }
+        return false
+    }
+
     async function displayRazorpay() {
         const res = await loadScript(
             "https://checkout.razorpay.com/v1/checkout.js"
         );
-
 
         if (!res) {
             showmodalwithmessageandvariant("Sorry Razorpay could not be loaded. Please use cash payment mode or try again later", "danger")
@@ -77,11 +84,7 @@ export default function PaymentSection() {
             return;
         }
 
-        const loginerror = result.data.error === "Token is not provided" || result.data.error === "Please provide a valid token"
-        if (loginerror) {
-            showmodalwithmessageandvariant("Sorry you have been logged out. Please login again to continue", "danger")
-            return
-        }
+        const loginerror = setloginerror(result.data.error)
 
         if (result.data.error !== undefined && !loginerror) {
             showmodalwithmessageandvariant(result.data.error, "danger")
@@ -108,8 +111,14 @@ export default function PaymentSection() {
                         razorpaySignature: response.razorpay_signature,
                     };
 
+                    const ordersuccessconfig = {
+                        method: 'post',
+                        url: "http://localhost:5000/user/order/payment/razorpay/success",
+                        headers: auth,
+                        data:{cartprice,items: cart }
+                    }
 
-                    const successresponse = await axios.post("http://localhost:5000/user/order/payment/razorpay/success", data);
+                    const successresponse = await axios(ordersuccessconfig);
 
                     if (!successresponse) {
                         showmodalwithmessageandvariant("Sorry something went wrong your order could not be placed.", "danger")
@@ -141,15 +150,13 @@ export default function PaymentSection() {
             data: {
                 items: cart
             },
-            // headers: auth
+            headers: auth
         }).then(({data}) => {
-            const loginerror = data.error === "Token is not provided" || data.error === "Please provide a valid token"
-            if (loginerror ) {
-                showmodalwithmessageandvariant("Sorry you have been logged out. Please login again to continue", "danger")
-                return
-            }
-            if (data.error !== undefined) {
+            const loginerror = setloginerror(data.error)
+
+            if (data.error !== undefined && !loginerror) {
                 showmodalwithmessageandvariant(data.error, "danger")
+                return
             }
             showmodalwithmessageandvariant("Your order is successfully placed", "warning")
         }).catch(() => {

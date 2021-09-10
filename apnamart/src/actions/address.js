@@ -1,20 +1,10 @@
 import { setaddress } from '../actionTypes'
-import { getAuthinbrowser } from '../utils'
-import axios from 'axios'
-// url: 'https://apna-mart.herokuapp.com/getprofile',
-// url: 'http://localhost:3000/getprofile',
-// url: 'http://localhost:5000/getprofile',
+import {axiosinstance} from '../config'
+
 export const getuseraddress = (latitude, longtitude) => (dispatch) => {
-    const authvalue = getAuthinbrowser() || ""
-    const auth = { "Auth": authvalue }
-    return axios({
-        method: 'post',
-        url: 'http://localhost:5000/user/location',
-        data: {
-            location: `${latitude},${longtitude}`
-        },
-        headers: auth
-    }).then(resp => {
+    const location = `${latitude},${longtitude}`
+
+    axiosinstance.post("/user/location", {location}).then(resp => {
         if (resp.data.error !== "") {
             dispatch({ type: setaddress, payload: ["Sorry we do not serve your area"] })
             return

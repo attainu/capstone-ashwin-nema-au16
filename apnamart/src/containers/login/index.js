@@ -1,14 +1,12 @@
 import './index.css'
 import { useState } from 'react'
-import axios from 'axios'
-import { PATHS } from '../../config'
+import { PATHS, axiosinstance } from '../../config'
 import { authsetter, setprofile } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 import { Modal } from 'react-bootstrap'
 import * as yup from 'yup'
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
-
 
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
@@ -39,18 +37,9 @@ export const Login = ({ history }) => {
         e.preventDefault()
         changeerrormessage("")
 
-        // url: 'http://localhost:3000/editprofile',!
-        // url: 'http://localhost:5000/editprofile',
-        // url: 'https://apna-mart.herokuapp.com/editprofile'
 
         schema.validate({ Password, Email }, { abortEarly: false }).then(async userdata => {
-            const response = await axios({
-                method: 'post',
-                url: 'http://localhost:5000/user/login',
-                data: {
-                    ...userdata
-                }
-            })
+            const response = await axiosinstance.post('/user/login', { ...userdata })
 
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
@@ -60,7 +49,10 @@ export const Login = ({ history }) => {
 
             const { Name, Email, Mobilenumber, Location } = response.data
             dispatch(authsetter(response.data.token))
-            dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
+            dispatch(setprofile({ Name, Email, Mobilenumber, Location })) 
+            
+            const auth = { "Auth": response.data.token }
+            axiosinstance.defaults.headers = auth
             history.push(PATHS.HOME)
             return
 

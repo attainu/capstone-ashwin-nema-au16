@@ -1,18 +1,11 @@
 import { data } from '../actionTypes'
-import axios from 'axios'
 import {convertarraytoobject} from '../utils'
-import {PATHS} from '../config'
+import {PATHS, axiosinstance} from '../config'
+
 const { products_data, subcategory_data, category_data} = data
 
-// url: 'https://apna-mart.herokuapp.com/getprofile',
-// url: 'http://localhost:3000/getprofile',
-// url: 'http://localhost:5000/getprofile',
 export const getproductsdata = () => (dispatch) => {
-    return axios({
-        method: 'post',
-        url: 'http://localhost:5000/products',
-        data: {}
-    }).then(resp => {
+    axiosinstance.post("/products").then(resp => {
         if (resp.data.error !== "") {
             dispatch({ type: products_data, payload: {error:"Sorry products data could not be fetched"} })
             return

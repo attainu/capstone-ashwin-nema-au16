@@ -3,16 +3,12 @@ import { Modal, Alert } from 'react-bootstrap'
 import { useState } from 'react'
 import { mobilenumber_validator } from '../../utils'
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
-import axios from 'axios';
+import {axiosinstance} from '../../config'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditIcon from '@material-ui/icons/Edit';
-
-// url: 'https://apna-mart.herokuapp.com/getprofile',
-// url: 'http://localhost:3000/getprofile',
-// url: 'http://localhost:5000/getprofile',
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
@@ -22,8 +18,6 @@ export const UserAccountInformation = () => {
     const email = userprofile.Email
     const mobilenumber = userprofile.Mobilenumber
     const {Location} = userprofile
-
-    const authvalue = useSelector(state => state.Auth)
 
     const [modal, showmodal] = useState(false)
     const [errormodal, showerrormodal] = useState(false)
@@ -89,17 +83,8 @@ export const UserAccountInformation = () => {
             return
         }
 
-        const auth = { "Auth": authvalue }
         schema.validate({ Name, Password, Email, NewPassword }, { abortEarly: false }).then(async userdata => {
-            const response = await axios({
-                method: 'put',
-                url: 'http://localhost:5000/user/profile',
-                data: {
-                    ...userdata,
-                    Mobilenumber,
-                },
-                headers: auth
-            })
+            const response = await axiosinstance.put("/user/profile",{...userdata, Mobilenumber})
 
             if (response.data.error !== "") {
                 changeerrormessage(response.data.error)

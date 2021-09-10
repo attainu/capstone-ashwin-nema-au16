@@ -7,7 +7,7 @@ import { SetAddressContext } from '../../utils'
 import { useSelector, useDispatch } from 'react-redux'
 import { getuseraddress, setprofile } from '../../actions'
 import { Alert, Modal } from 'react-bootstrap'
-import axios from 'axios'
+import { axiosinstance } from '../../config'
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import './index.css'
@@ -57,16 +57,16 @@ function DisplayPosition({ map, markerref, circleref }) {
 export default function LocationMap() {
     const dispatch = useDispatch()
     const [map, setMap] = useState(null)
+    const [modal, showmodal] = useState(false)
+    const [modalvariant, changemodalvariant] = useState('warning')
+    const modalmessage = useRef("")
+
     const mapismounted = useRef(false)
     const markerref = useRef()
     const circleref = useRef()
     const addresscontext = useContext(SetAddressContext)
     const { Name, Mobilenumber, Email, Location } = useSelector(state => state.Profile)
     const address = useSelector(state => state.Useraddress)
-    const Auth = useSelector(state => state.Auth)
-    const [modal, showmodal] = useState(false)
-    const [modalvariant, changemodalvariant] = useState('warning')
-    const modalmessage = useRef("")
 
     const hidemodal = () => {
         showmodal(false)
@@ -120,17 +120,12 @@ export default function LocationMap() {
     const saveuserlocation = () => {
         if (map !== undefined && map !== null) {
             const { lat, lng } = map.getCenter()
-            const auth = { "Auth": Auth }
-            return axios({
-                method: 'put',
-                url: 'http://localhost:5000/user/location',
-                data: {
-                    location: `${lat},${lng}`,
-                    Location: [lat, lng]
-                },
-                headers: auth
+            const userlocationdata = {
+                location: `${lat},${lng}`,
+                Location: [lat, lng]
+            }
 
-            }).then((resp) => {
+            axiosinstance.put("/user/location", userlocationdata).then((resp) => {
                 if (resp.data.error !== "") {
                     displaymodaltouser(resp.data.error)
                     return
