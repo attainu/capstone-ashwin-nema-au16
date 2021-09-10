@@ -1,14 +1,15 @@
 import './index.css'
 import { Modal, Alert } from 'react-bootstrap'
 import { useState } from 'react'
-import { mobilenumber_validator } from '../../utils'
+import { mobilenumber_validator, hidemodal, showmodalwithmessageandvariant } from '../../utils'
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
-import {axiosinstance} from '../../config'
+import { axiosinstance } from '../../config'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditIcon from '@material-ui/icons/Edit';
+import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
@@ -17,13 +18,12 @@ export const UserAccountInformation = () => {
     const name = userprofile.Name
     const email = userprofile.Email
     const mobilenumber = userprofile.Mobilenumber
-    const {Location} = userprofile
+    const { Location } = userprofile
 
     const [modal, showmodal] = useState(false)
-    const [errormodal, showerrormodal] = useState(false)
-    const [errormessage, changeerrormessage] = useState("")
-    const [datasavedmodal, showdatasavedmodal] = useState(false)
-
+    const [notificationmodal, shownotificationmodal] = useState(false)
+    const [modalnotificationmessage, changemodalnotificationmessage] = useState("")
+    const [notificationmodalvariant, changenotificationmodalvariant] = useState("success")
     const [Name, Changename] = useState(name)
     const [Email, Changeemail] = useState(email)
     const [Mobilenumber, changeMobilenumber] = useState(mobilenumber)
@@ -37,20 +37,13 @@ export const UserAccountInformation = () => {
         Email: yup.string().email().required()
     })
 
-    const hidemodal = () => {
-        showmodal(false)
-    }
 
     const openmodal = () => {
         showmodal(true)
     }
 
-    const hideerrormodal = () => {
-        showerrormodal(false)
-    }
-
-    const hidedatesavedmodal = () => {
-        showdatasavedmodal(false)
+    const setnotificationmodal = (message, variant) => {
+        showmodalwithmessageandvariant(shownotificationmodal, message, changemodalnotificationmessage, variant, changenotificationmodalvariant)
     }
 
     const setmobilenumber = (e) => {
@@ -60,13 +53,13 @@ export const UserAccountInformation = () => {
         }
 
         if (e.target.value.length > 10) {
+            setnotificationmodal("Mobile Number cannot be of more than 10 digits", "danger")
             return
         }
 
 
         if (e.target.value.length === 10 && mobilenumber_validator(newmobilenumber) !== true) {
-            changeerrormessage("Please provide a valid Indian mobile number")
-            showerrormodal(true)
+            setnotificationmodal("Please provide a valid Indian mobile number", "danger")
             return
         }
 
@@ -75,30 +68,27 @@ export const UserAccountInformation = () => {
 
     const saveuserdata = (e) => {
         e.preventDefault()
-        changeerrormessage("")
 
         if (mobilenumber_validator(Number(Mobilenumber)) !== true) {
-            changeerrormessage("Please provide a valid Indian mobile number")
-            showerrormodal(true)
+            setnotificationmodal("Please provide a valid Indian mobile number", "danger")
             return
         }
 
         schema.validate({ Name, Password, Email, NewPassword }, { abortEarly: false }).then(async userdata => {
-            const response = await axiosinstance.put("/user/profile",{...userdata, Mobilenumber})
+            const response = await axiosinstance.put("/user/profile", { ...userdata, Mobilenumber })
 
             if (response.data.error !== "") {
-                changeerrormessage(response.data.error)
-                showerrormodal(true)
+                setnotificationmodal(response.data.error, "danger")
                 return
             }
 
-            dispatch(setprofile({Name, Email, Location, Mobilenumber}))
-            showdatasavedmodal(true)
+            dispatch(setprofile({ Name, Email, Location, Mobilenumber }))
+            setnotificationmodal("Your profile has successfully been updated", "success")
+
             return
 
         }).catch(function (err) {
-            changeerrormessage(err.errors[0])
-            showerrormodal(true)
+            setnotificationmodal(err.errors[0], "danger")
         })
     }
 
@@ -123,9 +113,9 @@ export const UserAccountInformation = () => {
                             Edit
                         </div>
 
-                        <Modal centered show={modal} contentClassName="modalwithoutcolor" onHide={hidemodal}>
+                        <Modal centered show={modal} contentClassName="modalwithoutcolor" onHide={() => hidemodal(showmodal)}>
                             <div className="d-flex justify-content-center mb-3">
-                                <CancelRoundedIcon className="closeeditingbutton" onClick={hidemodal} />
+                                <CancelRoundedIcon className="closeeditingbutton" onClick={() => hidemodal(showmodal)} />
                             </div>
                             <Alert variant="warning">
                                 <h5 className="mb-3 text-center">Edit Information <EditIcon /> </h5>
@@ -171,21 +161,33 @@ export const UserAccountInformation = () => {
                             </Alert>
                         </Modal>
 
-                        <Modal show={errormodal} contentClassName="modalwithoutcolor" onHide={hideerrormodal}>
-                            <Alert variant="danger">
+                        <Modal show={notificationmodal} contentClassName="modalwithoutcolor" onHide={() => hidemodal(shownotificationmodal)}>
+                            <Alert variant={`${notificationmodalvariant}`}>
+
                                 <h6>
-                                    {errormessage}
+                                    {
+                                        modalnotificationmessage === "Your profile has successfully been updated" ?
+                                            <>
+                                                <div className="d-flex justify-content-center">
+                                                    <CheckCircleIcon style={{ color: "green" }} />
+                                                </div>
+
+                                                <div className="d-flex justify-content-center">
+                                                    {modalnotificationmessage}
+                                                </div>
+                                            </>
+                                            :
+                                            <>
+                                                <div className="d-flex justify-content-center">
+                                                    <ErrorRoundedIcon style={{ color: "red" }} />
+                                                    {modalnotificationmessage}
+                                                </div>
+                                            </>
+                                    }
                                 </h6>
                             </Alert>
                         </Modal>
 
-                        <Modal show={datasavedmodal} contentClassName="modalwithoutcolor" onHide={hidedatesavedmodal}>
-                            <Alert variant="success">
-                                <h6>
-                                    Your profile has successfully been updated <CheckCircleIcon style={{ color: "green" }} />
-                                </h6>
-                            </Alert>
-                        </Modal>
                     </div>
                 </div>
             </div>

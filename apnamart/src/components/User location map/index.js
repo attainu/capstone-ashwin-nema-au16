@@ -3,11 +3,11 @@ import { useEffect } from 'react'
 import { useRef, useState, useContext } from 'react'
 import { useMemo, useCallback } from 'react'
 import L from 'leaflet'
-import { SetAddressContext } from '../../utils'
+import { SetAddressContext, hidemodal, showmodalwithmessageandvariant } from '../../utils'
 import { useSelector, useDispatch } from 'react-redux'
 import { getuseraddress, setprofile } from '../../actions'
 import { Alert, Modal } from 'react-bootstrap'
-import { axiosinstance } from '../../config'
+import {axiosinstance} from '../../config'
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import './index.css'
@@ -57,31 +57,20 @@ function DisplayPosition({ map, markerref, circleref }) {
 export default function LocationMap() {
     const dispatch = useDispatch()
     const [map, setMap] = useState(null)
-    const [modal, showmodal] = useState(false)
-    const [modalvariant, changemodalvariant] = useState('warning')
-    const modalmessage = useRef("")
-
     const mapismounted = useRef(false)
     const markerref = useRef()
     const circleref = useRef()
     const addresscontext = useContext(SetAddressContext)
     const { Name, Mobilenumber, Email, Location } = useSelector(state => state.Profile)
     const address = useSelector(state => state.Useraddress)
+    const [modal, showmodal] = useState(false)
+    const [modalvariant, changemodalvariant] = useState('warning')
+    const modalmessage = useRef("")
 
-    const hidemodal = () => {
-        showmodal(false)
+    const displaymodaltouser = (message, variant) => {
+        showmodalwithmessageandvariant(showmodal, message,undefined,variant,  changemodalvariant, modalmessage)
     }
-
-    const displaymodaltouser = (message) => {
-        modalmessage.current = message
-        showmodal(true)
-        if (message === "Location saved") {
-            changemodalvariant('warning')
-            return
-        }
-        changemodalvariant('danger')
-    }
-
+    
     useEffect(() => {
         if (address.length === 0 && addresscontext === undefined) {
             dispatch(getuseraddress(Location[0], Location[1]))
@@ -99,7 +88,7 @@ export default function LocationMap() {
             .then(
                 ({ state }) => {
                     if (state === "denied") {
-                        displaymodaltouser("You have to enable location access in the browser first in order to enable map to find your location")
+                        displaymodaltouser("You have to enable location access in the browser first in order to enable map to find your location", "danger")
                     }
                 }
             )
@@ -111,6 +100,7 @@ export default function LocationMap() {
                 })
             }
             catch (error) {
+                displaymodaltouser("Sorry could not fetch your location. Please try again later", "danger")
                 console.log("Error occurred")
             }
         }
@@ -120,18 +110,17 @@ export default function LocationMap() {
     const saveuserlocation = () => {
         if (map !== undefined && map !== null) {
             const { lat, lng } = map.getCenter()
-            const userlocationdata = {
+            const data = {
                 location: `${lat},${lng}`,
                 Location: [lat, lng]
             }
-
-            axiosinstance.put("/user/location", userlocationdata).then((resp) => {
+            axiosinstance.put("/user/location", data ).then((resp) => {
                 if (resp.data.error !== "") {
-                    displaymodaltouser(resp.data.error)
+                    displaymodaltouser(resp.data.error, "danger")
                     return
                 }
 
-                displaymodaltouser("Location saved")
+                displaymodaltouser("Location saved", "warning")
                 dispatch(setprofile({ Name, Email, Mobilenumber, Location: [lat, lng] }))
 
                 if (addresscontext !== undefined && addresscontext !== null) {
@@ -139,7 +128,7 @@ export default function LocationMap() {
                 }
             }).catch(() => {
                 console.log("Location could not be saved some error occurred")
-                displaymodaltouser("Sorry you location could not be saved. Please try again later")
+                displaymodaltouser("Sorry you location could not be saved. Please try again later", "warning")
             })
         }
     }
@@ -202,7 +191,7 @@ export default function LocationMap() {
                 </button>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={hidemodal}>
+            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
                 <Alert variant={`${modalvariant}`}>
                     <span className="d-flex justify-content-center ">
                         {

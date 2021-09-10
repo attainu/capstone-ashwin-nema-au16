@@ -11,3 +11,5 @@ export {convertarraytoobject, searchdatafilter} from './array operations'
 export {SetAddressContext} from './contexts'
 
 export {default as ScrollToTop} from './topscroll'
+
+export {hidemodal, showmodalwithmessageandvariant} from './modal utility'

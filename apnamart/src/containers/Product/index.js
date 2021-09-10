@@ -24,7 +24,6 @@ const Product = ({ history }) => {
     const [description, setdescription] = useState("")
     const [ref, bounds] = useMeasure()
 
-
     const count = cartitems[productid] === undefined ? 0 : cartitems[productid].count
 
     const disabled = count < 20 ? "" : "disabled"

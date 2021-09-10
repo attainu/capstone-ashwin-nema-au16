@@ -4,7 +4,7 @@ import {changecartstate, changecartprice} from '../../actions'
 import { Modal, Alert } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
-import {deliverydate} from '../../utils'
+import {deliverydate, showmodalwithmessageandvariant, hidemodal } from '../../utils'
 import { useState } from 'react'
 
 export const Cartitem = ({ item, count }) => {
@@ -16,18 +16,13 @@ export const Cartitem = ({ item, count }) => {
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, changeshowmodalmessage] = useState(false)
     
-    const hidemodal = () => {
-        changeshowmodalmessage(false)
-    }
-
     const increaseitemcount = () => {
         if (count < 20) {
             dispatch(increase_item_count(item))
             dispatch(changecartprice(totalprice + price))
             return
         }
-        setmodalmessage(`You cannot order more than 20 items of ${name}`)
-        changeshowmodalmessage(true)
+        showmodalwithmessageandvariant(changeshowmodalmessage, `You cannot order more than 20 items of ${name}`, setmodalmessage)
     }
 
     const decreaseitemcount = () => {
@@ -36,8 +31,7 @@ export const Cartitem = ({ item, count }) => {
             dispatch(changecartprice(totalprice - price))
             return
         }
-        setmodalmessage(`You cannot order less than 1 item of ${name}`)
-        changeshowmodalmessage(true)
+        showmodalwithmessageandvariant(changeshowmodalmessage, `You cannot order less than 1 item of ${name}`, setmodalmessage)
     }
 
     const removeitemfromcart = () => {
@@ -81,7 +75,7 @@ export const Cartitem = ({ item, count }) => {
                 </div>
             </div>
             <div>Delivery by {deliverydate}</div>
-            <Modal centered show={showmodalmessage} contentClassName="modalalert" onHide={hidemodal}>
+            <Modal centered show={showmodalmessage} contentClassName="modalwithoutcolor" onHide={() => hidemodal(changeshowmodalmessage)}>
                 <Alert variant="danger">
                     {modalmessage}
                 </Alert>

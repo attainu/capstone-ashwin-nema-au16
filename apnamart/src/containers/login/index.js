@@ -4,9 +4,10 @@ import { PATHS, axiosinstance } from '../../config'
 import { authsetter, setprofile } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
-import { Modal } from 'react-bootstrap'
+import { Modal, Alert } from 'react-bootstrap'
 import * as yup from 'yup'
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
+import { hidemodal, showmodalwithmessageandvariant } from '../../utils'
 
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
@@ -24,15 +25,6 @@ export const Login = ({ history }) => {
         Email: yup.string().email().required()
     })
 
-    const hidemodal = () => {
-        showmodal(false)
-    }
-
-    const showmodalwithmessage = (message) => {
-        changeerrormessage(message)
-        showmodal(true)
-    }
-
     const submithandler = (e) => {
         e.preventDefault()
         changeerrormessage("")
@@ -43,21 +35,21 @@ export const Login = ({ history }) => {
 
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
-                showmodalwithmessage(response.data.error)
+                showmodalwithmessageandvariant(showmodal, response.data.error, changeerrormessage)
                 return
             }
 
             const { Name, Email, Mobilenumber, Location } = response.data
             dispatch(authsetter(response.data.token))
-            dispatch(setprofile({ Name, Email, Mobilenumber, Location })) 
-            
+            dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
+
             const auth = { "Auth": response.data.token }
             axiosinstance.defaults.headers = auth
             history.push(PATHS.HOME)
             return
 
         }).catch(function (err) {
-            showmodalwithmessage(err.errors[0])
+            showmodalwithmessageandvariant(showmodal, err.errors[0], changeerrormessage)
         })
     }
 
@@ -91,12 +83,14 @@ export const Login = ({ history }) => {
                 <div className="col-2"></div>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalalert text-danger py-5" onHide={hidemodal}>
-                <span className="d-flex justify-content-center ">
-                    <ErrorRoundedIcon style={{ color: "red" }} />
-                    <h5>{errormessage}</h5>
-                </span>
+            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
+                <Alert>
+                    <span className="d-flex justify-content-center ">
+                        <ErrorRoundedIcon style={{ color: "red" }} />
+                        <h5>{errormessage}</h5>
+                    </span>
 
+                </Alert>
             </Modal>
 
         </>

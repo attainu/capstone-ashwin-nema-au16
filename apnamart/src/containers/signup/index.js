@@ -6,10 +6,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { authsetter, setprofile } from '../../actions'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
-import { Modal } from 'react-bootstrap'
-import { mobilenumber_validator } from '../../utils'
+import { Modal, Alert } from 'react-bootstrap'
+import { mobilenumber_validator, hidemodal, showmodalwithmessageandvariant } from '../../utils'
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded'
-
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
@@ -25,17 +24,12 @@ export const Signup = ({ history }) => {
     const mobilenumber = useRef("")
 
     const userprofile = useSelector(state => state.Profile)
-    
+
     const schema = yup.object().shape({
         Password: yup.string().required(),
         Name: yup.string().required(),
         Email: yup.string().email().required()
     })
-
-    const showmodalwithmessage = (message) => {
-        changeerrormessage(message)
-        showmodal(true)
-    }
 
     const setmobilenumber = (e) => {
         const newmobilenumber = Number(e.target.value)
@@ -44,12 +38,12 @@ export const Signup = ({ history }) => {
         }
 
         if (e.target.value.length > 10) {
-            showmodalwithmessage("Mobile number cannot be of more than 10 digit")
+            showmodalwithmessageandvariant(showmodal, "Mobile number cannot be of more than 10 digit", changeerrormessage)
             return
         }
 
         if (e.target.value.length === 10 && mobilenumber_validator(newmobilenumber) !== true) {
-            showmodalwithmessage("Please provide a valid Indian mobile number")
+            showmodalwithmessageandvariant(showmodal, "Please provide a valid Indian mobile number", changeerrormessage)
             return
         }
 
@@ -57,29 +51,25 @@ export const Signup = ({ history }) => {
         ChangeMobilenumber(e.target.value)
     }
 
-    const hidemodal = () => {
-        showmodal(false)
-    }
-
     const submithandler = (e) => {
         e.preventDefault()
 
         if (mobilenumber_validator(Number(Mobilenumber)) !== true) {
-            showmodalwithmessage("Please provide a valid Indian mobile number")
+            showmodalwithmessageandvariant(showmodal, "Please provide a valid Indian mobile number", changeerrormessage)
             return
         }
 
         if (Password !== Confirmedpassword) {
-            showmodalwithmessage("Password and Confirm password do not match")
+            showmodalwithmessageandvariant(showmodal, "Password and Confirm password do not match", changeerrormessage)
             return
         }
 
 
         schema.validate({ Name, Password, Email }, { abortEarly: false }).then(async userdata => {
-            const response = await axiosinstance.post('/user/signup',{...userdata, Mobilenumber:mobilenumber.current})
+            const response = await axiosinstance.post('/user/signup', { ...userdata, Mobilenumber: mobilenumber.current })
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
-                showmodalwithmessage(response.data.error)
+                showmodalwithmessageandvariant(showmodal, response.data.error, changeerrormessage)
                 return
             }
             const { Name, Email, Location, token, Mobilenumber } = response.data
@@ -91,11 +81,10 @@ export const Signup = ({ history }) => {
             return
         }).catch(function (err) {
             if (err.errors !== undefined) {
-                showmodalwithmessage(err.errors[0])
+                showmodalwithmessageandvariant(showmodal, err.errors[0], changeerrormessage)
                 return
             }
-
-            showmodalwithmessage("Sorry some error occurred. Please try again later")
+            showmodalwithmessageandvariant(showmodal, "Sorry some error occurred. Please try again later", changeerrormessage)
         })
     }
 
@@ -138,11 +127,13 @@ export const Signup = ({ history }) => {
                 <div className="col-2"></div>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalalert py-5" onHide={hidemodal}>
-                <span className="d-flex justify-content-center ">
-                    <ErrorRoundedIcon style={{ color: "red" }} />
-                    <h5 className="text-danger">{errormessage}</h5>
-                </span>
+            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
+                <Alert variant="danger">
+                    <span className="d-flex justify-content-center ">
+                        <ErrorRoundedIcon style={{ color: "red" }} />
+                        <h5 className="text-danger">{errormessage}</h5>
+                    </span>
+                </Alert>
 
             </Modal>
         </>
