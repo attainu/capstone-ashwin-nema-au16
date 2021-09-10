@@ -23,9 +23,9 @@ const Usercart = ({nomargin}) => {
 
     return (
         <>
-            <div className={`usercart ${nomargin === undefined ? `mt-3` : ``} `}>
-                <div className="usercartsection"></div>
-                <div className="profilecontentdisplaycolor usercartsectionitems ps-3 me-3 py-3 pe-3">
+            <div className="usercart">
+                <div className="usercartsection "></div>
+                <div className={`profilecontentdisplaycolor usercartsectionitems ps-3 me-3 py-3 pe-3 ${nomargin === undefined && "mt-5"}`}>
                     <h5>My Cart{count > 0 ? <>({count}) </> : <></>}</h5>
                     {count === 0 && <>
                         <div className="d-flex justify-content-center">
@@ -51,7 +51,7 @@ const Usercart = ({nomargin}) => {
                         </SimpleBar>
                     </>}
                 </div>
-                {count > 0 && <div className="profilecontentdisplaycolor pe-3 ps-3 py-3 usercartpaymentsection">
+                {count > 0 && <div className={`profilecontentdisplaycolor pe-3 ps-3 py-3 h-100 usercartpaymentsection ${nomargin === undefined && "mt-5"}`}>
                     <h5>Price details(Summary)</h5>
                     <hr />
                     <div className="space-between smalltext">

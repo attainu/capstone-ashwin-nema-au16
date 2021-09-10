@@ -3,13 +3,37 @@ import Radio from '@material-ui/core/Radio';
 import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector } from "react-redux";
-import { Alert } from "react-bootstrap";
-import {deliverydate} from '../../utils'
+import { Alert, Modal } from "react-bootstrap";
+import { deliverydate } from '../../utils'
+import { useState } from "react";
+import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
+import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 // url: 'https://apna-mart.herokuapp.com/getprofile',
 // url: 'http://localhost:3000/getprofile',
 // url: 'http://localhost:5000/getprofile',
 export default function PaymentSection() {
-    const {Name, Email, Mobilenumber} = useSelector(state => state.Profile)
+    const { Name, Email, Mobilenumber } = useSelector(state => state.Profile)
+    const cart = useSelector(state => state.Cart)
+    const Auth = useSelector(state => state.Auth)
+    const cartprice = useSelector(state => state.CartPrice)
+
+    const [modalmessage, changemodalmessage] = useState("")
+    const [modal, showmodal] = useState(false)
+    const [modalvariant, changemodalvariant] = useState("warning")
+    const [paymentmode, changepaymentmode] = useState("Cash")
+
+    const auth = { "Auth": Auth }
+
+    const showmodalwithmessageandvariant = (message, variant) => {
+        changemodalmessage(message)
+        changemodalvariant(variant)
+        showmodal(true)
+    }
+
+    const hidemodal = () => {
+        showmodal(false)
+    }
+
     function loadScript(src) {
         return new Promise((resolve) => {
             const script = document.createElement("script");
@@ -31,53 +55,110 @@ export default function PaymentSection() {
             "https://checkout.razorpay.com/v1/checkout.js"
         );
 
+
         if (!res) {
-            alert("Razorpay SDK failed to load. Are you online?");
+            showmodalwithmessageandvariant("Sorry Razorpay could not be loaded. Please use cash payment mode or try again later", "danger")
             return;
         }
 
-        const result = await axios.post("http://localhost:5000/user/order/payment/razorpay");
+        const orderconfig = {
+            method: 'post',
+            url: "http://localhost:5000/user/order/payment/razorpay",
+            headers: auth,
+            data:{cartprice}
+        }
+
+        const result = await axios(
+            orderconfig
+        );
 
         if (!result) {
-            alert("Server error. Are you online?");
+            showmodalwithmessageandvariant("You are not online. Please be online if you want to place order", "danger")
             return;
         }
-        const { amount, id: order_id, currency } = result.data;
 
-        const options = {
-            key: "rzp_test_lYaL0slH0VoZzj", // Enter the Key ID generated from the Dashboard
-            amount: amount.toString(),
-            currency: currency,
-            name: "Apnamart",
-            image: "https://res.cloudinary.com/ash006/image/upload/v1622457972/shop_myswcw.jpg",
-            description: "",
-            order_id: order_id,
-            handler: async function (response) {
-                const data = {
-                    orderCreationId: order_id,
-                    razorpayPaymentId: response.razorpay_payment_id,
-                    razorpayOrderId: response.razorpay_order_id,
-                    razorpaySignature: response.razorpay_signature,
-                };
+        const loginerror = result.data.error === "Token is not provided" || result.data.error === "Please provide a valid token"
+        if (loginerror) {
+            showmodalwithmessageandvariant("Sorry you have been logged out. Please login again to continue", "danger")
+            return
+        }
 
-                await axios.post("http://localhost:5000/user/order/payment/razorpay/success", data);
-            },
-            prefill: {
-                name: Name,
-                email: Email,
-                contact: Mobilenumber,
-            },
-            notes: {
-                address: "So ",
-            },
-            theme: {
-                color: "#ffc107",
-            },
-        };
-        const paymentObject = new window.Razorpay(options);
-        paymentObject.open();
+        if (result.data.error !== undefined && !loginerror) {
+            showmodalwithmessageandvariant(result.data.error, "danger")
+            return
+        }
+
+        if (result.data.error === undefined) {
+
+            const { amount, id: order_id, currency } = result.data;
+
+            const options = {
+                key: "rzp_test_lYaL0slH0VoZzj", // Enter the Key ID generated from the Dashboard
+                amount: amount.toString(),
+                currency: currency,
+                name: "Apnamart",
+                image: "https://res.cloudinary.com/ash006/image/upload/v1622457972/shop_myswcw.jpg",
+                description: "",
+                order_id: order_id,
+                handler: async function (response) {
+                    const data = {
+                        orderCreationId: order_id,
+                        razorpayPaymentId: response.razorpay_payment_id,
+                        razorpayOrderId: response.razorpay_order_id,
+                        razorpaySignature: response.razorpay_signature,
+                    };
+
+
+                    const successresponse = await axios.post("http://localhost:5000/user/order/payment/razorpay/success", data);
+
+                    if (!successresponse) {
+                        showmodalwithmessageandvariant("Sorry something went wrong your order could not be placed.", "danger")
+                        return
+                    }
+                },
+                prefill: {
+                    name: Name,
+                    email: Email,
+                    contact: Mobilenumber,
+                },
+                notes: {
+                    address: "So ",
+                },
+                theme: {
+                    color: "#ffc107",
+                },
+            };
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+        }
+
     }
-    
+
+    const cashmode = () => {
+        axios({
+            method: 'post',
+            url: 'http://localhost:5000/user/order/cash',
+            data: {
+                items: cart
+            },
+            // headers: auth
+        }).then(({data}) => {
+            const loginerror = data.error === "Token is not provided" || data.error === "Please provide a valid token"
+            if (loginerror ) {
+                showmodalwithmessageandvariant("Sorry you have been logged out. Please login again to continue", "danger")
+                return
+            }
+            if (data.error !== undefined) {
+                showmodalwithmessageandvariant(data.error, "danger")
+            }
+            showmodalwithmessageandvariant("Your order is successfully placed", "warning")
+        }).catch(() => {
+            showmodalwithmessageandvariant("Sorry your order could not be placed. Please try again later", "danger")
+        }
+
+        )
+    }
+
     return (
         <>
             <div className="checkoutaccordion mt-5">
@@ -91,23 +172,58 @@ export default function PaymentSection() {
                             <FormControlLabel
                                 label="Cash on delivery"
                                 value="Cash"
+                                onClick={() => changepaymentmode("Cash")}
                                 control={<Radio color="primary" />}
                                 labelPlacement="start"
                             />
                             <FormControlLabel
                                 value="Razorpay"
-                                onClick={displayRazorpay}
+                                onClick={() => changepaymentmode("Razorpay")}
                                 control={<Radio color="primary" />}
                                 label="Razorpay"
                                 labelPlacement="start"
                             />
                         </RadioGroup>
                     </FormControl>
-                    <button  className="bordernone p-2 rounded-pill bg-warning mt-3" >
-                        Continue <DoubleArrowIcon />
-                    </button>
+                    {
+                        paymentmode === "Cash" ? <button onClick={cashmode} className="bordernone p-2 rounded-pill bg-warning mt-3" >
+                            Continue <DoubleArrowIcon />
+                        </button> : <button onClick={displayRazorpay} className="bordernone p-2 rounded-pill bg-warning mt-3" >
+                            Continue <DoubleArrowIcon />
+                        </button>
+                    }
                 </div>
             </div>
+
+            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={hidemodal}>
+                <Alert variant={`${modalvariant}`}>
+                    <span className="d-flex justify-content-center ">
+                        {
+                            modalmessage === "Your order is successfully placed" ?
+                                <>
+                                    <div className="d-flex flex-column">
+                                        <div className="d-flex justify-content-center">
+                                            <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
+                                        </div>
+
+                                        <div >
+                                            <h5>
+                                                {modalmessage}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <ErrorRoundedIcon style={{ color: "red" }} />
+                                    <h5>
+                                        {modalmessage}
+                                    </h5>
+                                </>
+                        }
+                    </span>
+                </Alert>
+            </Modal>
 
         </>
     )

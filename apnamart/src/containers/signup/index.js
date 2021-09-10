@@ -4,11 +4,12 @@ import * as yup from 'yup'
 import './index.css'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
-import { authsetter,  setprofile } from '../../actions'
+import { authsetter, setprofile } from '../../actions'
 import { PATHS } from '../../config'
 import { Redirect } from 'react-router'
 import { Modal } from 'react-bootstrap'
 import { mobilenumber_validator } from '../../utils'
+import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
@@ -26,6 +27,11 @@ export const Signup = ({ history }) => {
         Email: yup.string().email().required()
     })
 
+    const showmodalwithmessage = (message) => {
+        changeerrormessage(message)
+        showmodal(true)
+    }
+
     const setmobilenumber = (e) => {
         const newmobilenumber = Number(e.target.value)
         if (isNaN(newmobilenumber)) {
@@ -33,12 +39,12 @@ export const Signup = ({ history }) => {
         }
 
         if (e.target.value.length > 10) {
+            showmodalwithmessage("Mobile number cannot be of more than 10 digit")
             return
         }
 
         if (e.target.value.length === 10 && mobilenumber_validator(newmobilenumber) !== true) {
-            changeerrormessage("Please provide a valid Indian mobile number")
-            showmodal(true)
+            showmodalwithmessage("Please provide a valid Indian mobile number")
             return
         }
 
@@ -51,17 +57,14 @@ export const Signup = ({ history }) => {
 
     const submithandler = (e) => {
         e.preventDefault()
-        changeerrormessage('')
 
         if (mobilenumber_validator(Number(Mobilenumber)) !== true) {
-            changeerrormessage("Please provide a valid Indian mobile number")
-            showmodal(true)
+            showmodalwithmessage("Please provide a valid Indian mobile number")
             return
         }
 
         if (Password !== Confirmedpassword) {
-            changeerrormessage("Password and Confirm password do not match")
-            showmodal(true)
+            showmodalwithmessage("Password and Confirm password do not match")
             return
         }
         // url: 'http://localhost:3000/editprofile',
@@ -79,20 +82,18 @@ export const Signup = ({ history }) => {
 
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
-                changeerrormessage(response.data.error)
-                showmodal(true)
+                showmodalwithmessage(response.data.error)
                 return
             }
 
             dispatch(authsetter(response.data.token))
-            const {Name, Email, Location} = response.data
-            dispatch(setprofile({Name, Email, Location, Mobilenumber:response.data.Mobilenumber}))
+            const { Name, Email, Location } = response.data
+            dispatch(setprofile({ Name, Email, Location, Mobilenumber: response.data.Mobilenumber }))
             history.push(PATHS.HOME)
             return
 
         }).catch(function (err) {
-            changeerrormessage(err.errors[0])
-            showmodal(true)
+            showmodalwithmessage(err.errors[0])
         })
     }
 
@@ -137,9 +138,8 @@ export const Signup = ({ history }) => {
 
             <Modal centered show={modal} contentClassName="modalalert py-5" onHide={hidemodal}>
                 <span className="d-flex justify-content-center ">
-                    <div>
-                        <h5 className="text-danger">{errormessage}</h5>
-                    </div>
+                    <ErrorRoundedIcon style={{ color: "red" }} />
+                    <h5 className="text-danger">{errormessage}</h5>
                 </span>
 
             </Modal>

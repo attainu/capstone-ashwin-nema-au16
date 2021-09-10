@@ -1,12 +1,11 @@
 import './index.css'
 import {changecartstate,changecartprice } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
-import { PATHS } from '../../config'
 
 const Carouselitem = ({ itemdetails, history }) => {
     const dispatch = useDispatch() 
     const {add_new_item, remove_item,increase_item_count, decrease_item_count} = changecartstate
-    const {price, image, name,_id } = itemdetails
+    const {price, image, name,_id, link } = itemdetails
     const cartprice = useSelector(state => state.CartPrice)
     const cartitems = useSelector(state => state.Cart)
     const count = cartitems[_id] === undefined ? 0 : cartitems[_id].count
@@ -15,7 +14,7 @@ const Carouselitem = ({ itemdetails, history }) => {
     const Add_to_cart = () => {
         dispatch(changecartprice(cartprice + price))
         if (count === 0) {
-            dispatch(add_new_item({_id, price}))
+            dispatch(add_new_item({_id}))
             return
         }
         dispatch(increase_item_count(_id))
@@ -31,7 +30,7 @@ const Carouselitem = ({ itemdetails, history }) => {
     }
 
     const Redirect = () => {
-        history.push(`${PATHS.PRODUCTPATH}${_id}`)
+        history.push(`${link}`)
     }
     return (
         <>

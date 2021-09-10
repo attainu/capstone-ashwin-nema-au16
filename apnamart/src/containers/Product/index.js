@@ -56,7 +56,7 @@ const Product = ({ history }) => {
 
         dispatch(changecartprice(cartprice + price))
         if (count === 0) {
-            dispatch(add_new_item({ _id, price }))
+            dispatch(add_new_item({ _id }))
             return
         }
         dispatch(increase_item_count(_id))
@@ -86,10 +86,6 @@ const Product = ({ history }) => {
         enlargedImageContainerStyle: { background: '#fff', zIndex: 9 },
         enlargedImagePosition:'beside',
         enlargedImageContainerDimensions:{width: '155%', height: '150%'},
-        lensStyle: {
-            width:"10px",
-            height:10
-          },
         shouldUsePositiveSpaceLens:true
     };
 

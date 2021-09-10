@@ -137,8 +137,8 @@ export default function LocationMap() {
                 }
 
                 displaymodaltouser("Location saved")
-                dispatch(setprofile({Name, Email, Mobilenumber, Location:[lat, lng]}))
-        
+                dispatch(setprofile({ Name, Email, Mobilenumber, Location: [lat, lng] }))
+
                 if (addresscontext !== undefined && addresscontext !== null) {
                     addresscontext(false)
                 }
@@ -208,34 +208,34 @@ export default function LocationMap() {
             </div>
 
             <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={hidemodal}>
-                                <Alert variant={`${modalvariant}`}>
-                                    <span className="d-flex justify-content-center ">
-                                        {
-                                            modalmessage.current === "Location saved" ?
-                                                <>
-                                                    <div className="d-flex flex-column">
-                                                        <div className="d-flex justify-content-center">
-                                                            <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
-                                                        </div>
+                <Alert variant={`${modalvariant}`}>
+                    <span className="d-flex justify-content-center ">
+                        {
+                            modalmessage.current === "Location saved" ?
+                                <>
+                                    <div className="d-flex flex-column">
+                                        <div className="d-flex justify-content-center">
+                                            <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
+                                        </div>
 
-                                                        <div >
-                                                            <h5>
-                                                                {modalmessage.current}
-                                                            </h5>
-                                                        </div>
-                                                    </div>
-                                                </>
-                                                :
-                                                <>
-                                                    <ErrorRoundedIcon style={{ color: "red" }} />
-                                                    <h5>
-                                                        {modalmessage.current}
-                                                    </h5>
-                                                </>
-                                        }
-                                    </span>
-                                </Alert>
-                            </Modal>
+                                        <div >
+                                            <h5>
+                                                {modalmessage.current}
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <ErrorRoundedIcon style={{ color: "red" }} />
+                                    <h5>
+                                        {modalmessage.current}
+                                    </h5>
+                                </>
+                        }
+                    </span>
+                </Alert>
+            </Modal>
         </div>
     )
 }

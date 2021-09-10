@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import EditIcon from '@material-ui/icons/Edit';
 
 // url: 'https://apna-mart.herokuapp.com/getprofile',
 // url: 'http://localhost:3000/getprofile',
@@ -142,7 +143,8 @@ export const UserAccountInformation = () => {
                                 <CancelRoundedIcon className="closeeditingbutton" onClick={hidemodal} />
                             </div>
                             <Alert variant="warning">
-                                <h5 className="mb-3 text-center">Edit Information</h5>
+                                <h5 className="mb-3 text-center">Edit Information <EditIcon /> </h5>
+
                                 <form onSubmit={saveuserdata} >
                                     <div>
                                         <label className="form-label">Name</label>

@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 import { Modal } from 'react-bootstrap'
 import * as yup from 'yup'
+import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
+
 
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
@@ -28,6 +30,11 @@ export const Login = ({ history }) => {
         showmodal(false)
     }
 
+    const showmodalwithmessage = (message) => {
+        changeerrormessage(message)
+        showmodal(true)
+    }
+
     const submithandler = (e) => {
         e.preventDefault()
         changeerrormessage("")
@@ -47,20 +54,18 @@ export const Login = ({ history }) => {
 
             if (response.data.error !== "") {
                 dispatch(authsetter(" "))
-                changeerrormessage(response.data.error)
-                showmodal(true)
+                showmodalwithmessage(response.data.error)
                 return
             }
 
-            const {Name, Email, Mobilenumber, Location} = response.data
+            const { Name, Email, Mobilenumber, Location } = response.data
             dispatch(authsetter(response.data.token))
-            dispatch(setprofile({Name, Email, Mobilenumber, Location}))
+            dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
             history.push(PATHS.HOME)
             return
 
         }).catch(function (err) {
-            changeerrormessage(err.errors[0])
-            showmodal(true)
+            showmodalwithmessage(err.errors[0])
         })
     }
 
@@ -96,6 +101,7 @@ export const Login = ({ history }) => {
 
             <Modal centered show={modal} contentClassName="modalalert text-danger py-5" onHide={hidemodal}>
                 <span className="d-flex justify-content-center ">
+                    <ErrorRoundedIcon style={{ color: "red" }} />
                     <h5>{errormessage}</h5>
                 </span>
 

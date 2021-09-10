@@ -17,7 +17,7 @@ const Header = ({ children }) => {
     const [childrenmargin, changemargin] = useState("80px")
 
     useEffect(() => {
-        changemargin(`${bounds.height}px`) 
+        changemargin(`${bounds.height + 20}px`) 
     }, [bounds])
     const Auth = useSelector(state => state.Auth)
     const userprofile = useSelector(state => state.Profile)
@@ -116,7 +116,7 @@ const Header = ({ children }) => {
                     </div>
                 </div>
 
-                <div style={{marginTop:childrenmargin} } className="children">
+                <div style={{marginTop:childrenmargin } } className="children">
                 {children}
                 </div>
 

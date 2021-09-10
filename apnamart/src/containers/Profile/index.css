@@ -37,3 +37,8 @@
     background-color: transparent;
     border: none;
 }
+
+.imageandname {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
