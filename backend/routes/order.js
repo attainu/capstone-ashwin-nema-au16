@@ -5,10 +5,13 @@ require('dotenv').config()
 const { RAZORPAYKEY, RAZORPAYPASSWORD } = process.env
 const order_router = express.Router()
 order_router.use(express.urlencoded({ extended: true }))
+const {  orderauthenticationandgeneration } = require('../middlewares/product')
+const OrderModel = require('../models/order')
+const { authenticatetoken } = require('../middlewares/token')
+const mongoose = require('mongoose')
 
-
-
-order_router.post("/payment/razorpay", async (req, res) => {
+order_router.post("/payment/razorpay", authenticatetoken, async (req, res) => {
+    const { cartprice } = req.body
     try {
         var instance = new Razorpay({
             key_id: RAZORPAYKEY,
@@ -16,59 +19,61 @@ order_router.post("/payment/razorpay", async (req, res) => {
         });
 
         const options = {
-            amount: 50000, // amount in smallest currency unit
+            amount: cartprice * 100, // amount in smallest currency unit
             currency: "INR",
-            receipt: "receipt_order_74394",
         };
-
         const order = await instance.orders.create(options);
-
         if (!order) return res.status(500).send("Some error occured");
-
         return res.json(order);
     } catch (error) {
         return res.status(500).send(error);
     }
 });
 
-order_router.post("/payment/razorpay/success", async (req, res) => {
+order_router.post("/payment/razorpay/success", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
+    const { ordereditems, price } = req.neworder
+    const {
+        orderCreationId,
+        razorpayPaymentId,
+        razorpayOrderId,
+        razorpaySignature,
+    } = req.body
 
     try {
-        // getting the details back from our font-end
-        const {
-            orderCreationId,
-            razorpayPaymentId,
-            razorpayOrderId,
-            razorpaySignature,
-        } = req.body;
+        let hmac = crypto.createHmac('sha256', RAZORPAYPASSWORD)
+        hmac.update(razorpayOrderId + "|" + razorpayPaymentId);
+        const generated_signature = hmac.digest('hex')
+        if (razorpaySignature !== generated_signature) {
+            return res.json({ error: "Sorry order could not be generated" })
+        }
 
-        // Creating our own digest
-        // The format should be like this:
-        // digest = hmac_sha256(orderCreationId + "|" + razorpayPaymentId, secret);
-        const shasum = crypto.createHmac("sha256", "w2lBtgmeuDUfnJVp43UpcaiT");
-
-        shasum.update(`${orderCreationId}|${razorpayPaymentId}`);
-
-        const digest = shasum.digest("hex");
-
-        // comaparing our digest with the actual signature
-
-        // if (digest !== razorpaySignature) {
-        //     console.log("Try is stopping here")
-        //     return res.status(400).json({ msg: "Transaction not legit!" });
+        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems, paymentid:razorpayPaymentId,paymentmode:"Razorpay"  }
+        const finalorder = new OrderModel(userorder)
+        await finalorder.save()
+        return res.json({ success: true })
+        // if (razorpaySignature === generated_signature) {
+        //     return res.json({ success: true })
         // }
-
-        // THE PAYMENT IS LEGIT & VERIFIED
-        // YOU CAN SAVE THE DETAILS IN YOUR DATABASE IF YOU WANT
-        return res.json({
-            msg: "success",
-            orderId: razorpayOrderId,
-            paymentId: razorpayPaymentId,
-        });
+        // res.json({ error: true })
     } catch (error) {
         res.status(500).send(error);
     }
-});
+})
 
+order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
+    const { ordereditems, price } = req.neworder
+    try {
+        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems }
+        const finalorder = new OrderModel(userorder)
+        await finalorder.save()
+        return res.json({ success: true })
+
+    } catch (error) {
+
+        console.log(error)
+        return res.json({ error: "Sorry something went wrong" })
+
+    }
+})
 
 module.exports = order_router

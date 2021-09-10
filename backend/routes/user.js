@@ -7,7 +7,9 @@ user_router.use(express.urlencoded({ extended: true }))
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const { validate_email, validate_mobile_number, validate_password, verify_mobile_number, verify_email } = require('../middlewares/verification')
-const {authenticatetoken, accesstokengenerator} = require('../middlewares/token')
+const {authenticatetoken, accesstokengenerator} = require('../middlewares/token');
+// const TokenModel = require('../models/token');
+// const { newtokengenerator} = require('../middlewares/token');
 
 user_router.post("/signup", async (req, res) => {
     const verifyemail = await verify_email(req.body.Email)
@@ -32,6 +34,7 @@ user_router.post("/signup", async (req, res) => {
         req.body.Password = hash
         const newuser = new UserModel(req.body)
         const finaluser = await newuser.save()
+        // const token = await newtokengenerator(finaluser._id)
         const token = accesstokengenerator(finaluser._id)
         const {Name, Email, Mobilenumber, Location} = finaluser
         return res.json({ error: "", token,Name, Email, Mobilenumber, Location })
@@ -43,15 +46,18 @@ user_router.post("/signup", async (req, res) => {
 
 user_router.post("/login", async (req, res) => {
     try {
-        const user = await UserModel.findOne({ Email: req.body.Email })
-        const isMatching = await bcrypt.compare(req.body.Password, user.Password)
+        const {Email, Password} = req.body
+        const user = await UserModel.findOne({ Email })
+        const isMatching = await bcrypt.compare(Password, user.Password)
         if (user != null && isMatching) {
             const token = accesstokengenerator(user._id)
+            // const token = await newtokengenerator(user._id)
             const {Name, Email, Mobilenumber, Location} = user
             return res.json({ error: "", token, Name, Email, Mobilenumber, Location })
         }
 
     } catch (error) {
+        console.log(error)
         return res.json({ error: "Please SignUp to continue" })
     }
 
@@ -59,10 +65,9 @@ user_router.post("/login", async (req, res) => {
 })
 
 user_router.post("/profile", authenticatetoken,async (req, res) => {
-
     try {
 
-        let user = await UserModel.findById(req.verifieduser.id)
+        let user = await UserModel.findById(req.verifieduser)
         const { Name, Mobilenumber, Email, Location } = user
         return res.json({ Name, Mobilenumber, Email, error: "", Location })
 
@@ -72,40 +77,41 @@ user_router.post("/profile", authenticatetoken,async (req, res) => {
 })
 
 user_router.put("/profile",authenticatetoken ,async (req, res) => {
+    const {Password, NewPassword, Name, Email, Mobilenumber} = req.body
     try {
-        if (Object.keys(req.body).length !== 5 || req.body.Password === undefined || req.body.NewPassword === undefined) {
+        if (Object.keys(req.body).length !== 5 || Password === undefined || NewPassword === undefined) {
             return res.json({ error: "Inputs provided are not of valid format" })
         }
 
-        if (req.body.Name === undefined || req.body.Name.length === 0) return res.json({ errror: "Name is not valid" })
+        if (Name === undefined || Name.length === 0) return res.json({ error: "Name is not valid" })
 
-        const email = await validate_email(req.body.Email, req.verifieduser.id)
-        const mobilenumber = await validate_mobile_number(req.body.Mobilenumber, req.verifieduser.id)
+        const email = await validate_email(Email, req.verifieduser)
+        const mobilenumber = await validate_mobile_number(Mobilenumber, req.verifieduser)
 
-        if (req.verifieduser.id != email) {
+        if (req.verifieduser != email) {
             return res.json({ error: "Sorry another user with this email already exists" })
         }
 
-        if (req.verifieduser.id != mobilenumber) {
+        if (req.verifieduser != mobilenumber) {
             return res.json({ error: "Sorry another user with this mobile number already exists" })
         }
 
         let editeduser = {}
 
-        if (req.body.Password !== "" && req.body.NewPassword !== "" && typeof req.body.NewPassword === "string") {
-            const oldpassword = await validate_password(req.body.Password, req.verifieduser.id)
+        if (Password !== "" && NewPassword !== "" && typeof NewPassword === "string") {
+            const oldpassword = await validate_password(Password, req.verifieduser)
             if (oldpassword === true) {
                 const salt = await bcrypt.genSalt(10)
-                const hash = await bcrypt.hash(req.body.NewPassword, salt)
+                const hash = await bcrypt.hash(NewPassword, salt)
                 editeduser.Password = hash
             }
         }
 
-        delete req.body.NewPassword
-        delete req.body.Password
+        delete NewPassword
+        delete Password
         editeduser = { ...editeduser, ...req.body }
 
-        updateduser = await UserModel.updateOne({ _id:req.verifieduser.id }, { $set: editeduser })
+        updateduser = await UserModel.updateOne({ _id:req.verifieduser }, { $set: editeduser })
         return res.json({ error: "" })
 
     } catch (error) {
@@ -128,7 +134,7 @@ user_router.post("/location", authenticatetoken,async (req, res) => {
 user_router.put("/location", authenticatetoken,async (req, res) => {
 
     try {
-        let user = await UserModel.findById(req.verifieduser.id)
+        let user = await UserModel.findById(req.verifieduser)
         if (user === null) {
             return res.json({ error: "No such user present" })
         }
@@ -138,7 +144,7 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
             return res.json({ error: "Sorry we do not serve this area" })
         }
 
-        await UserModel.updateOne({ _id: req.verifieduser.id }, { $set: { Location: req.body.Location } })
+        await UserModel.updateOne({ _id: req.verifieduser }, { $set: { Location: req.body.Location } })
         return res.json({ error: "" })
     }
 
@@ -147,5 +153,15 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
         return res.json({ error: "Sorry your location could not be saved some error occurred. Please try again later" })
     }
 })
+
+// user_router.post("/logout", authenticatetoken, async (req, res) => {
+//     try {
+//         await TokenModel.findByIdAndDelete(req.headers.auth)
+//         res.json({error:""})
+//     }
+//     catch {
+//         res.json({error:"You have been logged out"})
+//     }
+// })
 
 module.exports = user_router
