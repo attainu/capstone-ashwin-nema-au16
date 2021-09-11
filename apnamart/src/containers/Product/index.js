@@ -93,7 +93,6 @@ const Product = ({ history }) => {
             <div className="productcontent space-between mt-3">
                 <div ref={ref} className="productimage">
                     <ReactImageMagnify {...imageProps} />
-                    {/* <img src={image} alt={name} /> */}
                 </div>
 
                 <div className="productinformation">
@@ -124,8 +123,9 @@ const Product = ({ history }) => {
             <div>
             </div>
             <hr className="mx-4 mt-5"></hr>
-            <div className="productdescription ms-2">
+            <div className="productdescription ms-2 text-wrap">
                 <h6>Product description</h6>
+                <pre className="text-wrap ms-1 me-1"> 
                 {
                     typeof description === "string" ? <p >{description}</p> :
                         <ul>
@@ -138,6 +138,7 @@ const Product = ({ history }) => {
                             }
                         </ul>
                 }
+                </pre>
             </div>
             <hr className="mx-4 mt-5"></hr>
             <div className="ms-2">

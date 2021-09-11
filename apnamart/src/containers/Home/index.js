@@ -18,11 +18,11 @@ export const Home = ({ history }) => {
 
     return (
         <>
-            <div className="mt-3 pt-3">
-                <div className="ms-3 mb-2">
-                    Search by item
+            <div className="mt-3 pt-3 w-100">
+                <div className="ms-3 mb-3">
+                    <strong>Search by item</strong>
                 </div>
-                <Carousel breakPoints={breakpoints}>
+                <Carousel className="displaycarousel" breakPoints={breakpoints}>
                     {
                         Object.keys(items).map((item, index) => {
                             return (
@@ -34,11 +34,11 @@ export const Home = ({ history }) => {
             </div>
 
             <div className="mt-3 pt-3">
-                <div className="ms-3 mb-2">
-                    Search by category
+                <div className="ms-3 mb-3">
+                    <strong>Search by category</strong>
                 </div>
 
-                <Carousel breakPoints={breakpoints}>
+                <Carousel className="displaycarousel" breakPoints={breakpoints}>
                     {
                         Object.keys(subcategories).map((item, index) => {
                             const { image, name, link } = subcategories[item]

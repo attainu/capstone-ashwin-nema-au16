@@ -2,11 +2,12 @@ import './index.css'
 
 const Footer = () => {
 
+
     return (
         <>
-        <footer className="footer">
-                Mr Footer
-        </footer>
+                <footer className="footer mt-5 bg-warning">
+                    Mr Footer
+                </footer>
         </>
     )
 }

@@ -1,20 +1,17 @@
-import axios from "axios";
 import Radio from '@material-ui/core/Radio';
 import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector } from "react-redux";
 import { Alert, Modal } from "react-bootstrap";
-import { deliverydate } from '../../utils'
+import { deliverydate, hidemodal, showmodalwithmessageandvariant } from '../../utils'
 import { useState } from "react";
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
-// url: 'https://apna-mart.herokuapp.com/getprofile',
-// url: 'http://localhost:3000/getprofile',
-// url: 'http://localhost:5000/getprofile',
+import {axiosinstance} from '../../config'
+
 export default function PaymentSection() {
     const { Name, Email, Mobilenumber } = useSelector(state => state.Profile)
     const cart = useSelector(state => state.Cart)
-    const Auth = useSelector(state => state.Auth)
     const cartprice = useSelector(state => state.CartPrice)
 
     const [modalmessage, changemodalmessage] = useState("")
@@ -22,16 +19,8 @@ export default function PaymentSection() {
     const [modalvariant, changemodalvariant] = useState("warning")
     const [paymentmode, changepaymentmode] = useState("Cash")
 
-    const auth = { "Auth": Auth }
-
-    const showmodalwithmessageandvariant = (message, variant) => {
-        changemodalmessage(message)
-        changemodalvariant(variant)
-        showmodal(true)
-    }
-
-    const hidemodal = () => {
-        showmodal(false)
+    const displaymodal = (message, variant) => {
+        showmodalwithmessageandvariant(showmodal, message,changemodalmessage, variant, changemodalvariant)
     }
 
     function loadScript(src) {
@@ -52,7 +41,7 @@ export default function PaymentSection() {
 
     const setloginerror = (error) => {
         if (error === "Token is not provided" || error === "Please provide a valid token") {
-            showmodalwithmessageandvariant("Sorry you have been logged out. Please login again to continue", "danger")
+            displaymodal("Sorry you have been logged out. Please login again to continue", "danger")
             return true
         }
         return false
@@ -64,30 +53,21 @@ export default function PaymentSection() {
         );
 
         if (!res) {
-            showmodalwithmessageandvariant("Sorry Razorpay could not be loaded. Please use cash payment mode or try again later", "danger")
+            displaymodal("Sorry Razorpay could not be loaded. Please use cash payment mode or try again later", "danger")
             return;
         }
 
-        const orderconfig = {
-            method: 'post',
-            url: "http://localhost:5000/user/order/payment/razorpay",
-            headers: auth,
-            data:{cartprice}
-        }
-
-        const result = await axios(
-            orderconfig
-        );
+        const result = await axiosinstance.post('/user/order/payment/razorpay', {cartprice})
 
         if (!result) {
-            showmodalwithmessageandvariant("You are not online. Please be online if you want to place order", "danger")
+            displaymodal("You are not online. Please be online if you want to place order", "danger")
             return;
         }
 
         const loginerror = setloginerror(result.data.error)
 
         if (result.data.error !== undefined && !loginerror) {
-            showmodalwithmessageandvariant(result.data.error, "danger")
+            displaymodal(result.data.error, "danger")
             return
         }
 
@@ -111,17 +91,10 @@ export default function PaymentSection() {
                         razorpaySignature: response.razorpay_signature,
                     };
 
-                    const ordersuccessconfig = {
-                        method: 'post',
-                        url: "http://localhost:5000/user/order/payment/razorpay/success",
-                        headers: auth,
-                        data:{cartprice,items: cart }
-                    }
-
-                    const successresponse = await axios(ordersuccessconfig);
+                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {cartprice, items:cart, ...data})
 
                     if (!successresponse) {
-                        showmodalwithmessageandvariant("Sorry something went wrong your order could not be placed.", "danger")
+                        displaymodal("Sorry something went wrong your order could not be placed.", "danger")
                         return
                     }
                 },
@@ -144,23 +117,16 @@ export default function PaymentSection() {
     }
 
     const cashmode = () => {
-        axios({
-            method: 'post',
-            url: 'http://localhost:5000/user/order/cash',
-            data: {
-                items: cart
-            },
-            headers: auth
-        }).then(({data}) => {
+        axiosinstance.post("/user/order/cash", {items:cart, cartprice}).then(({data}) => {
             const loginerror = setloginerror(data.error)
 
             if (data.error !== undefined && !loginerror) {
-                showmodalwithmessageandvariant(data.error, "danger")
+                displaymodal(data.error, "danger")
                 return
             }
-            showmodalwithmessageandvariant("Your order is successfully placed", "warning")
+            displaymodal("Your order is successfully placed", "warning")
         }).catch(() => {
-            showmodalwithmessageandvariant("Sorry your order could not be placed. Please try again later", "danger")
+            displaymodal("Sorry your order could not be placed. Please try again later", "danger")
         }
 
         )
@@ -202,7 +168,7 @@ export default function PaymentSection() {
                 </div>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={hidemodal}>
+            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
                 <Alert variant={`${modalvariant}`}>
                     <span className="d-flex justify-content-center ">
                         {

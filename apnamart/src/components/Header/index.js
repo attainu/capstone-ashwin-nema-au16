@@ -1,7 +1,7 @@
 import './index.css'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {InputSearchBar} from '../Search bar'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
@@ -14,8 +14,10 @@ const Header = ({ children }) => {
     const [count, changecount] = useState(0)
     const [ref, bounds] = useMeasure()
     const [childrenmargin, changemargin] = useState("80px")
+
     useEffect(() => {
-        changemargin(`${bounds.height + 20}px`) 
+        console.log(bounds.height)
+        changemargin(`${bounds.height}px`) 
     }, [bounds])
     const Auth = useSelector(state => state.Auth)
     const userprofile = useSelector(state => state.Profile)
@@ -33,7 +35,6 @@ const Header = ({ children }) => {
 
     useEffect(() => {
         if (Auth !== " " && Object.keys(userprofile).length === 0) {
-            console.log("Response came here")
             dispatch(getuserprofile())
         }
     }, [Auth, dispatch, userprofile])
@@ -61,7 +62,7 @@ const Header = ({ children }) => {
         <>
 
             <div className="mainwrapper">
-                <div ref={ref}  className="header space-between bg-warning pb-2">
+                <div ref={ref}  className="header space-between bg-warning pb-2 w-100">
                     <div className="logo">
                         <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
                     </div>

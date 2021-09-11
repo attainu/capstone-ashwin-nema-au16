@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 import { Carouselitem } from "../../components";
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import './index.css'
 
 export const Category = ({ history }) => {
     const { categoryid } = useParams()
@@ -42,25 +43,28 @@ export const Category = ({ history }) => {
 
     return (
         <>
-            {
-                Categories[categoryid] !== undefined &&
-                <>
-                    <h3 className="mt-3 ms-2">{Categories[categoryid].name}</h3>
+            <div className="categorydata">
+                {
+                    Categories[categoryid] !== undefined &&
+                    <>
+                        <h3 className="mt-3 ms-2">{Categories[categoryid].name}</h3>
 
-                    <div className="row">
-                        {
-                            Categorydata.map((item) => {
-                                const itemdetails = Productsdata[item._id]
-                                return (
-                                    <div key={Math.random()} className="col-4 mt-5">
-                                        <Carouselitem itemdetails={itemdetails} history={history} />
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                </>
-            }
+                        <div className="row">
+                            {
+                                Categorydata.map((item) => {
+                                    const itemdetails = Productsdata[item._id]
+                                    return (
+                                        <div key={Math.random()} className="col-4 mt-5">
+                                            <Carouselitem itemdetails={itemdetails} history={history} />
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </>
+                }
+            </div>
+
         </>
     )
 }

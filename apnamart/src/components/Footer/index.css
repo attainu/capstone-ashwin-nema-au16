@@ -1,6 +1,4 @@
-.footer
- {
-    height: 8vh;
-    background-color: purple;
-    width: 100vw;
-  } 
+.footer{
+  width: 100vw !important;
+  height: 10vh;
+}

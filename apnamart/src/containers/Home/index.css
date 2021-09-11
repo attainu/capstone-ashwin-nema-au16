@@ -16,3 +16,8 @@
 .carouselcategorycontent p:hover {
     cursor: pointer;
 }
+
+.displaycarousel{
+    margin-left: 5vw;
+    width: 90vw !important;
+}
