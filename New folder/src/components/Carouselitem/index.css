@@ -1,0 +1,36 @@
+.cartbutton {
+    width: 2vw;
+    height: 5vh;
+}
+
+.itemcarouselcount {
+    align-self: center;
+}
+
+.productcarousel {
+    flex-direction: column;
+    min-height: 30vh;
+    font-size: 1vw;
+}
+
+.productcarouselimage {
+    height: 15vh;
+}
+
+.cardimage {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.cardimage:hover {
+    transform: scale(1.2);
+}
+
+.productcarouselprice {
+    align-self: center;
+}
+
+.itemcarouseltext:hover, .cardimage:hover {
+    cursor: pointer;
+}

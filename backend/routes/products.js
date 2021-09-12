@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const products_router = express.Router()
 products_router.use(express.urlencoded({ extended: true }))
 
+
 products_router.post("/products", async (req, res) => {
     try {
         const allitemms = await ItemModel.find({})
@@ -59,7 +60,5 @@ products_router.post("/category/:id", async (req, res) => {
     }
 
 })
-
-
 
 module.exports = products_router

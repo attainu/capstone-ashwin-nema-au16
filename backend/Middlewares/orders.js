@@ -1,5 +1,7 @@
 const ItemModel = require("../models/items")
 const ItemModel2 = require("../models/items2")
+const OrderModel = require("../models/order")
+const mongoose = require('mongoose')
 
 const verifyproductcount = (productscount) => {
     for (i = 0; i < productscount.length; i++) {
@@ -42,7 +44,6 @@ const orderauthenticationandgeneration = async (req, res, next) => {
         }
 
         const { ordereditems, price } = finalorderandprice([...data1, ...data2], req.body.items)
-
         if (price !== cartprice) {
             return res.json({error: "Please do not maniplulate prices"})
         }
@@ -54,4 +55,14 @@ const orderauthenticationandgeneration = async (req, res, next) => {
     }
 }
 
-module.exports = { verifyproductcount, finalorderandprice, orderauthenticationandgeneration }
+const getorderdata = async (id) => {
+    const userorderdata = await OrderModel.aggregate([
+        { $match:{Customer: mongoose.Types.ObjectId(id)} },
+        {$project:{_id:1, status:1, price:1, ordereditems:1, paymentid:1, paymentmode:1, createdAt:1 } },
+        {$sort:{createdAt:-1}}
+    ])
+    
+    return userorderdata
+}
+
+module.exports = {  orderauthenticationandgeneration, getorderdata }

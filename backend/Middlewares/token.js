@@ -1,17 +1,10 @@
 const jwt = require('jsonwebtoken')
-const TokenModel = require('../models/token')
 require('dotenv').config()
 const { SECRET_KEY } = process.env
 
 function accesstokengenerator(id) {
     return jwt.sign({ id }, SECRET_KEY, { expiresIn: '168h' })
 }
-
-// async function newtokengenerator (id) {
-//     const newtoken = new TokenModel({userid: id})
-//     const usertoken = await newtoken.save()
-//     return usertoken._id
-// }
 
 async function authenticatetoken(req, res, next) {
     try {

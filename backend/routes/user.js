@@ -1,15 +1,13 @@
 const express = require('express')
 const UserModel = require('../models/user')
 const user_router = express.Router()
-const jwt = require('jsonwebtoken')
 const opencage = require('opencage-api-client');
 user_router.use(express.urlencoded({ extended: true }))
 const bcrypt = require('bcrypt')
 require('dotenv').config()
 const { validate_email, validate_mobile_number, validate_password, verify_mobile_number, verify_email } = require('../middlewares/verification')
 const {authenticatetoken, accesstokengenerator} = require('../middlewares/token');
-// const TokenModel = require('../models/token');
-// const { newtokengenerator} = require('../middlewares/token');
+const {getorderdata} = require('../middlewares/orders')
 
 user_router.post("/signup", async (req, res) => {
     const verifyemail = await verify_email(req.body.Email)
@@ -20,7 +18,6 @@ user_router.post("/signup", async (req, res) => {
     }
 
     const verifymobilenumber = await verify_mobile_number(req.body.Mobilenumber)
-
     if (verifymobilenumber != true) {
         return res.json({
             error: verifymobilenumber
@@ -34,12 +31,12 @@ user_router.post("/signup", async (req, res) => {
         req.body.Password = hash
         const newuser = new UserModel(req.body)
         const finaluser = await newuser.save()
-        // const token = await newtokengenerator(finaluser._id)
         const token = accesstokengenerator(finaluser._id)
         const {Name, Email, Mobilenumber, Location} = finaluser
         return res.json({ error: "", token,Name, Email, Mobilenumber, Location })
 
     } catch (error) {
+
         return res.json({ error: "Inputs provided are not valid" })
     }
 })
@@ -51,9 +48,9 @@ user_router.post("/login", async (req, res) => {
         const isMatching = await bcrypt.compare(Password, user.Password)
         if (user != null && isMatching) {
             const token = accesstokengenerator(user._id)
-            // const token = await newtokengenerator(user._id)
             const {Name, Email, Mobilenumber, Location} = user
-            return res.json({ error: "", token, Name, Email, Mobilenumber, Location })
+            const userorderdata = await getorderdata(user._id)
+            return res.json({ error: "", token, Name, Email, Mobilenumber, Location, userorderdata })
         }
 
     } catch (error) {
@@ -67,9 +64,10 @@ user_router.post("/login", async (req, res) => {
 user_router.post("/profile", authenticatetoken,async (req, res) => {
     try {
 
-        let user = await UserModel.findById(req.verifieduser)
+        const user = await UserModel.findById(req.verifieduser)
+        const userorderdata = await getorderdata(req.verifieduser)
         const { Name, Mobilenumber, Email, Location } = user
-        return res.json({ Name, Mobilenumber, Email, error: "", Location })
+        return res.json({ Name, Mobilenumber, Email, error: "", Location, userorderdata })
 
     } catch {
         return res.json({ error: "User has not loggin in" })
@@ -98,7 +96,7 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
 
         let editeduser = {}
 
-        if (Password !== "" && NewPassword !== "" && typeof NewPassword === "string") {
+        if (typeof Password === "string" && Password.trim() !== "" && typeof NewPassword === "string" && NewPassword.trim() !== ""  ) {
             const oldpassword = await validate_password(Password, req.verifieduser)
             if (oldpassword === true) {
                 const salt = await bcrypt.genSalt(10)
@@ -107,11 +105,10 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
             }
         }
 
-        delete NewPassword
-        delete Password
+        delete req.body.NewPassword
+        delete req.body.Password
         editeduser = { ...editeduser, ...req.body }
-
-        updateduser = await UserModel.updateOne({ _id:req.verifieduser }, { $set: editeduser })
+        await UserModel.updateOne({ _id:req.verifieduser }, { $set: editeduser })
         return res.json({ error: "" })
 
     } catch (error) {
@@ -153,15 +150,5 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
         return res.json({ error: "Sorry your location could not be saved some error occurred. Please try again later" })
     }
 })
-
-// user_router.post("/logout", authenticatetoken, async (req, res) => {
-//     try {
-//         await TokenModel.findByIdAndDelete(req.headers.auth)
-//         res.json({error:""})
-//     }
-//     catch {
-//         res.json({error:"You have been logged out"})
-//     }
-// })
 
 module.exports = user_router

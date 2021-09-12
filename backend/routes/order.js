@@ -5,13 +5,14 @@ require('dotenv').config()
 const { RAZORPAYKEY, RAZORPAYPASSWORD } = process.env
 const order_router = express.Router()
 order_router.use(express.urlencoded({ extended: true }))
-const {  orderauthenticationandgeneration } = require('../middlewares/product')
+const {  orderauthenticationandgeneration } = require('../middlewares/orders')
 const OrderModel = require('../models/order')
+
 const { authenticatetoken } = require('../middlewares/token')
 const mongoose = require('mongoose')
 
-order_router.post("/payment/razorpay", authenticatetoken, async (req, res) => {
-    const { cartprice } = req.body
+order_router.post("/payment/razorpay", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
+    const { ordereditems, price } = req.neworder
     try {
         var instance = new Razorpay({
             key_id: RAZORPAYKEY,
@@ -19,24 +20,24 @@ order_router.post("/payment/razorpay", authenticatetoken, async (req, res) => {
         });
 
         const options = {
-            amount: cartprice * 100, // amount in smallest currency unit
+            amount: price * 100, // amount in smallest currency unit
             currency: "INR",
         };
         const order = await instance.orders.create(options);
         if (!order) return res.status(500).send("Some error occured");
-        return res.json(order);
+        return res.json({...order,ordereditems, price});
     } catch (error) {
         return res.status(500).send(error);
     }
 });
 
-order_router.post("/payment/razorpay/success", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
-    const { ordereditems, price } = req.neworder
+order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, res) => {
     const {
-        orderCreationId,
         razorpayPaymentId,
         razorpayOrderId,
         razorpaySignature,
+        ordereditems,
+        price
     } = req.body
 
     try {
@@ -51,10 +52,6 @@ order_router.post("/payment/razorpay/success", authenticatetoken, orderauthentic
         const finalorder = new OrderModel(userorder)
         await finalorder.save()
         return res.json({ success: true })
-        // if (razorpaySignature === generated_signature) {
-        //     return res.json({ success: true })
-        // }
-        // res.json({ error: true })
     } catch (error) {
         res.status(500).send(error);
     }

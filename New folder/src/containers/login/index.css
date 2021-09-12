@@ -1,0 +1,7 @@
+.row, .loginupbutton {
+    font-size: 1vw;
+}
+
+.errormessage {
+    min-height: 100px;
+}
