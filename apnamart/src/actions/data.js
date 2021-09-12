@@ -1,5 +1,5 @@
 import { data } from '../actionTypes'
-import {convertarraytoobject} from '../utils'
+import {convertarraydatatoobjectdata} from '../utils'
 import {PATHS, axiosinstance} from '../config'
 
 const { products_data, subcategory_data, category_data} = data
@@ -10,9 +10,9 @@ export const getproductsdata = () => (dispatch) => {
             dispatch({ type: products_data, payload: {error:"Sorry products data could not be fetched"} })
             return
         }
-        const productsdata = convertarraytoobject(resp.data.products, PATHS.PRODUCTPATH)
-        const subcategorydata = convertarraytoobject(resp.data.subcategories, PATHS.SUBCATEGORYPATH)
-        const categorydata = convertarraytoobject(resp.data.categories, PATHS.CATEGORYPATH)
+        const productsdata = convertarraydatatoobjectdata(resp.data.products, PATHS.PRODUCTPATH)
+        const subcategorydata = convertarraydatatoobjectdata(resp.data.subcategories, PATHS.SUBCATEGORYPATH)
+        const categorydata = convertarraydatatoobjectdata(resp.data.categories, PATHS.CATEGORYPATH)
         dispatch({ type: products_data, payload: productsdata })
         dispatch({ type: subcategory_data, payload: subcategorydata })
         dispatch({ type: category_data, payload: categorydata })

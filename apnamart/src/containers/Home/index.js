@@ -3,12 +3,13 @@ import Carousel from 'react-elastic-carousel'
 import './index.css'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import useMeasure from 'react-use-measure'
 
 export const Home = ({ history }) => {
     const items = useSelector(state => state.Productsdata.products)
     const subcategories = useSelector(state => state.Productsdata.subcategories)
     const categories = useSelector(state => state.Productsdata.categories)
-
+    const [productsref, productbounds] = useMeasure()
     const breakpoints = [
         { width: 500, itemsToShow: 3 },
         { width: 760, itemsToShow: 4 },
@@ -18,7 +19,7 @@ export const Home = ({ history }) => {
 
     return (
         <>
-            <div className="mt-3 pt-3 w-100">
+            <div ref={productsref} className="mt-3 pt-3 w-100">
                 <div className="ms-3 mb-3">
                     <strong>Search by item</strong>
                 </div>
@@ -26,7 +27,7 @@ export const Home = ({ history }) => {
                     {
                         Object.keys(items).map((item, index) => {
                             return (
-                                <Carouselitem history={history} key={index} index={index} itemdetails={items[item]} />
+                                <Carouselitem carouselheight={productbounds.height}  history={history} key={index} index={index} itemdetails={items[item]} />
                             )
                         })
                     }
@@ -72,10 +73,10 @@ export const Home = ({ history }) => {
 
                         return (
                             <div key={index} className="col-3 card ms-2">
-    
+
                                 <img onClick={Redirect} src={image} className="card-img-top carouselcategoryimage" alt={name} />
                                 <div className="card-body">
-                                <p onClick={Redirect} className="card-text text-center"><Link className="text-decoration-none text-dark" to={link}>{name}</Link> </p> 
+                                    <p onClick={Redirect} className="card-text text-center"><Link className="text-decoration-none text-dark" to={link}>{name}</Link> </p>
                                 </div>
                             </div>
                         )

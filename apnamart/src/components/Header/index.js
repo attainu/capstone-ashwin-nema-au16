@@ -1,7 +1,7 @@
 import './index.css'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {InputSearchBar} from '../Search bar'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
@@ -16,7 +16,6 @@ const Header = ({ children }) => {
     const [childrenmargin, changemargin] = useState("80px")
 
     useEffect(() => {
-        console.log(bounds.height)
         changemargin(`${bounds.height}px`) 
     }, [bounds])
     const Auth = useSelector(state => state.Auth)

@@ -1,8 +1,10 @@
-export const convertarraytoobject = (Originalarray, Path) => {
+export const convertarraydatatoobjectdata = (Originalarray, Path) => {
     const result = Originalarray.reduce((object, item) => {
         const {_id} = item
         object[_id] = item
-        object[_id].link = `${Path}${_id}`
+        if (Path !== undefined) {
+            object[_id].link = `${Path}${_id}`
+        }
         return object
     }, {})
     return result

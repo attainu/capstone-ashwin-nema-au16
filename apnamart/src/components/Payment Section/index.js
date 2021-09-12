@@ -2,25 +2,27 @@ import Radio from '@material-ui/core/Radio';
 import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector } from "react-redux";
-import { Alert, Modal } from "react-bootstrap";
-import { deliverydate, hidemodal, showmodalwithmessageandvariant } from '../../utils'
+import { Alert } from "react-bootstrap";
+import { deliverydate,  showmodalwithmessageandvariant } from '../../utils'
 import { useState } from "react";
-import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import {axiosinstance} from '../../config'
+import {NotificationModal} from '../Notification Modal'
 
-export default function PaymentSection() {
+export default function PaymentSection({history, userlocationaddress, PATHS}) {
     const { Name, Email, Mobilenumber } = useSelector(state => state.Profile)
     const cart = useSelector(state => state.Cart)
     const cartprice = useSelector(state => state.CartPrice)
-
     const [modalmessage, changemodalmessage] = useState("")
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState("warning")
     const [paymentmode, changepaymentmode] = useState("Cash")
-
     const displaymodal = (message, variant) => {
         showmodalwithmessageandvariant(showmodal, message,changemodalmessage, variant, changemodalvariant)
+        if (message === "Your order is successfully placed") {
+            setTimeout(() => {
+                history.push(PATHS.HOME)
+            }, 2000);
+        }
     }
 
     function loadScript(src) {
@@ -57,24 +59,24 @@ export default function PaymentSection() {
             return;
         }
 
-        const result = await axiosinstance.post('/user/order/payment/razorpay', {cartprice})
+        const generatedrazorpayorder = await axiosinstance.post('/user/order/payment/razorpay', { items:cart,cartprice})
 
-        if (!result) {
+        if (!generatedrazorpayorder) {
             displaymodal("You are not online. Please be online if you want to place order", "danger")
             return;
         }
 
-        const loginerror = setloginerror(result.data.error)
+        const loginerror = setloginerror(generatedrazorpayorder.data.error)
 
-        if (result.data.error !== undefined && !loginerror) {
-            displaymodal(result.data.error, "danger")
+        if (generatedrazorpayorder.data.error !== undefined && !loginerror) {
+            displaymodal(generatedrazorpayorder.data.error, "danger")
             return
         }
 
-        if (result.data.error === undefined) {
+        if (generatedrazorpayorder.data.error === undefined) {
 
-            const { amount, id: order_id, currency } = result.data;
-
+            const { amount, id: order_id, currency, ordereditems,price } = generatedrazorpayorder.data;
+    
             const options = {
                 key: "rzp_test_lYaL0slH0VoZzj", // Enter the Key ID generated from the Dashboard
                 amount: amount.toString(),
@@ -85,18 +87,25 @@ export default function PaymentSection() {
                 order_id: order_id,
                 handler: async function (response) {
                     const data = {
-                        orderCreationId: order_id,
                         razorpayPaymentId: response.razorpay_payment_id,
                         razorpayOrderId: response.razorpay_order_id,
                         razorpaySignature: response.razorpay_signature,
                     };
 
-                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {cartprice, items:cart, ...data})
+                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {ordereditems, ...data, price})
 
                     if (!successresponse) {
                         displaymodal("Sorry something went wrong your order could not be placed.", "danger")
                         return
                     }
+
+                    const {data:responsedata} = successresponse
+                    const {success, error} = responsedata
+                    if (success === true) {
+                        displaymodal("Your order is successfully placed", "warning")
+                        return
+                    }
+                    displaymodal(error,"danger")
                 },
                 prefill: {
                     name: Name,
@@ -104,7 +113,7 @@ export default function PaymentSection() {
                     contact: Mobilenumber,
                 },
                 notes: {
-                    address: "So ",
+                    address:userlocationaddress,
                 },
                 theme: {
                     color: "#ffc107",
@@ -168,36 +177,7 @@ export default function PaymentSection() {
                 </div>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
-                <Alert variant={`${modalvariant}`}>
-                    <span className="d-flex justify-content-center ">
-                        {
-                            modalmessage === "Your order is successfully placed" ?
-                                <>
-                                    <div className="d-flex flex-column">
-                                        <div className="d-flex justify-content-center">
-                                            <CheckCircleOutlinedIcon style={{ color: "green", border: "none" }} />
-                                        </div>
-
-                                        <div >
-                                            <h5>
-                                                {modalmessage}
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </>
-                                :
-                                <>
-                                    <ErrorRoundedIcon style={{ color: "red" }} />
-                                    <h5>
-                                        {modalmessage}
-                                    </h5>
-                                </>
-                        }
-                    </span>
-                </Alert>
-            </Modal>
-
+            <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant={modalvariant} successmessage="Your order is successfully placed" />
         </>
     )
 }

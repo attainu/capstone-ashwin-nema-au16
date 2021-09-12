@@ -1,11 +1,11 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import {changecartstate, changecartprice} from '../../actions'
-import { Modal, Alert } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
-import {deliverydate, showmodalwithmessageandvariant, hidemodal } from '../../utils'
+import {deliverydate, showmodalwithmessageandvariant } from '../../utils'
 import { useState } from 'react'
+import {NotificationModal} from '../Notification Modal'
 
 export const Cartitem = ({ item, count }) => {
     const dispatch = useDispatch()
@@ -22,7 +22,7 @@ export const Cartitem = ({ item, count }) => {
             dispatch(changecartprice(totalprice + price))
             return
         }
-        showmodalwithmessageandvariant(changeshowmodalmessage, `You cannot order more than 20 items of ${name}`, setmodalmessage)
+        showmodalwithmessageandvariant(changeshowmodalmessage, `Sorry you cannot order more than 20 items of ${name}`, setmodalmessage)
     }
 
     const decreaseitemcount = () => {
@@ -31,7 +31,7 @@ export const Cartitem = ({ item, count }) => {
             dispatch(changecartprice(totalprice - price))
             return
         }
-        showmodalwithmessageandvariant(changeshowmodalmessage, `You cannot order less than 1 item of ${name}`, setmodalmessage)
+        showmodalwithmessageandvariant(changeshowmodalmessage, `Sorry you cannot order less than 1 item of ${name}`, setmodalmessage)
     }
 
     const removeitemfromcart = () => {
@@ -75,11 +75,7 @@ export const Cartitem = ({ item, count }) => {
                 </div>
             </div>
             <div>Delivery by {deliverydate}</div>
-            <Modal centered show={showmodalmessage} contentClassName="modalwithoutcolor" onHide={() => hidemodal(changeshowmodalmessage)}>
-                <Alert variant="danger">
-                    {modalmessage}
-                </Alert>
-            </Modal>
+            <NotificationModal show={showmodalmessage} centered={true} onHide={changeshowmodalmessage} currentmodalmessage={modalmessage} alertvariant="danger" successmessage="" />
         </div>
     )
 }

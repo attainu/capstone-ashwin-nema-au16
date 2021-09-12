@@ -1,7 +1,3 @@
-export const hidemodal = (showmodalfunction) => {
-    showmodalfunction(false)
-}
-
 export const showmodalwithmessageandvariant = (showmodalfunction, modalmessage, messagesetter, modalvariant, variantchanger, messageref) => {
     if (messagesetter !== undefined) {
         messagesetter(modalmessage)

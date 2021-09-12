@@ -39,7 +39,6 @@ const Subcategory = ({ history }) => {
     useEffect(() => {
         if (currenid.length > 0 && subcategoryid !== currenid) {
             changeSubcategorydata([])
-            console.log("Data will get changed")
         }
     }, [currenid, subcategoryid])
     return (

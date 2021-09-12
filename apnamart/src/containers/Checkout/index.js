@@ -40,7 +40,7 @@ const CheckoutPage = ({ history }) => {
             {Location !== undefined && count > 0 &&
                 <>
                     <SetAddressContext.Provider value={setaddress} >
-                        <MapAccordion userlocationaddress={userlocationaddress}  />
+                        <MapAccordion userlocationaddress={userlocationaddress} />
                     </SetAddressContext.Provider>
 
                     <div className="checkoutaccordion mt-5">
@@ -66,7 +66,7 @@ const CheckoutPage = ({ history }) => {
                         </Accordion>
                     </div>
 
-                    <PaymentSection />
+                    <PaymentSection history={history} userlocationaddress={`${userlocationaddress.join(", ")}`} PATHS={PATHS} />
                 </>
             }
         </>

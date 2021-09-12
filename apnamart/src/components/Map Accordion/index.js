@@ -21,22 +21,7 @@ const MapAccordion = ({userlocationaddress}) => {
                             <h6 >Current delivery address</h6>
                             <div>
                                 {
-                                    userlocationaddress.map((item, index) => {
-                                        if (index !== userlocationaddress.length - 1) {
-                                            return (
-                                                <span key={index} >
-                                                    {item},
-                                                </span>
-                                            )
-                                        }
-                                        else {
-                                            return (
-                                                <span key={index} >
-                                                    {item}
-                                                </span>
-                                            )
-                                        }
-                                    })
+                                    userlocationaddress.join(", ")
                                 }
                             </div>
                         </div>

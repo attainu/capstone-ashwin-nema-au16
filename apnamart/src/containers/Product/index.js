@@ -7,14 +7,19 @@ import { Fragment, useState } from 'react'
 import { useEffect } from 'react'
 import ReactImageMagnify from 'react-image-magnify'
 import useMeasure from 'react-use-measure'
+import {deliverydate} from '../../utils'
+import {NotificationModal} from '../../components'
 
 const Product = ({ history }) => {
     const { add_new_item, remove_item, increase_item_count, decrease_item_count } = changecartstate
+
     const { productid } = useParams()
     const dispatch = useDispatch()
+
     const Productsdata = useSelector(state => state.Productsdata.products)
     const cartprice = useSelector(state => state.CartPrice)
     const cartitems = useSelector(state => state.Cart)
+
     const [name, changename] = useState("")
     const [image, changeimage] = useState("")
     const [price, changeprice] = useState(0)
@@ -22,11 +27,11 @@ const Product = ({ history }) => {
     const [detailitems, changedetailitems] = useState([])
     const [_id, setid] = useState("")
     const [description, setdescription] = useState("")
+    const [modal, showhidemodal] = useState(false) 
     const [ref, bounds] = useMeasure()
 
     const count = cartitems[productid] === undefined ? 0 : cartitems[productid].count
 
-    const disabled = count < 20 ? "" : "disabled"
     useEffect(() => {
         if (Object.keys(Productsdata).length === 0) {
             dispatch(getproductsdata())
@@ -52,6 +57,10 @@ const Product = ({ history }) => {
     }, [Productsdata, productid, history, dispatch])
 
     const Add_to_cart = () => {
+        if (count === 20) {
+            showhidemodal(true)
+            return
+        }
 
         dispatch(changecartprice(cartprice + price))
         if (count === 0) {
@@ -109,11 +118,15 @@ const Product = ({ history }) => {
                         Sold by ApnaMart
                     </div>
 
+                    <div>
+                        Delivery by {deliverydate}
+                    </div>
+
                     {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning productbutton">Add to cart</button> : <>
                         <div className="space-between productbutton">
                             <button onClick={Remove_from_cart} className="btn btn-warning cartbutton rounded-circle d-flex justify-content-center">-</button>
                             <div className="itemcarouselcount">{count}</div>
-                            <button onClick={Add_to_cart} className={`btn btn-warning cartbutton rounded-circle d-flex justify-content-center ${disabled}`}>+</button>
+                            <button onClick={Add_to_cart} className={`btn btn-warning cartbutton rounded-circle d-flex justify-content-center ${count === 20 ? "opacity50" : ""}`}>+</button>
 
                         </div>
 
@@ -154,6 +167,7 @@ const Product = ({ history }) => {
                     })}
                 </div>
             </div>
+            <NotificationModal show={modal} centered={true} currentmodalmessage={`Sorry you cannot order more than 20 items of ${name}`} onHide={showhidemodal} alertvariant="danger" successmessage="" />
         </>
 
     )

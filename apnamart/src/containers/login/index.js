@@ -4,10 +4,9 @@ import { PATHS, axiosinstance } from '../../config'
 import { authsetter, setprofile } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
-import { Modal, Alert } from 'react-bootstrap'
 import * as yup from 'yup'
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
-import { hidemodal, showmodalwithmessageandvariant } from '../../utils'
+import { showmodalwithmessageandvariant } from '../../utils'
+import {NotificationModal} from '../../components'
 
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
@@ -83,16 +82,7 @@ export const Login = ({ history }) => {
                 <div className="col-2"></div>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
-                <Alert>
-                    <span className="d-flex justify-content-center ">
-                        <ErrorRoundedIcon style={{ color: "red" }} />
-                        <h5>{errormessage}</h5>
-                    </span>
-
-                </Alert>
-            </Modal>
-
+            <NotificationModal show={modal} centered={true} currentmodalmessage={errormessage} onHide={showmodal} alertvariant="danger" successmessage="" />
         </>
     )
 }

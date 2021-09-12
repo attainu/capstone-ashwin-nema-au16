@@ -1,15 +1,14 @@
 import './index.css'
 import { Modal, Alert } from 'react-bootstrap'
 import { useState } from 'react'
-import { mobilenumber_validator, hidemodal, showmodalwithmessageandvariant } from '../../utils'
+import { mobilenumber_validator, showmodalwithmessageandvariant } from '../../utils'
 import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
 import { axiosinstance } from '../../config'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditIcon from '@material-ui/icons/Edit';
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
+import {NotificationModal} from '../Notification Modal'
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
@@ -36,7 +35,6 @@ export const UserAccountInformation = () => {
         Name: yup.string().required(),
         Email: yup.string().email().required()
     })
-
 
     const openmodal = () => {
         showmodal(true)
@@ -88,8 +86,13 @@ export const UserAccountInformation = () => {
             return
 
         }).catch(function (err) {
-            setnotificationmodal(err.errors[0], "danger")
+            if (err.errors !== undefined && err.errors.length > 0) {
+                setnotificationmodal(err.errors[0], "danger")
+                return
+            }
+            setnotificationmodal(err.error, "danger")
         })
+        
     }
 
     return (
@@ -113,9 +116,9 @@ export const UserAccountInformation = () => {
                             Edit
                         </div>
 
-                        <Modal centered show={modal} contentClassName="modalwithoutcolor" onHide={() => hidemodal(showmodal)}>
+                        <Modal centered show={modal} contentClassName="modalwithoutcolor" onHide={() => showmodal(false)}>
                             <div className="d-flex justify-content-center mb-3">
-                                <CancelRoundedIcon className="closeeditingbutton" onClick={() => hidemodal(showmodal)} />
+                                <CancelRoundedIcon className="closeeditingbutton" onClick={() => showmodal(false)} />
                             </div>
                             <Alert variant="warning">
                                 <h5 className="mb-3 text-center">Edit Information <EditIcon /> </h5>
@@ -161,33 +164,7 @@ export const UserAccountInformation = () => {
                             </Alert>
                         </Modal>
 
-                        <Modal show={notificationmodal} contentClassName="modalwithoutcolor" onHide={() => hidemodal(shownotificationmodal)}>
-                            <Alert variant={`${notificationmodalvariant}`}>
-
-                                <h6>
-                                    {
-                                        modalnotificationmessage === "Your profile has successfully been updated" ?
-                                            <>
-                                                <div className="d-flex justify-content-center">
-                                                    <CheckCircleIcon style={{ color: "green" }} />
-                                                </div>
-
-                                                <div className="d-flex justify-content-center">
-                                                    {modalnotificationmessage}
-                                                </div>
-                                            </>
-                                            :
-                                            <>
-                                                <div className="d-flex justify-content-center">
-                                                    <ErrorRoundedIcon style={{ color: "red" }} />
-                                                    {modalnotificationmessage}
-                                                </div>
-                                            </>
-                                    }
-                                </h6>
-                            </Alert>
-                        </Modal>
-
+                        <NotificationModal show={notificationmodal} centered={false} currentmodalmessage={modalnotificationmessage} onHide={shownotificationmodal} alertvariant={notificationmodalvariant} successmessage="Your profile has successfully been updated" />
                     </div>
                 </div>
             </div>

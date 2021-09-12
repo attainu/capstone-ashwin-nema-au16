@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { authsetter, setprofile } from '../../actions'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
-import { Modal, Alert } from 'react-bootstrap'
-import { mobilenumber_validator, hidemodal, showmodalwithmessageandvariant } from '../../utils'
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded'
+import { mobilenumber_validator, showmodalwithmessageandvariant } from '../../utils'
+import {NotificationModal} from '../../components'
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
@@ -127,15 +126,7 @@ export const Signup = ({ history }) => {
                 <div className="col-2"></div>
             </div>
 
-            <Modal centered show={modal} contentClassName="modalwithoutcolor py-5" onHide={() => hidemodal(showmodal)}>
-                <Alert variant="danger">
-                    <span className="d-flex justify-content-center ">
-                        <ErrorRoundedIcon style={{ color: "red" }} />
-                        <h5 className="text-danger">{errormessage}</h5>
-                    </span>
-                </Alert>
-
-            </Modal>
+            <NotificationModal show={modal} centered={true} onHide={showmodal} currentmodalmessage={errormessage} alertvariant="danger" successmessage=""/>
         </>
     )
 }
