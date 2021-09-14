@@ -40,9 +40,9 @@ const Header = ({ children }) => {
     }, [Auth, dispatch, userprofile])
 
     useEffect(() => {
-        if (Object.keys(Productsdata.subcategories).length === 0 && Object.keys(Productsdata.products).length === 0 && Object.keys(Productsdata.categories).length === 0 ) {
+        if ( Object.keys(Productsdata.products).length === 0 ) {
             dispatch(getproductsdata())
-        }   
+        }  
     }, [Productsdata, dispatch])
 
     const AddToggleclass = () => {
