@@ -2,8 +2,8 @@ import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { PATHS } from '../../config'
 import { useEffect, useState } from 'react'
-import { getuserprofile } from '../../actions'
-import { UserAccountInformation, LocationMap } from '../../components'
+import {  getuserprofile } from '../../actions'
+import { UserAccountInformation, LocationMap, NotificationModal } from '../../components'
 import Usercart from '../Cart'
 import { Alert } from 'react-bootstrap'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -12,6 +12,7 @@ import RoomIcon from '@material-ui/icons/Room';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import DeleteIcon from '@material-ui/icons/Delete';
+import {logoutuser, deleleteuseraccount} from '../../utils'
 
 const Profile = ({ history }) => {
     const dispatch = useDispatch()
@@ -19,6 +20,8 @@ const Profile = ({ history }) => {
     const userprofile = useSelector(state => state.Profile)
     const { Name } = userprofile
     const Auth = useSelector(state => state.Auth)
+
+    const [modal, showmodal] = useState(false)
 
     useEffect(() => {
         if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
@@ -74,11 +77,11 @@ const Profile = ({ history }) => {
                                 <ShoppingBasketIcon style={{ color: "red" }} />
                             </Alert>
 
-                            <Alert variant="light" className="mt-5 p-2 d-flex cursorpointer justify-content-center ">
+                            <Alert onClick={() => logoutuser(dispatch)} variant="light" className="mt-5 p-2 d-flex cursorpointer justify-content-center ">
                                 Logout<PowerSettingsNewIcon />
                             </Alert>
 
-                            <Alert className="mt-5 p-2 d-flex cursorpointer justify-content-center" variant="danger">
+                            <Alert onClick={() => deleleteuseraccount(dispatch,showmodal) } className="mt-5 p-2 d-flex cursorpointer justify-content-center" variant="danger">
                                 Delete Account <DeleteIcon />
                             </Alert>
 
@@ -102,7 +105,7 @@ const Profile = ({ history }) => {
                         </div>
 
                     </div>
-
+                    <NotificationModal show={modal} centered={true} currentmodalmessage="Sorry you have been logged out. Please sign in to delete your account" onHide={showmodal} alertvariant="danger" successmessage="" />
                 </>
             }
         </>

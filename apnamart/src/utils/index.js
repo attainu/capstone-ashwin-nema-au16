@@ -13,3 +13,5 @@ export {SetAddressContext} from './contexts'
 export {default as ScrollToTop} from './topscroll'
 
 export {showmodalwithmessageandvariant} from './modal utility'
+
+export {logouterros, logoutuser, deleleteuseraccount, gotohome} from './user'

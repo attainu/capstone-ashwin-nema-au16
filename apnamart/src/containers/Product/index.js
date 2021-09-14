@@ -10,6 +10,9 @@ import useMeasure from 'react-use-measure'
 import {deliverydate} from '../../utils'
 import {NotificationModal} from '../../components'
 
+
+
+
 const Product = ({ history }) => {
     const { add_new_item, remove_item, increase_item_count, decrease_item_count } = changecartstate
 
@@ -79,6 +82,7 @@ const Product = ({ history }) => {
         dispatch(decrease_item_count(_id))
     }
 
+
     const imageProps = {
         smallImage: {
             alt: name,
@@ -94,7 +98,7 @@ const Product = ({ history }) => {
         enlargedImageContainerStyle: { background: '#fff', zIndex: 9 },
         enlargedImagePosition:'beside',
         enlargedImageContainerDimensions:{width: '155%', height: '150%'},
-        shouldUsePositiveSpaceLens:true
+        shouldUsePositiveSpaceLens:true,
     };
 
     return (
@@ -102,6 +106,7 @@ const Product = ({ history }) => {
             <div className="productcontent space-between mt-3">
                 <div ref={ref} className="productimage">
                     <ReactImageMagnify {...imageProps} />
+
                 </div>
 
                 <div className="productinformation">

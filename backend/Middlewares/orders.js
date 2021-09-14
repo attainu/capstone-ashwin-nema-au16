@@ -45,7 +45,7 @@ const orderauthenticationandgeneration = async (req, res, next) => {
 
         const { ordereditems, price } = finalorderandprice([...data1, ...data2], req.body.items)
         if (price !== cartprice) {
-            return res.json({error: "Please do not maniplulate prices"})
+            return res.json({error: "Cartprice and Price do not match"})
         }
         delete req.body.items
         req.neworder = {ordereditems, price}

@@ -147,7 +147,16 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
 
     catch(error) {
         console.log("Error occurred while saving new user location")
-        return res.json({ error: "Sorry your location could not be saved some error occurred. Please try again later" })
+        return res.json({ error: "Sorry your location could not be saved as some error occurred. Please try again later" })
+    }
+})
+
+user_router.delete("/", authenticatetoken, async (req, res) => {
+    try {
+        await UserModel.findByIdAndDelete(req.verifieduser)
+        res.json({success:true})
+    } catch {
+        res.status(400).send("Sorry your account could not be deleted")
     }
 })
 

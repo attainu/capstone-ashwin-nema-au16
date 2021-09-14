@@ -25,7 +25,6 @@ function DisplayPosition({ map, markerref, circleref }) {
 
     const onDragend = useCallback(() => {
         const { lat, lng } = map.getCenter()
-
         dispatch(getuseraddress(lat, lng))
     }, [map, dispatch])
 
@@ -169,7 +168,7 @@ export default function LocationMap() {
                 }
             </Alert>
             <div className="d-flex justify-content-center">
-                <button onClick={saveuserlocation} className={`mt-2 btn btn-info rounded-pill ${address[0] === 'Sorry we do not serve your area' ? 'disabledr' : ''}`}>
+                <button onClick={saveuserlocation} className={`mt-2 btn btn-info rounded-pill ${address[0] === 'Sorry we do not serve your area' ? 'disabled' : ''}`}>
                     Save Location
                 </button>
             </div>

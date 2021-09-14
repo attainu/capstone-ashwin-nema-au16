@@ -1,5 +1,5 @@
 import {PATHS} from '../config'
-import {Login, Signup, Home, Product, Subcategory, Profile, Usercart, CheckoutPage, Category} from '../containers'
+import {Login, Signup, Home, Product, Subcategory, Profile, Usercart, CheckoutPage, Category, OrderHistory} from '../containers'
 
 const routes = [
     {exact:true, path:PATHS.HOME, component:Home},
@@ -10,7 +10,8 @@ const routes = [
     {exact:true, path:PATHS.PROFILE,component:Profile},
     {exact:true, path:PATHS.CART,component:Usercart},
     {exact:true, path:PATHS.CHECKOUT,component:CheckoutPage},
-    {exact:true, path:PATHS.CATEGORY,component:Category}
+    {exact:true, path:PATHS.CATEGORY,component:Category},
+    {exact:true, path:PATHS.ORDERHISTORY,component:OrderHistory}
 ]
 
 export default routes

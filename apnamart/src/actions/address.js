@@ -1,16 +1,17 @@
 import { setaddress } from '../actionTypes'
 import {axiosinstance} from '../config'
+import {logoutuser} from '../utils'
 
 export const getuseraddress = (latitude, longtitude) => (dispatch) => {
     const location = `${latitude},${longtitude}`
-
     axiosinstance.post("/user/location", {location}).then(resp => {
+
         if (resp.data.error !== "") {
-            dispatch({ type: setaddress, payload: ["Sorry we do not serve your area"] })
+            dispatch({ type: setaddress, payload: [] })
+            logoutuser(dispatch)
             return
         }
         const finaluserlocationaddress = []
-       
         if (resp.data.useraddress.country === "India" && resp.data.useraddress.state !== undefined) {
             
             if (resp.data.useraddress._type !== "suburb" &&

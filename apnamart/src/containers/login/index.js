@@ -41,9 +41,6 @@ export const Login = ({ history }) => {
             const { Name, Email, Mobilenumber, Location } = response.data
             dispatch(authsetter(response.data.token))
             dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
-
-            const auth = { "Auth": response.data.token }
-            axiosinstance.defaults.headers = auth
             history.push(PATHS.HOME)
             return
 

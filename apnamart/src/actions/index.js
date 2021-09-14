@@ -11,3 +11,5 @@ export {changecartstate} from './cart'
 export {changecartprice} from './cartprice'
 
 export {getproductsdata} from './data'
+
+export {addnewordertoorderhistory, changeorderstatustocancelled, storeuserorderdata} from './order'

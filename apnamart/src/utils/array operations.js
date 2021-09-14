@@ -1,13 +1,19 @@
 export const convertarraydatatoobjectdata = (Originalarray, Path) => {
-    const result = Originalarray.reduce((object, item) => {
-        const {_id} = item
-        object[_id] = item
-        if (Path !== undefined) {
-            object[_id].link = `${Path}${_id}`
-        }
-        return object
-    }, {})
-    return result
+    try {
+        const result = Originalarray.reduce((object, item) => {
+            const {_id} = item
+            object[_id] = item
+            if (Path !== undefined) {
+                object[_id].link = `${Path}${_id}`
+            }
+            return object
+        }, {})
+        return result
+    } catch(error) {
+        console.log(Originalarray)
+        console.log(error)
+        return {}
+    }
 }
 
 export const searchdatafilter = (originaldata, searchparameter) => {

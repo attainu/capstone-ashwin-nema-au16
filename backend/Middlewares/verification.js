@@ -26,7 +26,7 @@ async function validate_mobile_number(Mobilenumber, id) {
         }
 
     } catch {
-        console.log("Error occurred while validating molbile number")
+        console.log("Sorry something went wrong.Error occurred while validating mobile number")
         return false
     }
 }
@@ -86,7 +86,7 @@ async function verify_mobile_number(Mobilenumber) {
     }
 
     if (user) {
-        return "User with the same mobile number is already exists"
+        return "Sorry user with the same mobile number is already registered."
     }
 
     return true
@@ -104,7 +104,7 @@ async function verify_email(Email) {
     }
         
     if (user) {
-        return "User with the same email is already present"
+        return "Sorry user with the same email is already registered."
     }
 
     return true

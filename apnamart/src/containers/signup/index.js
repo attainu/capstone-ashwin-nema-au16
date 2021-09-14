@@ -72,10 +72,8 @@ export const Signup = ({ history }) => {
                 return
             }
             const { Name, Email, Location, token, Mobilenumber } = response.data
-            const auth = { "Auth": token }
-            axiosinstance.defaults.headers = auth
             dispatch(setprofile({ Name, Email, Location, Mobilenumber }))
-            dispatch(authsetter(response.data.token))
+            dispatch(authsetter(token))
             history.push(PATHS.HOME)
             return
         }).catch(function (err) {

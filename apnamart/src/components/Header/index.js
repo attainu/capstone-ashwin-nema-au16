@@ -8,6 +8,7 @@ import { PATHS } from '../../config';
 import { getuserprofile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
 import useMeasure from 'react-use-measure'
+import {logoutuser} from '../../utils'
 
 const Header = ({ children }) => {
     const dispatch = useDispatch()
@@ -95,9 +96,9 @@ const Header = ({ children }) => {
                                     <button onClick={ClickToggle} onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} className="headerdropdownbutton text-wrap dropdown-toggle w-50">
                                         {Name.slice(0, 12)}
                                     </button>
-                                    <ul onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
+                                    <ul onClick={RemoveToggleclass} onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
                                         <Link className="text-decoration-none" to={PATHS.PROFILE}><li><p className="dropdown-item" >Profile</p></li></Link>
-                                        <li><p className="dropdown-item" >Logout</p></li>
+                                        <li onClick={() => logoutuser(dispatch)}><p className="dropdown-item" >Logout</p></li>
                                         <li><p className="dropdown-item" >Delete Account</p></li>
                                     </ul>
                                 </div>

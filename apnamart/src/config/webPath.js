@@ -10,7 +10,8 @@ const PATHS = {
     CATEGORYPATH:'/category/',
     PROFILE:'/profile',
     CART:'/cart',
-    CHECKOUT:'/checkout'
+    CHECKOUT:'/checkout',
+    ORDERHISTORY:'/orderhistory'
 }
 
 export default PATHS

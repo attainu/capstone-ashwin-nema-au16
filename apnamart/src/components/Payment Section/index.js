@@ -1,14 +1,16 @@
 import Radio from '@material-ui/core/Radio';
 import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
-import { deliverydate,  showmodalwithmessageandvariant } from '../../utils'
+import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros } from '../../utils'
 import { useState } from "react";
 import {axiosinstance} from '../../config'
 import {NotificationModal} from '../Notification Modal'
+import {authsetter} from '../../actions'
 
-export default function PaymentSection({history, userlocationaddress, PATHS}) {
+export default function PaymentSection({history, deliveryaddress, PATHS}) {
+    const dispatch = useDispatch()
     const { Name, Email, Mobilenumber } = useSelector(state => state.Profile)
     const cart = useSelector(state => state.Cart)
     const cartprice = useSelector(state => state.CartPrice)
@@ -42,8 +44,9 @@ export default function PaymentSection({history, userlocationaddress, PATHS}) {
     }
 
     const setloginerror = (error) => {
-        if (error === "Token is not provided" || error === "Please provide a valid token") {
-            displaymodal("Sorry you have been logged out. Please login again to continue", "danger")
+        if (logouterros[error] !== undefined) {
+            displaymodal("Sorry you have been logged out. Please login again to continue placing order", "danger")
+            gotohome(dispatch)
             return true
         }
         return false
@@ -75,8 +78,8 @@ export default function PaymentSection({history, userlocationaddress, PATHS}) {
 
         if (generatedrazorpayorder.data.error === undefined) {
 
-            const { amount, id: order_id, currency, ordereditems,price } = generatedrazorpayorder.data;
-    
+            const { amount, id: order_id, currency, ordereditems,price, newtoken } = generatedrazorpayorder.data;
+            dispatch(authsetter(newtoken))
             const options = {
                 key: "rzp_test_lYaL0slH0VoZzj", // Enter the Key ID generated from the Dashboard
                 amount: amount.toString(),
@@ -92,7 +95,7 @@ export default function PaymentSection({history, userlocationaddress, PATHS}) {
                         razorpaySignature: response.razorpay_signature,
                     };
 
-                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {ordereditems, ...data, price})
+                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {ordereditems, ...data, price, deliveryaddress})
 
                     if (!successresponse) {
                         displaymodal("Sorry something went wrong your order could not be placed.", "danger")
@@ -105,6 +108,10 @@ export default function PaymentSection({history, userlocationaddress, PATHS}) {
                         displaymodal("Your order is successfully placed", "warning")
                         return
                     }
+                    const loginerror = setloginerror(error) 
+                    if (loginerror === true) {
+                        return
+                    }
                     displaymodal(error,"danger")
                 },
                 prefill: {
@@ -113,7 +120,7 @@ export default function PaymentSection({history, userlocationaddress, PATHS}) {
                     contact: Mobilenumber,
                 },
                 notes: {
-                    address:userlocationaddress,
+                    address:deliveryaddress,
                 },
                 theme: {
                     color: "#ffc107",
@@ -126,11 +133,15 @@ export default function PaymentSection({history, userlocationaddress, PATHS}) {
     }
 
     const cashmode = () => {
-        axiosinstance.post("/user/order/cash", {items:cart, cartprice}).then(({data}) => {
+        axiosinstance.post("/user/order/cash", {items:cart, cartprice, deliveryaddress}).then(({data}) => {
             const loginerror = setloginerror(data.error)
-
             if (data.error !== undefined && !loginerror) {
+                console.log("Reswponse reaching here")
                 displaymodal(data.error, "danger")
+                return
+            }
+
+            if (loginerror) {
                 return
             }
             displaymodal("Your order is successfully placed", "warning")

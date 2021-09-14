@@ -1,8 +1,0 @@
-export {Layout} from './Layout'
-export {default as Carouselitem} from './Carouselitem'
-export {UserAccountInformation} from './useraccountinfomation'
-export {default as LocationMap} from './User location map'
-export {Ordersummary} from './Order Summary'
-export {Cartitem} from './Cart item'
-export {default as MapAccordion} from './Map Accordion'
-export {default as PaymentSection} from './Payment Section'

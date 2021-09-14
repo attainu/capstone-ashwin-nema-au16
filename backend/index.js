@@ -6,11 +6,9 @@ require('dotenv').config()
 const { MONGODB_URL} = process.env
 const cors = require('cors')
 
-
 const products_router = require('./routes/products')
 const user_router = require('./routes/user')
 const order_router = require('./routes/order')
-
 
 app.use(
     cors({
@@ -27,9 +25,7 @@ mongoose.connect(MONGODB_URL, {
 }, async (err) => {
     if (err) throw err
     console.log("connected")
-
 })
-
 
 app.use("", products_router)
 app.use("/user", user_router)

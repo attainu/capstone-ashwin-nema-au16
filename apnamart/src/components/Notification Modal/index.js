@@ -1,9 +1,9 @@
 import { Modal, Alert } from 'react-bootstrap'
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-export const NotificationModal = ({ show, centered, currentmodalmessage, onHide, alertvariant, successmessage, contentClassName }) => {
+export const NotificationModal = ({ show, centered, currentmodalmessage, onHide, alertvariant, successmessage }) => {
     return (
-        <Modal show={show} centered={centered} contentClassName={`modalwithoutcolor ${contentClassName !== undefined && contentClassName}`} onHide={() => onHide(false)} >
+        <Modal show={show} centered={centered} contentClassName="modalwithoutcolor" onHide={() => onHide(false)} >
             <Alert variant={alertvariant} >
                 <div className="d-flex justify-content-center">
                     <h5>

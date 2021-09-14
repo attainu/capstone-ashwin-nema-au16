@@ -66,7 +66,7 @@ const CheckoutPage = ({ history }) => {
                         </Accordion>
                     </div>
 
-                    <PaymentSection history={history} userlocationaddress={`${userlocationaddress.join(", ")}`} PATHS={PATHS} />
+                    <PaymentSection history={history} deliveryaddress={`${userlocationaddress.join(", ")}`} PATHS={PATHS} />
                 </>
             }
         </>

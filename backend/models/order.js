@@ -30,7 +30,12 @@ const OrderSchema = new mongoose.Schema({
 
     createdAt:{
         type:Date,
-        default:Date.now
+        default:Date.now,
+    },
+
+    deliveryaddress:{
+        type:String,
+        required:true
     }
 })
 

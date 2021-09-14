@@ -8,7 +8,7 @@ order_router.use(express.urlencoded({ extended: true }))
 const {  orderauthenticationandgeneration } = require('../middlewares/orders')
 const OrderModel = require('../models/order')
 
-const { authenticatetoken } = require('../middlewares/token')
+const { authenticatetoken, accesstokengenerator } = require('../middlewares/token')
 const mongoose = require('mongoose')
 
 order_router.post("/payment/razorpay", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
@@ -24,10 +24,11 @@ order_router.post("/payment/razorpay", authenticatetoken, orderauthenticationand
             currency: "INR",
         };
         const order = await instance.orders.create(options);
-        if (!order) return res.status(500).send("Some error occured");
-        return res.json({...order,ordereditems, price});
+        if (!order) return res.json({error:"Sorry Razorpay is currently not working. Please try again later"})
+        const newtoken = accesstokengenerator(req.verifieduser)
+        return res.json({...order,ordereditems, price, newtoken});
     } catch (error) {
-        return res.status(500).send(error);
+        return res.json({error:"Sorry Razorpay is currently not working. Please try again later"})
     }
 });
 
@@ -37,7 +38,8 @@ order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, r
         razorpayOrderId,
         razorpaySignature,
         ordereditems,
-        price
+        price, 
+        deliveryaddress
     } = req.body
 
     try {
@@ -45,10 +47,9 @@ order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, r
         hmac.update(razorpayOrderId + "|" + razorpayPaymentId);
         const generated_signature = hmac.digest('hex')
         if (razorpaySignature !== generated_signature) {
-            return res.json({ error: "Sorry order could not be generated" })
+            return res.json({ error: "Sorry an error occurred while making payment" })
         }
-
-        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems, paymentid:razorpayPaymentId,paymentmode:"Razorpay"  }
+        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems, paymentid:razorpayPaymentId,paymentmode:"Razorpay", deliveryaddress  }
         const finalorder = new OrderModel(userorder)
         await finalorder.save()
         return res.json({ success: true })
@@ -59,8 +60,9 @@ order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, r
 
 order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
     const { ordereditems, price } = req.neworder
+    const {deliveryaddress} = req.body
     try {
-        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems }
+        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems, deliveryaddress }
         const finalorder = new OrderModel(userorder)
         await finalorder.save()
         return res.json({ success: true })
@@ -68,7 +70,7 @@ order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, 
     } catch (error) {
 
         console.log(error)
-        return res.json({ error: "Sorry something went wrong" })
+        return res.json({ error: "Sorry something went wrong. Your order could not be placed" })
 
     }
 })
