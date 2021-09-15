@@ -6,9 +6,7 @@ const { products_data, subcategory_data, category_data} = data
 
 export const getproductsdata = () => (dispatch) => {
     axiosinstance.post("/products").then(resp => {
-        console.log("Request came here")
         if (resp.data.error !== "") {
-            dispatch({ type: products_data, payload: {error:"Sorry products data could not be fetched"} })
             return
         }
         const productsdata = convertarraydatatoobjectdata(resp.data.products, PATHS.PRODUCTPATH)
@@ -18,11 +16,8 @@ export const getproductsdata = () => (dispatch) => {
         dispatch({ type: subcategory_data, payload: subcategorydata })
         dispatch({ type: category_data, payload: categorydata })
         return
-    }).catch((error) => {
-        console.log(error)
-        dispatch({ type: products_data, payload: {error:"Sorry products data could not be fetched"} })
-
-        return
+    }).catch(() => {
+        console.log("Something went wrongg while fetching order data")
     })
     
 }

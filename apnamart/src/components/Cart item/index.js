@@ -1,11 +1,14 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
-import {changecartstate, changecartprice} from '../../actions'
+import { changecartstate, changecartprice } from '../../actions'
 import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
-import {deliverydate, showmodalwithmessageandvariant } from '../../utils'
+import { deliverydate, showmodalwithmessageandvariant } from '../../utils'
 import { useState } from 'react'
-import {NotificationModal} from '../Notification Modal'
+import { NotificationModal } from '../Notification Modal'
+import Button from '@material-ui/core/Button';
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 export const Cartitem = ({ item, count }) => {
     const dispatch = useDispatch()
@@ -15,7 +18,7 @@ export const Cartitem = ({ item, count }) => {
     const totalprice = useSelector(state => state.CartPrice)
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, changeshowmodalmessage] = useState(false)
-    
+
     const increaseitemcount = () => {
         if (count < 20) {
             dispatch(increase_item_count(item))
@@ -46,31 +49,25 @@ export const Cartitem = ({ item, count }) => {
                 <Link to={`${PATHS.PRODUCTPATH}${item}`} ><img className="cartimage" src={image} alt={name} /></Link>
             </div>
             <div>
-                <h6>
+                <h6 >
                     <Link className="text-decoration-none text-dark" to={`${PATHS.PRODUCTPATH}${item}`} >{name}</Link>
                 </h6>
                 <p>₹ {price}</p>
                 <div className="space-between">
                     <div className="increasedecreasecartitem w-25">
                         <div>
-                            <button onClick={decreaseitemcount} className={`w-50 rounded-circle buttondisplay bordernone bg-warning
-                             ${count === 1 ? "opacity50" : ""}`}>
-                                -
-                            </button>
+                            <RemoveCircleIcon className={`${count > 1 ? "cursorpointer" : ""}`} onClick={decreaseitemcount} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
+
                         </div>
 
                         <div>{count}</div>
 
                         <div>
-                            <button onClick={increaseitemcount} className={`w-50 bordernone rounded-circle bg-warning buttondisplay ${count === 20 ? "opacity50" : ""}`}>
-                                +
-                            </button>
+                            <AddCircleTwoToneIcon className={`${count < 20 ? "cursorpointer" : ""}`} onClick={increaseitemcount} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
                         </div>
                     </div>
                     <div>
-                        <button onClick={removeitemfromcart} className="bg-warning bordernone p-2 rounded-pill">
-                            Remove item
-                        </button>
+                        <Button className="bg-warning rounded-pill" onClick={removeitemfromcart} > Remove item </Button>
                     </div>
                 </div>
             </div>

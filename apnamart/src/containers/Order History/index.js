@@ -1,38 +1,48 @@
-import { useSelector, useDispatch } from "react-redux"
-import { useEffect } from "react"
-import { PATHS } from '../../config'
+import {OrderHistory} from '../../components'
+import { useDispatch, useSelector } from 'react-redux'
 import {getuserprofile} from '../../actions'
+import { useEffect, useState } from 'react'
+import {PATHS} from '../../config'
+import './index.css'
 
-const OrderHistory = ({ history }) => {
+export const Orderhistorpage = ({history}) => {
     const dispatch = useDispatch()
-
-    const userprofile = useSelector(state => state.Profile)
-    const Auth = useSelector(state => state.Auth)
-    const userorders = useSelector(state => state.Userorderdata)
-    console.log(userorders)
+    const profile = useSelector(state => state.Profile)
+    const auth = useSelector(state => state.Auth)
+    const [pageisloaded, loadpage] = useState(false)
     useEffect(() => {
-        if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
-            dispatch(getuserprofile())
+        if (Object.keys(profile).length <= 2 && auth !== " ") {
+            dispatch(getuserprofile)
+            return
         }
-
-        else if (Object.keys(userprofile).length === 0) {
+        else if (Object.keys(profile).length <=2){
             history.push(PATHS.HOME)
         }
 
-        document.body.style.backgroundColor = "#f1f3f6"
-        return () => {
-            document.body.style.backgroundColor = "white"
-        }
-    }, [Auth.length, dispatch, history, userprofile])
+        if (pageisloaded === false) {
+            setTimeout(() => {
+                loadpage(true)
+            }, 500);
+        } 
+    },[profile, dispatch, history, auth, pageisloaded, loadpage])
+
 
     return (
         <>
-         {
-             Object.keys(userorders).length === 0 ? <> <h3 className="text-center">You have not placed any order yet</h3> </> :
-             <></>
-         }
+        {
+        Object.keys(profile).length > 2 && pageisloaded === true &&        
+        <div className="orderhistorygrid">
+            <div></div>
+            <div>
+            <OrderHistory /> 
+            </div>
+            <div>
+
+            </div>
+            
+        </div>
+        
+        }
         </>
     )
 }
-
-export default OrderHistory

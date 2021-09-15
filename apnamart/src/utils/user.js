@@ -1,5 +1,7 @@
 import { setprofile, authsetter, storeuserorderdata } from '../actions'
+import {setaddress} from '../actionTypes'
 import { axiosinstance } from '../config'
+import { useDispatch } from 'react-redux'
 
 export const logouterros = {
     "Token is not provided": true, "Please provide a valid token": true
@@ -9,6 +11,7 @@ const resetafterlogout = (dispatch) => {
     dispatch(authsetter(" "))
     dispatch(setprofile({}))
     dispatch(storeuserorderdata([]))
+    dispatch({ type: setaddress, payload: [] })
 }
 
 export const gotohome = (dispatch,time=2000) => {
@@ -17,8 +20,8 @@ export const gotohome = (dispatch,time=2000) => {
     }, time )
 }
 
-
-export const logoutuser = (dispatch) => {
+export const Logoutuser = () => {
+    const dispatch = useDispatch()
     resetafterlogout(dispatch)
 }
 

@@ -4,7 +4,7 @@ export const setAuthinbrowser = (data) => localStorage.setItem("_tk_", data)
 
 export { mobilenumber_validator} from './validator'
 
-export {deliverydate} from './deliverydate'
+export {deliverydate, checkorderdate} from './date'
 
 export {convertarraydatatoobjectdata, searchdatafilter} from './array operations'
 
@@ -14,4 +14,4 @@ export {default as ScrollToTop} from './topscroll'
 
 export {showmodalwithmessageandvariant} from './modal utility'
 
-export {logouterros, logoutuser, deleleteuseraccount, gotohome} from './user'
+export {logouterros, Logoutuser, deleleteuseraccount, gotohome} from './user'

@@ -7,10 +7,10 @@ import { Fragment, useState } from 'react'
 import { useEffect } from 'react'
 import ReactImageMagnify from 'react-image-magnify'
 import useMeasure from 'react-use-measure'
-import {deliverydate} from '../../utils'
-import {NotificationModal} from '../../components'
-
-
+import { deliverydate } from '../../utils'
+import { NotificationModal } from '../../components'
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 
 const Product = ({ history }) => {
@@ -30,7 +30,7 @@ const Product = ({ history }) => {
     const [detailitems, changedetailitems] = useState([])
     const [_id, setid] = useState("")
     const [description, setdescription] = useState("")
-    const [modal, showhidemodal] = useState(false) 
+    const [modal, showhidemodal] = useState(false)
     const [ref, bounds] = useMeasure()
 
     const count = cartitems[productid] === undefined ? 0 : cartitems[productid].count
@@ -92,13 +92,13 @@ const Product = ({ history }) => {
         },
         largeImage: {
             src: image,
-            width: bounds.width *2,
-            height: bounds.height *2
+            width: bounds.width * 2,
+            height: bounds.height * 2
         },
         enlargedImageContainerStyle: { background: '#fff', zIndex: 9 },
-        enlargedImagePosition:'beside',
-        enlargedImageContainerDimensions:{width: '155%', height: '150%'},
-        shouldUsePositiveSpaceLens:true,
+        enlargedImagePosition: 'beside',
+        enlargedImageContainerDimensions: { width: '155%', height: '150%' },
+        shouldUsePositiveSpaceLens: true,
     };
 
     return (
@@ -129,10 +129,11 @@ const Product = ({ history }) => {
 
                     {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning productbutton">Add to cart</button> : <>
                         <div className="space-between productbutton">
-                            <button onClick={Remove_from_cart} className="btn btn-warning cartbutton rounded-circle d-flex justify-content-center">-</button>
+                            <div>
+                                <RemoveCircleIcon fontSize="large" className={`${count > 1 ? "cursorpointer" : ""}`} onClick={Remove_from_cart} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
+                            </div>
                             <div className="itemcarouselcount">{count}</div>
-                            <button onClick={Add_to_cart} className={`btn btn-warning cartbutton rounded-circle d-flex justify-content-center ${count === 20 ? "opacity50" : ""}`}>+</button>
-
+                            <AddCircleTwoToneIcon fontSize="large" className={`${count < 20 ? "cursorpointer" : ""}`} onClick={Add_to_cart} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
                         </div>
 
                     </>}
@@ -143,19 +144,19 @@ const Product = ({ history }) => {
             <hr className="mx-4 mt-5"></hr>
             <div className="productdescription ms-2 text-wrap">
                 <h6>Product description</h6>
-                <pre className="text-wrap ms-1 me-1"> 
-                {
-                    typeof description === "string" ? <p >{description}</p> :
-                        <ul>
-                            {
-                                description.map((item, index) => {
-                                    return (
-                                        <li key={index}>{item} </li>
-                                    )
-                                })
-                            }
-                        </ul>
-                }
+                <pre className="text-wrap ms-1 me-1">
+                    {
+                        typeof description === "string" ? <p >{description}</p> :
+                            <ul>
+                                {
+                                    description.map((item, index) => {
+                                        return (
+                                            <li key={index}>{item} </li>
+                                        )
+                                    })
+                                }
+                            </ul>
+                    }
                 </pre>
             </div>
             <hr className="mx-4 mt-5"></hr>

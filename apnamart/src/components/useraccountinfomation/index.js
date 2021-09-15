@@ -8,7 +8,8 @@ import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
 import EditIcon from '@material-ui/icons/Edit';
-import {NotificationModal} from '../Notification Modal'
+import Fab from '@material-ui/core/Fab';
+import { NotificationModal } from '../Notification Modal'
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
@@ -92,9 +93,8 @@ export const UserAccountInformation = () => {
             }
             setnotificationmodal(err.error, "danger")
         })
-        
-    }
 
+    }
     return (
         <>
             <div className="profileseperator2 ps-3 pb-3 pe-3 me-3 profilecontentdisplaycolor w-50">
@@ -121,7 +121,9 @@ export const UserAccountInformation = () => {
                                 <CancelRoundedIcon className="closeeditingbutton" onClick={() => showmodal(false)} />
                             </div>
                             <Alert variant="warning">
-                                <h5 className="mb-3 text-center">Edit Information <EditIcon /> </h5>
+                                <h5 className="mb-3 text-center">Edit Information <Fab variant="extended" size="small" color="error" aria-label="edit">
+                                    <EditIcon />
+                                </Fab> </h5>
 
                                 <form onSubmit={saveuserdata} >
                                     <div>

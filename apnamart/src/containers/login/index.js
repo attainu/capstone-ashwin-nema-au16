@@ -1,7 +1,7 @@
 import './index.css'
 import { useState } from 'react'
 import { PATHS, axiosinstance } from '../../config'
-import { authsetter, setprofile } from '../../actions'
+import { authsetter, setprofile, storeuserorderdata } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 import * as yup from 'yup'
@@ -38,9 +38,10 @@ export const Login = ({ history }) => {
                 return
             }
 
-            const { Name, Email, Mobilenumber, Location } = response.data
+            const { Name, Email, Mobilenumber, Location, userorderdata } = response.data
             dispatch(authsetter(response.data.token))
             dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
+            dispatch(storeuserorderdata(userorderdata))
             history.push(PATHS.HOME)
             return
 

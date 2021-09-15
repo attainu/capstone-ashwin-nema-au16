@@ -22,6 +22,7 @@
 .productbutton {
     align-self: flex-end;
     width: 25%;
+    align-items: center;
 }
 
 .productdetaildescription {

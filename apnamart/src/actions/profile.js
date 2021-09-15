@@ -10,12 +10,14 @@ export const getuserprofile = () => (dispatch) => {
     axiosinstance.post("/user/profile", {headers:auth}).then(resp => {
         if (resp.data.error === "") {
             const {Name, Mobilenumber, Email, Location, userorderdata} =  resp.data
+
             dispatch({ type: profile, payload: {Name, Mobilenumber, Email, Location} })
             dispatch(storeuserorderdata(userorderdata))
             return
         }
         dispatch(authsetter(" "))
-    }).catch(()=> {
+    }).catch((error)=> {
+        console.log(error)
         console.log("Profile not fetched")
         console.log("Get profile request failed")
     } )

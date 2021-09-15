@@ -1,26 +1,44 @@
 import './index.css'
 import { useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import { Cartitem, Ordersummary } from '../../components';
 import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
+import { NotificationModal } from '../../components'
+import Button from '@material-ui/core/Button';
+const Loginreminder = () => {
+    return (
+        <>
+            <p>
+                You are not logged in.
+            </p>
+            <p className="smalltext text-center">
+                Click Here to <Link to={PATHS.LOGIN}>Login</Link>
+            </p>
+        </>
+    )
+}
 
-const Usercart = ({nomargin}) => {
+const Usercart = ({ nomargin }) => {
     const cart = useSelector(state => state.Cart)
     const count = Object.keys(cart).length
+    const isloggedin = Object.keys(useSelector(state => state.Profile)).length > 1
+
+    const [modal, showmodal] = useState(false)
 
     useEffect(() => {
-        document.body.style.backgroundColor = "#f1f3f6"
-        return () => {
-            if (nomargin === undefined) {
-                document.body.style.backgroundColor = "white"
-            }
+        if (isloggedin === false && count > 0) {
+            showmodal(true)
         }
-    }, [nomargin])
+        document.body.style.backgroundColor = "#f1f3f6"
 
+        return () => {
+            document.body.style.backgroundColor = "white"
+        }
+    }, [isloggedin, showmodal, count])
     return (
         <>
             <div className="usercart">
@@ -45,7 +63,7 @@ const Usercart = ({nomargin}) => {
                             {Object.keys(cart).map((item, index) => {
                                 const count = cart[item].count
                                 return (
-                                    <Cartitem key={index}  item={item} count={count}  />
+                                    <Cartitem key={index} item={item} count={count} />
                                 )
                             })}
                         </SimpleBar>
@@ -63,17 +81,24 @@ const Usercart = ({nomargin}) => {
                             <strong>Price</strong>
                         </div>
                     </div>
-                    
+
                     <Ordersummary ordersummaryclass="space-between smalltext" />
- 
+
                     <div className="d-flex justify-content-center mt-3">
-                        <Link to={PATHS.CHECKOUT} >
-                            <button className="bordernone p-2 rounded-pill checkoutbutton">Checkout </button>
-                        </Link>
+                        {
+                            isloggedin &&
+                            <Link className="text-decoration-none" to={PATHS.CHECKOUT} >
+                                <Button className="bg-warning text-dark" variant="contained" color="primary">
+                                    Checkout
+                                </Button>
+                            </Link>
+
+                        }
                     </div>
                 </div>}
                 <div className="usercartsection"></div>
             </div>
+            <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="info" notick={true} Customcomponent={<Loginreminder />} />
         </>
     )
 }

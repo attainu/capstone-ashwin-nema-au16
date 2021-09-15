@@ -2,7 +2,9 @@ import './index.css'
 import { changecartstate, changecartprice } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import {NotificationModal} from '../Notification Modal'
+import { NotificationModal } from '../Notification Modal'
+import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 const Carouselitem = ({ itemdetails, history, carouselheight }) => {
     const [carouselitemheight, setcarouselitemheight] = useState('30vh')
@@ -59,10 +61,9 @@ const Carouselitem = ({ itemdetails, history, carouselheight }) => {
 
                 {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning">Add to cart</button> : <>
                     <div className="space-between">
-                        <button onClick={Remove_from_cart} className="btn btn-warning cartbutton rounded-circle d-flex justify-content-center">-</button>
+                        <RemoveCircleIcon fontSize="large" className={`${count > 1 ? "cursorpointer" : ""}`} onClick={Remove_from_cart} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
                         <div className="itemcarouselcount">{count}</div>
-                        <button onClick={Add_to_cart} className={`btn btn-warning cartbutton rounded-circle d-flex justify-content-center ${count === 20 ? "opacity50" : ""}`}>+</button>
-
+                        <AddCircleTwoToneIcon fontSize="large" className={`${count < 20 ? "cursorpointer " : ""}`} onClick={Add_to_cart} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
                     </div>
                 </>}
             </div>

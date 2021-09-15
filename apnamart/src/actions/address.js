@@ -1,14 +1,13 @@
 import { setaddress } from '../actionTypes'
 import {axiosinstance} from '../config'
-import {logoutuser} from '../utils'
+import {Logoutuser} from '../utils'
 
 export const getuseraddress = (latitude, longtitude) => (dispatch) => {
     const location = `${latitude},${longtitude}`
     axiosinstance.post("/user/location", {location}).then(resp => {
 
         if (resp.data.error !== "") {
-            dispatch({ type: setaddress, payload: [] })
-            logoutuser(dispatch)
+            Logoutuser()
             return
         }
         const finaluserlocationaddress = []

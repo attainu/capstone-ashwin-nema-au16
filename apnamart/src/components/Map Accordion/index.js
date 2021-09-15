@@ -3,12 +3,13 @@ import { Card } from "react-bootstrap";
 import { useTransition, animated } from 'react-spring'
 import React from "react";
 import LocationMap from '../User location map'
+import Button from '@material-ui/core/Button';
 
-const MapAccordion = ({userlocationaddress}) => {
+const MapAccordion = ({ userlocationaddress }) => {
     const [isvisible, changevisibility] = useState(false)
     const transition = useTransition(isvisible, {
         from: { height: "0vh" },
-        enter: {minHeight: "65vh" },
+        enter: { minHeight: "65vh" },
         leave: { height: "0vh", display: null }
     })
 
@@ -16,8 +17,8 @@ const MapAccordion = ({userlocationaddress}) => {
         <div className="checkoutaccordion mt-5">
             <Card>
                 <Card.Header>
-                    <div  className="space-between checkoutaccordionheader">
-                        <div className="me-3">
+                    <div className="space-between checkoutaccordionheader">
+                        <div className="me-3 w-100">
                             <h6 >Current delivery address</h6>
                             <div>
                                 {
@@ -26,14 +27,9 @@ const MapAccordion = ({userlocationaddress}) => {
                             </div>
                         </div>
                         <div>
-                            <button
-                                type="button"
-                                className="bordernone p-2"
-                                style={{ backgroundColor: '#ffc107' }}
-                                onClick={() => changevisibility(currenvisbility => !currenvisbility)}
-                            >
+                            <Button className="bg-warning" onClick={() => changevisibility(currenvisbility => !currenvisbility)} variant="contained" color="primary">
                                 Change address
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </Card.Header>

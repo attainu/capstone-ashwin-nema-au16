@@ -1,18 +1,25 @@
 import  {userorderdata ,newuserorder, canceluserorder } from '../actionTypes'
-const initialstate = {}
+const initialstate = {count:0, orderdata:[]}
 
 const Userorderdata = (state, action) => {
     state = state || initialstate
-
-    switch  (action) {
-        case userorderdata:
-            return action.payload
+    
+    switch  (action.type) {
         
+        case userorderdata:
+            state = {...state, ...action.payload}
+            return state
+
         case newuserorder:
-            return {...state, ...action.payload}
+            if (state.orderdata.length === 5) {
+                state.orderdata.pop()
+            }
+            state.count += 1
+            state.orderdata = [...action.payload, ...state.orderdata]
+            return state
         
         case canceluserorder:
-            state[action.payload].status = "Order cancelled"
+            state.orderdata[action.payload].status = "Order cancelled"
             return state 
 
         default:
