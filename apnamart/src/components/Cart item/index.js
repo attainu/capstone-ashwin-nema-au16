@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { changecartstate, changecartprice } from '../../actions'
 import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
-import { deliverydate, showmodalwithmessageandvariant } from '../../utils'
+import { deliverydate, showmodalwithmessageandvariant, makesubpath } from '../../utils'
 import { useState } from 'react'
 import { NotificationModal } from '../Notification Modal'
 import Button from '@material-ui/core/Button';
@@ -46,11 +46,11 @@ export const Cartitem = ({ item, count }) => {
     return (
         <div className="mb-5 cartitem" >
             <div className="cartimagecontainer">
-                <Link to={`${PATHS.PRODUCTPATH}${item}`} ><img className="cartimage" src={image} alt={name} /></Link>
+                <Link to={`${makesubpath(PATHS.PRODUCT, item)}`} ><img className="cartimage" src={image} alt={name} /></Link>
             </div>
             <div>
                 <h6 >
-                    <Link className="text-decoration-none text-dark" to={`${PATHS.PRODUCTPATH}${item}`} >{name}</Link>
+                    <Link className="text-decoration-none text-dark" to={`${makesubpath(PATHS.PRODUCT, item)}`} >{name}</Link>
                 </h6>
                 <p>₹ {price}</p>
                 <div className="space-between">

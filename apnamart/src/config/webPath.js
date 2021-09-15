@@ -3,15 +3,13 @@ const PATHS = {
     LOGIN:'/login',
     SIGNUP:'/signup',
     PRODUCT:'/product/:productid',
-    PRODUCTPATH:'/product/',
     SUBCATEGORY:'/subcategory/:subcategoryid',
-    SUBCATEGORYPATH:'/subcategory/',
     CATEGORY:'/category/:categoryid',
-    CATEGORYPATH:'/category/',
     PROFILE:'/profile',
     CART:'/cart',
     CHECKOUT:'/checkout',
-    ORDERHISTORY:'/orderhistory'
+    ORDERHISTORY:'/orderhistory',
+    ORDERDETAILS:'/orderdetails/:orderid'
 }
 
 export default PATHS

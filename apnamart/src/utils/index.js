@@ -6,9 +6,9 @@ export { mobilenumber_validator} from './validator'
 
 export {deliverydate, checkorderdate} from './date'
 
-export {convertarraydatatoobjectdata, searchdatafilter} from './array operations'
+export {convertarraydatatoobjectdata, searchdatafilter, makesubpath} from './array string operations'
 
-export {SetAddressContext} from './contexts'
+export {SetAddressContext, OrderContext} from './contexts'
 
 export {default as ScrollToTop} from './topscroll'
 
