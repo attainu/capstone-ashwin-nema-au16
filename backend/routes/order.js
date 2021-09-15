@@ -5,7 +5,8 @@ require('dotenv').config()
 const { RAZORPAYKEY, RAZORPAYPASSWORD } = process.env
 const order_router = express.Router()
 order_router.use(express.urlencoded({ extended: true }))
-const {  orderauthenticationandgeneration } = require('../middlewares/orders')
+
+const {  orderauthenticationandgeneration, getorderdata } = require('../middlewares/orders')
 const OrderModel = require('../models/order')
 
 const { authenticatetoken, accesstokengenerator } = require('../middlewares/token')
@@ -72,6 +73,15 @@ order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, 
         console.log(error)
         return res.json({ error: "Sorry something went wrong. Your order could not be placed" })
 
+    }
+})
+
+order_router.post("/data/:skip", authenticatetoken, async (req, res) => {
+    try {
+        const data = await getorderdata(req.verifieduser, Number(req.params.skip))
+        return res.json(data)
+    } catch(error) {
+        return res.json({error:true})
     }
 })
 

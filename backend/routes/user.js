@@ -49,7 +49,7 @@ user_router.post("/login", async (req, res) => {
         if (user != null && isMatching) {
             const token = accesstokengenerator(user._id)
             const {Name, Email, Mobilenumber, Location} = user
-            const userorderdata = await getorderdata(user._id)
+            const userorderdata = await getorderdata(req.verifieduser,0, true)
             return res.json({ error: "", token, Name, Email, Mobilenumber, Location, userorderdata })
         }
 
@@ -65,7 +65,7 @@ user_router.post("/profile", authenticatetoken,async (req, res) => {
     try {
 
         const user = await UserModel.findById(req.verifieduser)
-        const userorderdata = await getorderdata(req.verifieduser)
+        const userorderdata = await getorderdata(req.verifieduser,0, true)
         const { Name, Mobilenumber, Email, Location } = user
         return res.json({ Name, Mobilenumber, Email, error: "", Location, userorderdata })
 

@@ -55,14 +55,42 @@ const orderauthenticationandgeneration = async (req, res, next) => {
     }
 }
 
-const getorderdata = async (id) => {
-    const userorderdata = await OrderModel.aggregate([
-        { $match:{Customer: mongoose.Types.ObjectId(id)} },
-        {$project:{_id:1, status:1, price:1, ordereditems:1, paymentid:1, paymentmode:1, createdAt:1 } },
-        {$sort:{createdAt:-1}}
-    ])
+const getorderdata = async (id, skip,totalcount) => {
+    if (totalcount === true) {
+        const desiredorders = await OrderModel.aggregate([
+            {
+                $facet: {
+                    totalData: [
+                        { $match: { Customer: mongoose.Types.ObjectId(id) } },
+                        { $project: { _id: 1, status: 1, price: 1, ordereditems: 1, paymentid: 1, paymentmode: 1, createdAt: 1 } },
+                        { $sort: { createdAt: -1 } },
+                        { $skip: 0 },
+                        { $limit: 5 }
+                    ],
+                    totalCount: [
+                        { $count: "count" }
+                    ]
+                }
+            }
+        ])
     
-    return userorderdata
+        return desiredorders
+    }
+    const desiredorders = await OrderModel.aggregate([
+        {
+            $facet: {
+                totalData: [
+                    { $match: { Customer: mongoose.Types.ObjectId(id) } },
+                    { $project: { _id: 1, status: 1, price: 1, ordereditems: 1, paymentid: 1, paymentmode: 1, createdAt: 1 } },
+                    { $sort: { createdAt: -1 } },
+                    { $skip: skip },
+                    { $limit: 5 }
+                ]
+            }
+        }
+    ])
+
+    return desiredorders
 }
 
 module.exports = {  orderauthenticationandgeneration, getorderdata }

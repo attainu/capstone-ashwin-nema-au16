@@ -4,6 +4,7 @@ const ItemModel2 = require('../models/items2')
 const SubcategoryModel = require('../models/subcategory')
 const CategoryModel = require('../models/category')
 const mongoose = require('mongoose')
+const OrderModel = require('../models/order')
 const products_router = express.Router()
 products_router.use(express.urlencoded({ extended: true }))
 
@@ -16,7 +17,7 @@ products_router.post("/products", async (req, res) => {
         const allcategories = await CategoryModel.find({})
         return res.json({ products: [...allitemms, ...remainingitems], subcategories: [...allsubcategories], categories: [...allcategories], error: "" })
     } catch (error) {
-        console.log(error)
+        console.log("Error occured while fetching data")
         return res.json({ error: true })
     }
 })
