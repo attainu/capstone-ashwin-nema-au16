@@ -28,7 +28,7 @@ const Profile = ({ history }) => {
             dispatch(getuserprofile())
         }
 
-        else if (Object.keys(userprofile).length === 0) {
+        else if (Object.keys(userprofile).length === 0 || Object.keys(userprofile).length === 1) {
             history.push(PATHS.HOME)
         }
 

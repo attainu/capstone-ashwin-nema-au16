@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import {PATHS} from '../../config'
 import './index.css'
 
-export const Orderhistorpage = ({history}) => {
+export const Orderhistorypage = ({history}) => {
     const dispatch = useDispatch()
     const profile = useSelector(state => state.Profile)
     const auth = useSelector(state => state.Auth)
@@ -22,7 +22,7 @@ export const Orderhistorpage = ({history}) => {
         if (pageisloaded === false) {
             setTimeout(() => {
                 loadpage(true)
-            }, 500);
+            }, 300);
         } 
     },[profile, dispatch, history, auth, pageisloaded, loadpage])
 

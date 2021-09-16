@@ -5,12 +5,13 @@ import { getuseraddress } from '../../actions'
 import { Accordion } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Ordersummary, MapAccordion, PaymentSection } from '../../components'
-import { SetAddressContext } from '../../utils'
+import { SetAddressContext, preventunauthorisedaccess } from '../../utils'
 
 const CheckoutPage = ({ history }) => {
     const dispatch = useDispatch()
     const useraddress = useSelector(state => state.Useraddress)
     const userprofile = useSelector(state => state.Profile)
+    const auth = useSelector(state => state.Auth)
     const { Location } = userprofile
     const [userlocationaddress, setcurrentaddress] = useState([])
     const [isaddressset, setaddress] = useState(false)
@@ -26,8 +27,8 @@ const CheckoutPage = ({ history }) => {
             setcurrentaddress(useraddress)
             setaddress(true)
         }
-
-    }, [useraddress, userprofile, isaddressset, dispatch, Location])
+        preventunauthorisedaccess(dispatch, auth)
+    }, [useraddress, userprofile, isaddressset, dispatch, Location, auth])
 
     useEffect(() => {
         if (Location === undefined) {

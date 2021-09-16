@@ -6,7 +6,6 @@ import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import { Detector } from "react-detect-offline";
 
 export const Layout = ({ children }) => {
-
     return (
         <>
             <ScrollToTop>

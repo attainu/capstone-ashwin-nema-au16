@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { authsetter, setprofile } from '../../actions'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
-import { mobilenumber_validator, showmodalwithmessageandvariant } from '../../utils'
+import { mobilenumber_validator, showmodalwithmessageandvariant,  checkisuserloggedin } from '../../utils'
 import {NotificationModal} from '../../components'
 
 export const Signup = ({ history }) => {
@@ -23,6 +23,7 @@ export const Signup = ({ history }) => {
     const mobilenumber = useRef("")
 
     const userprofile = useSelector(state => state.Profile)
+    const auth = useSelector(state => state.Auth)
 
     const schema = yup.object().shape({
         Password: yup.string().required(),
@@ -52,6 +53,10 @@ export const Signup = ({ history }) => {
 
     const submithandler = (e) => {
         e.preventDefault()
+        if (checkisuserloggedin(auth) !== true) {
+            window.location.reload()
+            return
+        }
 
         if (mobilenumber_validator(Number(Mobilenumber)) !== true) {
             showmodalwithmessageandvariant(showmodal, "Please provide a valid Indian mobile number", changeerrormessage)

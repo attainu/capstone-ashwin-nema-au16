@@ -7,7 +7,7 @@ export const getuseraddress = (latitude, longtitude) => (dispatch) => {
     axiosinstance.post("/user/location", {location}).then(resp => {
 
         if (resp.data.error !== "") {
-            Logoutuser()
+            Logoutuser(dispatch)
             return
         }
         const finaluserlocationaddress = []

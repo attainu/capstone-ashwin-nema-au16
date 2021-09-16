@@ -5,7 +5,7 @@ import { authsetter, setprofile, storeuserorderdata } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 import * as yup from 'yup'
-import { showmodalwithmessageandvariant } from '../../utils'
+import { showmodalwithmessageandvariant, checkisuserloggedin } from '../../utils'
 import {NotificationModal} from '../../components'
 
 export const Login = ({ history }) => {
@@ -16,6 +16,7 @@ export const Login = ({ history }) => {
     const [errormessage, changeerrormessage] = useState("")
 
     const userprofile = useSelector(state => state.Profile)
+    const auth = useSelector(state => state.Auth)
 
     const [modal, showmodal] = useState(false)
 
@@ -27,7 +28,10 @@ export const Login = ({ history }) => {
     const submithandler = (e) => {
         e.preventDefault()
         changeerrormessage("")
-
+        if (checkisuserloggedin(auth) !== true) {
+            window.location.reload()
+            return
+        }
 
         schema.validate({ Password, Email }, { abortEarly: false }).then(async userdata => {
             const response = await axiosinstance.post('/user/login', { ...userdata })

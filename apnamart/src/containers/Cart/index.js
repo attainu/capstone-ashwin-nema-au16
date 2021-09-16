@@ -1,6 +1,6 @@
 import './index.css'
 import { useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import { Cartitem, Ordersummary } from '../../components';
@@ -25,12 +25,14 @@ const Loginreminder = () => {
 const Usercart = ({ nomargin }) => {
     const cart = useSelector(state => state.Cart)
     const count = Object.keys(cart).length
-    const isloggedin = Object.keys(useSelector(state => state.Profile)).length > 1
-
+    
+    const userprofilechecker = Object.keys(useSelector(state => state.Profile)).length > 0
+    const modalactivator = useRef(userprofilechecker)
     const [modal, showmodal] = useState(false)
 
     useEffect(() => {
-        if (isloggedin === false && count > 0) {
+        if (modalactivator.current === false && count > 0) {
+            modalactivator.current = true
             showmodal(true)
         }
         document.body.style.backgroundColor = "#f1f3f6"
@@ -38,7 +40,7 @@ const Usercart = ({ nomargin }) => {
         return () => {
             document.body.style.backgroundColor = "white"
         }
-    }, [isloggedin, showmodal, count])
+    }, [ showmodal, count])
     return (
         <>
             <div className="usercart">
@@ -86,7 +88,7 @@ const Usercart = ({ nomargin }) => {
 
                     <div className="d-flex justify-content-center mt-3">
                         {
-                            isloggedin &&
+                            userprofilechecker === true &&
                             <Link className="text-decoration-none" to={PATHS.CHECKOUT} >
                                 <Button className="bg-warning text-dark" variant="contained" color="primary">
                                     Checkout

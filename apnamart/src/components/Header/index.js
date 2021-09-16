@@ -8,7 +8,7 @@ import { PATHS } from '../../config';
 import { getuserprofile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
 import useMeasure from 'react-use-measure'
-import {Logoutuser} from '../../utils'
+import {Logoutuser, getAuthinbrowser} from '../../utils'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import ListIcon from '@material-ui/icons/List';
@@ -19,7 +19,6 @@ const Header = ({ children, isonline }) => {
     const [count, changecount] = useState(0)
     const [ref, bounds] = useMeasure()
     const [childrenmargin, changemargin] = useState("80px")
-
     useEffect(() => {
         changemargin(`${bounds.height}px`) 
     }, [bounds])
@@ -32,7 +31,7 @@ const Header = ({ children, isonline }) => {
     const { Name } = userprofile
 
     const dropdown = useRef()
-
+    const auth = getAuthinbrowser()
     useEffect(() => {
         changecount(cartcount)
     }, [cartcount])
@@ -40,8 +39,20 @@ const Header = ({ children, isonline }) => {
     useEffect(() => {
         if (Auth !== " " && Object.keys(userprofile).length === 0 && isonline===true ) {
             dispatch(getuserprofile())
+            return
         }
-    }, [Auth, dispatch, userprofile, isonline])
+
+        if (auth === " " && Object.keys(userprofile).length > 0  && isonline===true) {
+            Logoutuser(dispatch)
+            return
+        }
+
+        if (auth !== Auth  && isonline===true) {
+            Logoutuser(dispatch)
+            return
+        }
+
+    }, [Auth, dispatch, userprofile, isonline, auth])
 
     useEffect(() => {
         if ( Object.keys(Productsdata.products).length === 0 && isonline===true  ) {
@@ -103,7 +114,7 @@ const Header = ({ children, isonline }) => {
                                     <ul onClick={RemoveToggleclass} onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
                                         <Link className="text-decoration-none" to={PATHS.PROFILE}><li><p className="dropdown-item" ><AccountCircleIcon color="primary" /> Profile</p></li></Link>
                                         <Link className="text-decoration-none" to={PATHS.ORDERHISTORY}><li><p className="dropdown-item" ><ListIcon color="primary" /> Your orders</p></li></Link>
-                                        <li onClick={() => Logoutuser()}><p className="dropdown-item" > <PowerSettingsNewIcon /> Logout</p></li>
+                                        <li onClick={() => Logoutuser(dispatch)}><p className="dropdown-item" > <PowerSettingsNewIcon /> Logout</p></li>
                                     </ul>
                                 </div>
                             </div>

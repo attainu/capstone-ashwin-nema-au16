@@ -7,8 +7,12 @@ export const addnewordertoorderhistory = (orderdata) => ({ type: newuserorder, p
 export const changeorderstatustocancelled = (orderid) => ({ type: canceluserorder, payload: orderid })
 
 export const storeuserorderdata = (userorders) => {
-    const [{ totalData: orderdata, totalCount:[{ count }]  }] = userorders
-    return { type: userorderdata, payload: { orderdata, count } }
+    if (userorders !== undefined) {
+        const [{ totalData: orderdata, totalCount:[{ count }]  }] = userorders
+        return { type: userorderdata, payload: { orderdata, count } }
+    }
+    
+    return { type: userorderdata, payload: {count:0, orderdata:[]} }
 }
 
 export const setuserqueryorderdata = (currentpage, showmodalfunction) => (dispatch) => {
@@ -17,7 +21,7 @@ export const setuserqueryorderdata = (currentpage, showmodalfunction) => (dispat
         const { error } = data
 
         if (logouterros[error] !== undefined) {
-            Logoutuser()
+            Logoutuser(dispatch)
             return
         }
 

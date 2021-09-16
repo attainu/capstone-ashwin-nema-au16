@@ -3,7 +3,7 @@ import { RadioGroup, FormControlLabel, FormControl } from '@material-ui/core'
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
-import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros } from '../../utils'
+import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, preventunauthorisedaccess } from '../../utils'
 import { useState } from "react";
 import {axiosinstance} from '../../config'
 import {NotificationModal} from '../Notification Modal'
@@ -18,6 +18,7 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState("warning")
     const [paymentmode, changepaymentmode] = useState("Cash")
+    const auth = useSelector(state => state.Auth)
     const displaymodal = (message, variant) => {
         showmodalwithmessageandvariant(showmodal, message,changemodalmessage, variant, changemodalvariant)
         if (message === "Your order is successfully placed") {
@@ -53,6 +54,11 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
     }
 
     async function displayRazorpay() {
+        const authenticateuserisloggedin = preventunauthorisedaccess(dispatch,auth)
+        if (authenticateuserisloggedin !== true) {
+            return
+        }
+
         const res = await loadScript(
             "https://checkout.razorpay.com/v1/checkout.js"
         );
@@ -133,6 +139,10 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
     }
 
     const cashmode = () => {
+        const authenticateuserisloggedin = preventunauthorisedaccess(dispatch,auth)
+        if (authenticateuserisloggedin !== true) {
+            return
+        }
         axiosinstance.post("/user/order/cash", {items:cart, cartprice, deliveryaddress}).then(({data}) => {
             const loginerror = setloginerror(data.error)
             if (data.error !== undefined && !loginerror) {
