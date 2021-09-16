@@ -1,4 +1,6 @@
 import { combineReducers } from "redux";
+import {persistReducer} from 'redux-persist'
+import storage from "redux-persist/lib/storage";
 import Auth from "./auth";
 import Profile from "./profile";
 import Useraddress from "./useraddress";
@@ -7,7 +9,13 @@ import CartPrice from "./cartprice";
 import Productsdata from "./data";
 import Userorderdata from "./userorders";
 
-export default combineReducers({
+const persistConfig = {
+    key:'root',
+    storage,
+    whitelist:['CartPrice','Cart']
+}
+
+const rootReducer = combineReducers({
     Auth,
     Profile,
     Useraddress,
@@ -16,3 +24,5 @@ export default combineReducers({
     Productsdata,
     Userorderdata
 })
+
+export default persistReducer(persistConfig, rootReducer)

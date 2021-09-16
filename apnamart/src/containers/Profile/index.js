@@ -1,8 +1,6 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { PATHS } from '../../config'
 import { useEffect, useState } from 'react'
-import { getuserprofile } from '../../actions'
 import { UserAccountInformation, LocationMap, NotificationModal, OrderHistory } from '../../components'
 import Usercart from '../Cart'
 import { Alert } from 'react-bootstrap'
@@ -12,31 +10,23 @@ import RoomIcon from '@material-ui/icons/Room';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Logoutuser, deleleteuseraccount } from '../../utils'
+import { Logoutuser, deleleteuseraccount, validateuserpageaccess } from '../../utils'
 
 const Profile = ({ history }) => {
     const dispatch = useDispatch()
 
-    const userprofile = useSelector(state => state.Profile)
-    const { Name } = userprofile
-    const Auth = useSelector(state => state.Auth)
+    const {Profile, Auth} = useSelector(state => state)
+    const { Name } = Profile
 
     const [modal, showmodal] = useState(false)
 
     useEffect(() => {
-        if (Auth.length !== 1 && Object.keys(userprofile).length === 0) {
-            dispatch(getuserprofile())
-        }
-
-        else if (Object.keys(userprofile).length === 0 || Object.keys(userprofile).length === 1) {
-            history.push(PATHS.HOME)
-        }
-
+        validateuserpageaccess(dispatch, history, Profile, Auth)
         document.body.style.backgroundColor = "#f1f3f6"
         return () => {
             document.body.style.backgroundColor = "white"
         }
-    }, [userprofile, history, dispatch, Auth])
+    }, [Profile, history, dispatch, Auth])
 
     const [selectcomponenttodisplay, changedisplaycomponent] = useState("accountinformation")
 
@@ -58,10 +48,10 @@ const Profile = ({ history }) => {
                                 <div className="relativeimage">
                                     <AccountCircleIcon color="primary" style={{ width: "100%", height: "100%", objectFit: "contain", position: "absolute" }}></AccountCircleIcon>
                                 </div>
-                                <div className="text-wrap">
+                                <div className="text-break">
                                     <span className="smalltext">Hello,</span>
-                                    <p >{Name.slice(0, 35)} </p>
-                                </div>
+                                    <p >{Name} </p>
+                             </div>
                             </div>
 
                             <Alert onClick={() => changedisplaycomponent("My orders")} className={`mt-5 p-2 d-flex justify-content-center ${selectcomponenttodisplay === "My orders" ? "" : "cursorpointer"}`}>
@@ -93,7 +83,7 @@ const Profile = ({ history }) => {
 
                         {
                             selectcomponenttodisplay === "My orders" &&
-                            <div  className="profileseperator2 profilecontentdisplaycolor w-50">
+                            <div className="profileseperator2 profilecontentdisplaycolor w-50">
                                 <OrderHistory profile={true} />
                             </div>
                         }

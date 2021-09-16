@@ -12,4 +12,4 @@ export {default as ScrollToTop} from './topscroll'
 
 export {showmodalwithmessageandvariant} from './modal utility'
 
-export {logouterros, Logoutuser, deleleteuseraccount, gotohome, preventunauthorisedaccess, checkisuserloggedin} from './user'
+export {logouterros, Logoutuser, deleleteuseraccount, gotohome, preventunauthorisedaccess, checkisuserloggedin, validateuserpageaccess} from './user'

@@ -1,6 +1,6 @@
-import { setprofile, authsetter, storeuserorderdata } from '../actions'
+import { setprofile, authsetter, storeuserorderdata, getuserprofile } from '../actions'
 import {setaddress} from '../actionTypes'
-import { axiosinstance } from '../config'
+import { axiosinstance, PATHS } from '../config'
 import {getAuthinbrowser} from './auth'
 
 export const logouterros = {
@@ -50,4 +50,16 @@ export const preventunauthorisedaccess = (dispatch, token) => {
 export const checkisuserloggedin = (token) => {
     const verification = getAuthinbrowser() === " " && token === " " && getAuthinbrowser() === token
     return verification 
+}
+
+export const validateuserpageaccess = (dispatch, history, profile, auth) => {
+    const validprofile = Object.keys(profile).length > 0
+    if (!validprofile && auth !== " ") {
+        dispatch(getuserprofile())
+        return false
+    } 
+    if (!validprofile) {
+        history.push(PATHS.HOME)
+    }
+    return validprofile
 }
