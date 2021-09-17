@@ -56,7 +56,7 @@ const OrderHistory = () => {
                                                     <div>
                                                         Total Items({Object.keys(ordereditems).length})
                                                         <div>₹{price}</div>
-                                                        <Link to={{pathname:makesubpath(PATHS.ORDERDETAILS, _id), state:item } } className="text-decoration-none text-white">
+                                                        <Link to={{pathname:`${makesubpath(PATHS.ORDERDETAILS,_id)}`, state:item } } className="text-decoration-none text-white">
 
                                                             <Button className="w-100" variant="contained" color="primary">
                                                                 View Details

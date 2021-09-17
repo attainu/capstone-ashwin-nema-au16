@@ -28,6 +28,7 @@
     "react-spring": "^9.2.4",
     "react-use-measure": "^2.0.4",
     "redux": "^4.1.0",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "simplebar-react": "^2.3.5",
     "styled-components": "^5.3.0",

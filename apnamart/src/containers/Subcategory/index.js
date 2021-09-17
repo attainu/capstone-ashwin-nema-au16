@@ -13,27 +13,16 @@ const Subcategory = ({ history }) => {
     const [currenid, changecurrenid] = useState("")
 
     useEffect(() => {
-        let flag
         if (Subcategorydata.length === 0) {
-            axiosinstance.post(`/subcategory/${subcategoryid}`).then(resp => {
-                if (resp.data.error !== "") {
-                    history.push(PATHS.HOME)
-                }
-                changeSubcategorydata([...resp.data.result])
+            axiosinstance.post(`/subcategory/${subcategoryid}`).then(({data}) => {
+                changeSubcategorydata([...data])
                 changecurrenid(subcategoryid)
-                flag = true
-                return
             }).catch(() => {
-                flag = false
-                history.push(PATHS.HOME)
+                history.push(PATHS.NOTFOUND)
             })
-
         }
 
-        if (flag !== undefined && flag !== true) {
-            history.push(PATHS.HOME)  
-        }
-        
+
     }, [Subcategories, Subcategorydata, history, subcategoryid])
 
     useEffect(() => {

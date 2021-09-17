@@ -6,9 +6,6 @@ const { products_data, subcategory_data, category_data} = data
 
 export const getproductsdata = () => (dispatch) => {
     axiosinstance.post("/products").then(resp => {
-        if (resp.data.error !== "") {
-            return
-        }
         const productsdata = convertarraydatatoobjectdata(resp.data.products, PATHS.PRODUCT)
         const subcategorydata = convertarraydatatoobjectdata(resp.data.subcategories, PATHS.SUBCATEGORY)
         const categorydata = convertarraydatatoobjectdata(resp.data.categories, PATHS.CATEGORY)

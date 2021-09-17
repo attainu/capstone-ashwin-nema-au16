@@ -1,13 +1,13 @@
 import { Modal, Alert } from 'react-bootstrap'
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-export const NotificationModal = ({ show, centered, currentmodalmessage, onHide, alertvariant, successmessage, notick, Customcomponent }) => {
+export const NotificationModal = ({ show, centered, currentmodalmessage, onHide, alertvariant, successmessage, additionalcustomcomponent, Customcomponent }) => {
     return (
         <Modal show={show} centered={centered} contentClassName="modalwithoutcolor" onHide={() => onHide(false)} >
             <Alert variant={alertvariant} >
                 <div className="d-flex justify-content-center">
                     <h5>
-                        {notick === undefined && 
+                        {additionalcustomcomponent === undefined && 
                              currentmodalmessage === successmessage ?
                              <>
                                  <div className="d-flex flex-column">
@@ -20,7 +20,7 @@ export const NotificationModal = ({ show, centered, currentmodalmessage, onHide,
                                      </div>
                                  </div>
                              </>
-                             : notick === undefined && 
+                             : additionalcustomcomponent === undefined && 
                              <>
                                  <div className="row">
                                      <div className="col-1"><ErrorRoundedIcon style={{ color: "red" }} /> </div>
@@ -34,7 +34,7 @@ export const NotificationModal = ({ show, centered, currentmodalmessage, onHide,
                            
 
                         {
-                            notick !== undefined && Customcomponent
+                            additionalcustomcomponent !== undefined && Customcomponent
                         }
 
                     </h5>

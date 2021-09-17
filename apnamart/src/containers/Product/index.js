@@ -42,7 +42,7 @@ const Product = ({ history }) => {
         }
 
         if (Productsdata[productid] === undefined) {
-            history.push(PATHS.HOME)
+            history.push(PATHS.NOTFOUND)
         }
 
         if (Productsdata[productid] !== undefined) {

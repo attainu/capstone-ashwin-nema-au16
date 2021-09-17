@@ -13,24 +13,13 @@ export const Category = ({ history }) => {
     const [currenid, changecurrenid] = useState("")
 
     useEffect(() => {
-        let flag
         if (Categorydata.length === 0) {
-            axiosinstance.post(`/category/${categoryid}`).then(resp => {
-                if (resp.data.error !== "") {
-                    history.push(PATHS.HOME)
-                }
-                changeCategorydata([...resp.data.result])
+            axiosinstance.post(`/category/${categoryid}`).then(({data}) => {
+                changeCategorydata([...data])
                 changecurrenid(categoryid)
-                flag = true
-                return
             }).catch(() => {
-                flag = false
-                history.push(PATHS.HOME)
+                history.push(PATHS.NOTFOUND)
             })
-        }
-
-        if (flag !== undefined && flag !== true) {
-            history.push(PATHS.HOME)
         }
 
     }, [Categories, Categorydata, history, categoryid])

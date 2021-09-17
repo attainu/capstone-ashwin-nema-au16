@@ -100,7 +100,7 @@ const Usercart = ({ nomargin }) => {
                 </div>}
                 <div className="usercartsection"></div>
             </div>
-            <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="info" notick={true} Customcomponent={<Loginreminder />} />
+            <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="info" additionalcustomcomponent={true} Customcomponent={<Loginreminder />} />
         </>
     )
 }

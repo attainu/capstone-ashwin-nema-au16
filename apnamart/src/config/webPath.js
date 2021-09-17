@@ -9,7 +9,8 @@ const PATHS = {
     CART:'/cart',
     CHECKOUT:'/checkout',
     ORDERHISTORY:'/orderhistory',
-    ORDERDETAILS:'/orderdetails/:orderid'
+    ORDERDETAILS:'/orderdetails/:orderid',
+    NOTFOUND:'/*'
 }
 
 export default PATHS
