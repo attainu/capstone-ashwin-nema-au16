@@ -69,8 +69,6 @@ order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, 
         return res.json({ success: true })
 
     } catch (error) {
-
-        console.log(error)
         return res.json({ error: "Sorry something went wrong. Your order could not be placed" })
 
     }
@@ -82,6 +80,19 @@ order_router.post("/data/:skip", authenticatetoken, async (req, res) => {
         return res.json(data)
     } catch(error) {
         return res.json({error:true})
+    }
+})
+
+order_router.post("/orderdetails/:id", authenticatetoken, async (req, res) => {
+    try {
+        const order = await OrderModel.aggregate([
+            {$match: {Customer: mongoose.Types.ObjectId(req.verifieduser), _id:mongoose.Types.ObjectId(req.params.id) }},
+            {$project:{_id:1, status:1, paymentmode:1, price:1, ordereditems:1, deliveryaddress:1, createdAt:1, paymentid:1}}
+        ])
+
+        return res.json(order)
+    } catch {
+        res.status(404).json({error:"Data not fetched"})
     }
 })
 
