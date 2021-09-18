@@ -12,7 +12,7 @@ import Userorderdata from "./userorders";
 const persistConfig = {
     key:'root',
     storage,
-    whitelist:['CartPrice','Cart']
+    whitelist:['CartPrice','Cart','Auth']
 }
 
 const rootReducer = combineReducers({
@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
     Cart,
     CartPrice,
     Productsdata,
-    Userorderdata
+    Userorderdata,
 })
 
 export default persistReducer(persistConfig, rootReducer)

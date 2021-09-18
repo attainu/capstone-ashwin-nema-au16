@@ -2,13 +2,13 @@ import './index.css'
 import { Modal, Alert } from 'react-bootstrap'
 import { useState } from 'react'
 import { mobilenumber_validator, showmodalwithmessageandvariant } from '../../utils'
-import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { axiosinstance } from '../../config'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
-import EditIcon from '@material-ui/icons/Edit';
-import Fab from '@material-ui/core/Fab';
+import EditIcon from '@mui/icons-material/Edit'; 
+import Fab from '@mui/material/Fab';
 import { NotificationModal } from '../Notification Modal'
 
 export const UserAccountInformation = () => {

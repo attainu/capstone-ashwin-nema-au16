@@ -1,5 +1,5 @@
 import './index.css'
-import SearchBar from 'material-ui-search-bar'
+import SearchBar from "material-ui-search-bar";
 import { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'

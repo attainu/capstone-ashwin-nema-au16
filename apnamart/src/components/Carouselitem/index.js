@@ -3,8 +3,8 @@ import { changecartstate, changecartprice } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { NotificationModal } from '../Notification Modal'
-import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 const Carouselitem = ({ itemdetails, history, carouselheight }) => {
     const [carouselitemheight, setcarouselitemheight] = useState('30vh')

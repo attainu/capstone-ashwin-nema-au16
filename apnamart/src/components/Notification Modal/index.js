@@ -1,6 +1,6 @@
 import { Modal, Alert } from 'react-bootstrap'
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 export const NotificationModal = ({ show, centered, currentmodalmessage, onHide, alertvariant, successmessage, additionalcustomcomponent, Customcomponent }) => {
     return (
         <Modal show={show} centered={centered} contentClassName="modalwithoutcolor" onHide={() => onHide(false)} >

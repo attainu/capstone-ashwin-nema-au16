@@ -9,36 +9,32 @@ import { SetAddressContext, preventunauthorisedaccess } from '../../utils'
 
 const CheckoutPage = ({ history }) => {
     const dispatch = useDispatch()
-    const useraddress = useSelector(state => state.Useraddress)
-    const userprofile = useSelector(state => state.Profile)
+    const {Useraddress, Profile, Productsdata:{products}} = useSelector(state => state)
     const auth = useSelector(state => state.Auth)
-    const { Location } = userprofile
+    const { Location } = Profile
     const [userlocationaddress, setcurrentaddress] = useState([])
     const [isaddressset, setaddress] = useState(false)
     const cart = useSelector(state => state.Cart)
     const count = Object.keys(cart).length
 
     useEffect(() => {
-        if (useraddress.length === 0 && Object.keys(userprofile).length > 0) {
+        if (Useraddress.length === 0 && Object.keys(Profile).length > 0) {
             dispatch(getuseraddress(Location[0], Location[1]))
         }
 
-        if (isaddressset === false && useraddress.length !== 0) {
-            setcurrentaddress(useraddress)
+        if (isaddressset === false && Useraddress.length !== 0) {
+            setcurrentaddress(Useraddress)
             setaddress(true)
         }
         preventunauthorisedaccess(dispatch, auth)
-    }, [useraddress, userprofile, isaddressset, dispatch, Location, auth])
-
-    useEffect(() => {
-        if (Location === undefined) {
+        if (auth === " ") {
             history.push(PATHS.HOME)
         }
-    }, [Location, history])
+    }, [Useraddress, Profile, isaddressset, dispatch, Location, auth, history])
 
     return (
         <>
-            {Location !== undefined && count > 0 &&
+            {Location !== undefined && count > 0 && Object.keys(products).length > 0 &&
                 <>
                     <SetAddressContext.Provider value={setaddress} >
                         <MapAccordion userlocationaddress={userlocationaddress} />

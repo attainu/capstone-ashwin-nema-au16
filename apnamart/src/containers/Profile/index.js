@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react'
 import { UserAccountInformation, LocationMap, NotificationModal, OrderHistory } from '../../components'
 import Usercart from '../Cart'
 import { Alert } from 'react-bootstrap'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import RoomIcon from '@material-ui/icons/Room';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
-import DeleteIcon from '@material-ui/icons/Delete';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import RoomIcon from '@mui/icons-material/Room';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Logoutuser, deleleteuseraccount, validateuserpageaccess } from '../../utils'
 
 const Profile = ({ history }) => {

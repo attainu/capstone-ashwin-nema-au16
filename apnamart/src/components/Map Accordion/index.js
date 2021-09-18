@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import { useTransition, animated } from 'react-spring'
 import React from "react";
 import LocationMap from '../User location map'
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button'
 
 const MapAccordion = ({ userlocationaddress }) => {
     const [isvisible, changevisibility] = useState(false)

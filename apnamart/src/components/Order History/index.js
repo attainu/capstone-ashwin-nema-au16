@@ -2,10 +2,10 @@ import { useSelector, useDispatch } from "react-redux"
 import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css'
 import './index.css'
-import Pagination from '@material-ui/lab/Pagination';
+import Pagination from '@mui/material/Pagination';
 import { Alert } from 'react-bootstrap'
 import { checkorderdate, makesubpath } from '../../utils'
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button'
 import { NotificationModal } from '../Notification Modal'
 import { useState } from 'react'
 import { setuserqueryorderdata } from '../../actions'

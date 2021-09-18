@@ -2,7 +2,7 @@ import Header from '../Header'
 import Footer from '../Footer'
 import { ScrollToTop } from '../../utils'
 import { Alert } from 'react-bootstrap'
-import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Detector } from "react-detect-offline";
 
 export const Layout = ({ children }) => {

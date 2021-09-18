@@ -1,0 +1,6 @@
+.orderdetailsdivider {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    width: 98vw;
+    margin-right: 1vw;
+}

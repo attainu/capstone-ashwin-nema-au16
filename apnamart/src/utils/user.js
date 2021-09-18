@@ -41,6 +41,7 @@ export const deleleteuseraccount = (dispatch, modaldisplayfunction) => {
 export const preventunauthorisedaccess = (dispatch, token) => {
     const auth = getAuthinbrowser()
     if (auth === " " || auth !== token) {
+        console.log(auth === " ", "This condition is helping me")
         Logoutuser(dispatch)
         return
     }

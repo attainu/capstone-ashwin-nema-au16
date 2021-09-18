@@ -8,7 +8,7 @@ import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { NotificationModal } from '../../components'
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button'
 const Loginreminder = () => {
     return (
         <>
@@ -89,7 +89,7 @@ const Usercart = ({ nomargin }) => {
                     <div className="d-flex justify-content-center mt-3">
                         {
                             userprofilechecker === true &&
-                            <Link className="text-decoration-none" to={PATHS.CHECKOUT} >
+                            <Link to={PATHS.CHECKOUT} className="text-decoration-none" >
                                 <Button className="bg-warning text-dark" variant="contained" color="primary">
                                     Checkout
                                 </Button>

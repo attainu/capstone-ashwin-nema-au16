@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom'
 import { deliverydate, showmodalwithmessageandvariant, makesubpath } from '../../utils'
 import { useState } from 'react'
 import { NotificationModal } from '../Notification Modal'
-import Button from '@material-ui/core/Button';
-import AddCircleTwoToneIcon from '@material-ui/icons/AddCircleTwoTone';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import Button from '@mui/material/Button'
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 export const Cartitem = ({ item, count }) => {
     const dispatch = useDispatch()
