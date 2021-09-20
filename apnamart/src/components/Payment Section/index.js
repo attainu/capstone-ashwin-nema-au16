@@ -9,7 +9,7 @@ import {axiosinstance} from '../../config'
 import {NotificationModal} from '../Notification Modal'
 import {authsetter} from '../../actions'
 
-export default function PaymentSection({history, deliveryaddress, PATHS}) {
+export default function PaymentSection({history, DeliveryAddress, PATHS}) {
     const dispatch = useDispatch()
     const { Name, Email, Mobilenumber } = useSelector(state => state.Profile)
     const cart = useSelector(state => state.Cart)
@@ -84,7 +84,7 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
 
         if (generatedrazorpayorder.data.error === undefined) {
 
-            const { amount, id: order_id, currency, ordereditems,price, newtoken } = generatedrazorpayorder.data;
+            const { amount, id: order_id, currency, OrderedItems, Price, newtoken } = generatedrazorpayorder.data;
             dispatch(authsetter(newtoken))
             const options = {
                 key: "rzp_test_lYaL0slH0VoZzj", // Enter the Key ID generated from the Dashboard
@@ -101,7 +101,7 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
                         razorpaySignature: response.razorpay_signature,
                     };
 
-                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {ordereditems, ...data, price, deliveryaddress})
+                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {OrderedItems, ...data, Price, DeliveryAddress})
 
                     if (!successresponse) {
                         displaymodal("Sorry something went wrong your order could not be placed.", "danger")
@@ -126,7 +126,7 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
                     contact: Mobilenumber,
                 },
                 notes: {
-                    address:deliveryaddress,
+                    address:DeliveryAddress,
                 },
                 theme: {
                     color: "#ffc107",
@@ -143,10 +143,9 @@ export default function PaymentSection({history, deliveryaddress, PATHS}) {
         if (authenticateuserisloggedin !== true) {
             return
         }
-        axiosinstance.post("/user/order/cash", {items:cart, cartprice, deliveryaddress}).then(({data}) => {
+        axiosinstance.post("/user/order/cash", {items:cart, cartprice, DeliveryAddress}).then(({data}) => {
             const loginerror = setloginerror(data.error)
             if (data.error !== undefined && !loginerror) {
-                console.log("Reswponse reaching here")
                 displaymodal(data.error, "danger")
                 return
             }

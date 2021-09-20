@@ -10,4 +10,4 @@ export {cartprice} from './cartprice'
 
 export {data} from './data'
 
-export {newuserorder, canceluserorder, userorderdata} from './order'
+export {newuserorder, canceluserorder, userorderdata, userordercount} from './order'

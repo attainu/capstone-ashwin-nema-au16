@@ -57,9 +57,14 @@ const Header = ({ children, isonline }) => {
 
     }, [Auth, dispatch, Profile, isonline, auth])
 
+
     useEffect(() => {
         if (Object.keys(products).length === 0 && isonline === true) {
             dispatch(getproductsdata(changeloadedstate))
+        }
+
+        if (Object.keys(products).length > 0) {
+            changeloadedstate(true)
         }
        
     }, [products, dispatch, isonline,changeloadedstate])

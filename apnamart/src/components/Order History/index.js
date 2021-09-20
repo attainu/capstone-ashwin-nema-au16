@@ -4,10 +4,10 @@ import 'simplebar/dist/simplebar.min.css'
 import './index.css'
 import Pagination from '@mui/material/Pagination';
 import { Alert } from 'react-bootstrap'
-import { checkorderdate, makesubpath } from '../../utils'
+import { checkorderdate, makesubpath, orderstatusmesssages } from '../../utils'
 import Button from '@mui/material/Button'
 import { NotificationModal } from '../Notification Modal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { setuserqueryorderdata } from '../../actions'
 import { PATHS } from '../../config'
 import { Link } from "react-router-dom";
@@ -18,6 +18,15 @@ const OrderHistory = () => {
     const [page, changepage] = useState(1)
     const { count, orderdata } = useSelector(state => state.Userorderdata)
     const { products } = useSelector(state => state.Productsdata)
+    const [isdataloaded, changedataloadedstate ] = useState(false)
+
+    useEffect(() => {
+        if (isdataloaded === false) {
+            dispatch(setuserqueryorderdata(1, showmodal))
+            changedataloadedstate(true)
+        }
+    }, [isdataloaded, changedataloadedstate.apply, dispatch])
+
     const getorderdata = (_, value) => {
         if (page !== value) {
             dispatch(setuserqueryorderdata(value, showmodal))
@@ -26,6 +35,7 @@ const OrderHistory = () => {
 
     }
 
+    const {notshipped, shipped, outfordelivery, delivered} = orderstatusmesssages
     return (
         <>
             {
@@ -36,26 +46,50 @@ const OrderHistory = () => {
 
                             {
                                 orderdata.map((item, index) => {
-                                    const { _id, createdAt, status, ordereditems, price } = item
-                                    const { deliverystatus } = checkorderdate(createdAt)
-                                    const randomitemindex = Math.floor(Math.random() * Object.keys(ordereditems).length)
-                                    const { name, image } = products[Object.keys(ordereditems)[randomitemindex]]
+                                    const { _id, CreatedAt, Status, OrderedItems, Price } = item
+                                    const { deliverystatus, shippingdate, outfordeliverydate, deliverydate, orderplaceddate } = checkorderdate(CreatedAt)
+                                    let currentstatusmessage = ""
+                                    switch (deliverystatus) {
+                                        case notshipped:
+                                            currentstatusmessage = orderplaceddate
+                                            break
+                                        
+                                        case shipped:
+                                            currentstatusmessage = shippingdate
+                                            break
+                                        
+                                        case outfordelivery:
+                                            currentstatusmessage = outfordeliverydate
+                                            break
+                                        
+                                        case delivered:
+                                            currentstatusmessage = deliverydate
+                                            break
+                                        
+                                        default:
+                                            break
+                                    }
+                                    const randomitemindex = Math.floor(Math.random() * Object.keys(OrderedItems).length)
+                                    const { name, image } = products[Object.keys(OrderedItems)[randomitemindex]]
                                     return (
                                         <div key={index} >
                                             <pre className="text-wrap">
                                                 <Alert className="space-between " variant="warning">
                                                     <div>
                                                         <h6 className="lead">Order Status </h6>
-                                                        {status !== "Cancelled" && <p>{deliverystatus} </p>}
-                                                        {status === "Cancelled" && <p>Order cancelled </p>}
+                                                        {Status !== "Order cancelled" && <> 
+                                                        <p>{deliverystatus} </p>
+                                                        <p>{currentstatusmessage}</p>
+                                                        </>}
+                                                        {Status === "Order cancelled" && <p>Order cancelled </p>}
                                                         <div>
-                                                            <img className="ordereditemimage" src={image} alt={name && name} />
+                                                            <img className="ordereditemimage" src={image} alt={name } />
                                                             {name}</div>
 
                                                     </div>
                                                     <div>
-                                                        Total Items({Object.keys(ordereditems).length})
-                                                        <div>₹{price}</div>
+                                                        Total Items({Object.keys(OrderedItems).length})
+                                                        <div>₹{Price}</div>
                                                         <Link to={{pathname:`${makesubpath(PATHS.ORDERDETAILS,_id)}`, state:item } } className="text-decoration-none text-white">
 
                                                             <Button className="w-100" variant="contained" color="primary">

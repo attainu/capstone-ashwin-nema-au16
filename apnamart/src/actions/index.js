@@ -10,4 +10,4 @@ export {changecartprice} from './cartprice'
 
 export {getproductsdata} from './data'
 
-export {addnewordertoorderhistory, changeorderstatustocancelled, storeuserorderdata, setuserqueryorderdata} from './order'
+export {addnewordertoorderhistory, changeorderstatustocancelled, setuserqueryorderdata, storeordercount} from './order'

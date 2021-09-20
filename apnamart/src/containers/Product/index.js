@@ -11,6 +11,7 @@ import { deliverydate } from '../../utils'
 import { NotificationModal } from '../../components'
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import {DetailsTable} from '../../components'
 
 
 const Product = ({ history }) => {
@@ -163,6 +164,7 @@ const Product = ({ history }) => {
             <div className="ms-2">
                 <h6>Details</h6>
                 <div className="productdetails w-50">
+                    {/* <DetailsTable title="Details" /> */}
                     {detailitems.map((item, index) => {
                         return (
                             <Fragment key={index}>

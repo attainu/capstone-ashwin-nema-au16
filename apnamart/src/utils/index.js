@@ -2,7 +2,7 @@ export {getAuthinbrowser, setAuthinbrowser} from './auth'
 
 export { mobilenumber_validator} from './validator'
 
-export {deliverydate, checkorderdate} from './date'
+export {deliverydate, checkorderdate, orderstatusmesssages} from './date'
 
 export {convertarraydatatoobjectdata, searchdatafilter, makesubpath} from './array string operations'
 

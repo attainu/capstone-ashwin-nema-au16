@@ -1,19 +1,10 @@
-import { newuserorder, canceluserorder, userorderdata } from '../actionTypes'
+import { newuserorder, canceluserorder, userorderdata, userordercount } from '../actionTypes'
 import { Logoutuser, logouterros } from '../utils'
 import { axiosinstance } from '../config'
 
 export const addnewordertoorderhistory = (orderdata) => ({ type: newuserorder, payload: orderdata })
 
 export const changeorderstatustocancelled = (orderid) => ({ type: canceluserorder, payload: orderid })
-
-export const storeuserorderdata = (userorders) => {
-    if (userorders !== undefined) {
-        const [{ totalData: orderdata, totalCount:[{ count }]  }] = userorders
-        return { type: userorderdata, payload: { orderdata, count } }
-    }
-    
-    return { type: userorderdata, payload: {count:0, orderdata:[]} }
-}
 
 export const setuserqueryorderdata = (currentpage, showmodalfunction) => (dispatch) => {
     const itemstobeskipped = (currentpage - 1) * 5
@@ -29,12 +20,15 @@ export const setuserqueryorderdata = (currentpage, showmodalfunction) => (dispat
             showmodalfunction(true)
             return
         }
-
-        const [{ totalData: orderdata }] = data
-        dispatch({ type: userorderdata, payload: { orderdata } })
+        dispatch({ type: userorderdata, payload: data  })
     }).catch(() => {
         if (showmodalfunction !== undefined) {
             showmodalfunction(true)
         }
     })
+}
+
+export const storeordercount = (countdata) => {
+    const [{count}] = countdata
+    return {type:userordercount, payload:count } 
 }

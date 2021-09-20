@@ -1,6 +1,21 @@
 .orderdetailsdivider {
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    width: 98vw;
-    margin-right: 1vw;
+    grid-template-columns: 1fr 3fr;
+}
+
+.orderdetailitems {
+    display: grid;
+    grid-template-columns: 1fr 20fr 1fr;
+}
+
+.ordereditemgrid {
+    display: grid;
+    grid-template-columns: 3fr 12fr 3fr;
+    align-items: center;
+}
+
+.orderdetailitemimage {
+    max-width: 10vw;
+    max-height: 10vw;
+    object-fit: contain;
 }

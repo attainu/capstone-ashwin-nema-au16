@@ -1,5 +1,5 @@
-import { setprofile, authsetter, storeuserorderdata, getuserprofile } from '../actions'
-import {setaddress} from '../actionTypes'
+import { setprofile, authsetter,  getuserprofile } from '../actions'
+import {setaddress, userorderdata} from '../actionTypes'
 import { axiosinstance, PATHS } from '../config'
 import {getAuthinbrowser} from './auth'
 
@@ -10,7 +10,7 @@ export const logouterros = {
 const resetafterlogout = (dispatch) => {
     dispatch(authsetter(" "))
     dispatch(setprofile({}))
-    dispatch(storeuserorderdata())
+    dispatch({type:userorderdata, payload:[]})
     dispatch({ type: setaddress, payload: [] })
 }
 
