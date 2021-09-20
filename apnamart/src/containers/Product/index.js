@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { changecartstate, changecartprice, getproductsdata } from '../../actions'
 import { PATHS } from '../../config'
-import { Fragment, useState } from 'react'
+import {  useState } from 'react'
 import { useEffect } from 'react'
 import ReactImageMagnify from 'react-image-magnify'
 import useMeasure from 'react-use-measure'
@@ -11,8 +11,7 @@ import { deliverydate } from '../../utils'
 import { NotificationModal } from '../../components'
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import {DetailsTable} from '../../components'
-
+import { DetailsTable } from '../../components'
 
 const Product = ({ history }) => {
     const { add_new_item, remove_item, increase_item_count, decrease_item_count } = changecartstate
@@ -28,7 +27,6 @@ const Product = ({ history }) => {
     const [image, changeimage] = useState("")
     const [price, changeprice] = useState(0)
     const [details, changedetails] = useState({})
-    const [detailitems, changedetailitems] = useState([])
     const [_id, setid] = useState("")
     const [description, setdescription] = useState("")
     const [modal, showhidemodal] = useState(false)
@@ -52,7 +50,6 @@ const Product = ({ history }) => {
             changeimage(image)
             changeprice(price)
             changedetails(details)
-            changedetailitems(Object.keys(details))
             setid(_id)
             setdescription(description)
         }
@@ -144,35 +141,16 @@ const Product = ({ history }) => {
             </div>
             <hr className="mx-4 mt-5"></hr>
             <div className="productdescription ms-2 text-wrap">
-                <h6>Product description</h6>
                 <pre className="text-wrap ms-1 me-1">
                     {
-                        typeof description === "string" ? <p >{description}</p> :
-                            <ul>
-                                {
-                                    description.map((item, index) => {
-                                        return (
-                                            <li key={index}>{item} </li>
-                                        )
-                                    })
-                                }
-                            </ul>
+                        <DetailsTable title="Product description" titlesize="h6" tabledata={description} />
                     }
                 </pre>
             </div>
             <hr className="mx-4 mt-5"></hr>
             <div className="ms-2">
-                <h6>Details</h6>
-                <div className="productdetails w-50">
-                    {/* <DetailsTable title="Details" /> */}
-                    {detailitems.map((item, index) => {
-                        return (
-                            <Fragment key={index}>
-                                <div>{item}</div>
-                                <div >{details[item]}</div>
-                            </Fragment>
-                        )
-                    })}
+                <div className="productdetails w-50 d-flex flex-column">
+                    <DetailsTable title="Details" titlesize="h6" tabledata={details} titletopborder={true} />
                 </div>
             </div>
             <NotificationModal show={modal} centered={true} currentmodalmessage={`Sorry you cannot order more than 20 items of ${name}`} onHide={showhidemodal} alertvariant="danger" successmessage="" />
