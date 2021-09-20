@@ -6,36 +6,40 @@ const OrderSchema = new mongoose.Schema({
         required:true
     },
 
-    status:{
+    Status:{
         type:String,
         default:"Order placed"
     },
 
-    ordereditems:{
+    OrderedItems:{
         type:Object,
         required:true
     },
 
-    price:{
+    Price:{
         type:Number,
         required:true
     },
 
-    paymentmode:{
+    PaymentMode:{
         type:String,
         default:'Cash on delivery'
     },
 
-    paymentid:String,
+    PaymentId:String,
 
-    createdAt:{
+    CreatedAt:{
         type:Date,
         default:Date.now,
     },
 
-    deliveryaddress:{
+    DeliveryAddress:{
         type:String,
         required:true
+    },
+
+    OrderCancellationTime:{
+        type:Date
     }
 })
 

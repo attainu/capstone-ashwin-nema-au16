@@ -17,20 +17,20 @@ const verifyproductcount = (productscount) => {
 }
 
 const finalorderandprice = (originaldata, userorderdetails) => {
-    let totalprice = 0
-    const ordereditems = originaldata.reduce((allpurchasedproducts, item) => {
+    let Price = 0
+    const OrderedItems = originaldata.reduce((allpurchasedproducts, item) => {
         const { _id, price } = item
         const { count } = userorderdetails[_id]
-        totalprice += (price * count)
+        Price += (price * count)
         allpurchasedproducts[_id] = { price, count }
         return allpurchasedproducts
     }, {})
 
-    return { ordereditems, price: totalprice }
+    return { OrderedItems, Price }
 }
 
 const orderauthenticationandgeneration = async (req, res, next) => {
-    const {cartprice} = req.body
+    const { cartprice } = req.body
     try {
         const data1 = await ItemModel.find({ '_id': { $in: Object.keys(req.body.items) } }, `_id price`);
         const data2 = await ItemModel2.find({ '_id': { $in: Object.keys(req.body.items) } }, `_id price`);
@@ -42,55 +42,37 @@ const orderauthenticationandgeneration = async (req, res, next) => {
         if (verifyproductcount(Object.values(req.body.items)) !== true) {
             return res.json({ error: "Order provided cannot be verified" })
         }
-
-        const { ordereditems, price } = finalorderandprice([...data1, ...data2], req.body.items)
-        if (price !== cartprice) {
-            return res.json({error: "Cartprice and Price do not match"})
+        const { OrderedItems, Price } = finalorderandprice([...data1, ...data2], req.body.items)
+        if (Price !== cartprice) {
+            return res.json({ error: "Cartprice and Price do not match" })
         }
         delete req.body.items
-        req.neworder = {ordereditems, price}
+        req.neworder = { OrderedItems, Price }
         next()
     } catch {
-        res.json({error:"Sorry something went wrong"})
+        res.json({ error: "Sorry something went wrong" })
     }
 }
 
-const getorderdata = async (id, skip,totalcount) => {
-    if (totalcount === true) {
-        const desiredorders = await OrderModel.aggregate([
-            {
-                $facet: {
-                    totalData: [
-                        { $match: { Customer: mongoose.Types.ObjectId(id) } },
-                        { $project: { _id: 1, status: 1, price: 1, ordereditems: 1, paymentid: 1, paymentmode: 1, createdAt: 1 } },
-                        { $sort: { createdAt: -1 } },
-                        { $skip: 0 },
-                        { $limit: 5 }
-                    ],
-                    totalCount: [
-                        { $count: "count" }
-                    ]
-                }
-            }
-        ])
-    
-        return desiredorders
-    }
-    const desiredorders = await OrderModel.aggregate([
-        {
-            $facet: {
-                totalData: [
-                    { $match: { Customer: mongoose.Types.ObjectId(id) } },
-                    { $project: { _id: 1, status: 1, price: 1, ordereditems: 1, paymentid: 1, paymentmode: 1, createdAt: 1 } },
-                    { $sort: { createdAt: -1 } },
-                    { $skip: skip },
-                    { $limit: 5 }
-                ]
-            }
-        }
+const getuserordercount = async (id) => {
+    const count = await OrderModel.aggregate([
+        { $match: { Customer: mongoose.Types.ObjectId(id) } },
+        { $count: "count" }
+    ])
+    return count
+}
+
+const getuserorderdata = async (id, skip) => {
+
+    const userorders = await OrderModel.aggregate([
+        { $match: { Customer: mongoose.Types.ObjectId(id) } },
+        { $project: { _id: 1, Status: 1, PaymentMode: 1, Price: 1, OrderedItems: 1, DeliveryAddress: 1, CreatedAt: 1, PaymentId: 1, OrderCancellationTime: 1 } },
+        { $sort: { CreatedAt: -1 } },
+        { $skip: skip },
+        { $limit: 5 }
     ])
 
-    return desiredorders
+    return userorders
 }
 
-module.exports = {  orderauthenticationandgeneration, getorderdata }
+module.exports = { orderauthenticationandgeneration, getuserorderdata, getuserordercount }

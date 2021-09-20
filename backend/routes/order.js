@@ -6,14 +6,14 @@ const { RAZORPAYKEY, RAZORPAYPASSWORD } = process.env
 const order_router = express.Router()
 order_router.use(express.urlencoded({ extended: true }))
 
-const {  orderauthenticationandgeneration, getorderdata } = require('../middlewares/orders')
+const {  orderauthenticationandgeneration, getuserorderdata } = require('../middlewares/orders')
 const OrderModel = require('../models/order')
 
 const { authenticatetoken, accesstokengenerator } = require('../middlewares/token')
 const mongoose = require('mongoose')
 
 order_router.post("/payment/razorpay", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
-    const { ordereditems, price } = req.neworder
+    const {OrderedItems, Price } = req.neworder
     try {
         var instance = new Razorpay({
             key_id: RAZORPAYKEY,
@@ -21,13 +21,13 @@ order_router.post("/payment/razorpay", authenticatetoken, orderauthenticationand
         });
 
         const options = {
-            amount: price * 100, // amount in smallest currency unit
+            amount: Price * 100, // amount in smallest currency unit
             currency: "INR",
         };
         const order = await instance.orders.create(options);
         if (!order) return res.json({error:"Sorry Razorpay is currently not working. Please try again later"})
         const newtoken = accesstokengenerator(req.verifieduser)
-        return res.json({...order,ordereditems, price, newtoken});
+        return res.json({...order,OrderedItems, Price, newtoken});
     } catch (error) {
         return res.json({error:"Sorry Razorpay is currently not working. Please try again later"})
     }
@@ -38,9 +38,9 @@ order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, r
         razorpayPaymentId,
         razorpayOrderId,
         razorpaySignature,
-        ordereditems,
-        price, 
-        deliveryaddress
+        OrderedItems,
+        Price, 
+        DeliveryAddress
     } = req.body
 
     try {
@@ -50,7 +50,7 @@ order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, r
         if (razorpaySignature !== generated_signature) {
             return res.json({ error: "Sorry an error occurred while making payment" })
         }
-        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems, paymentid:razorpayPaymentId,paymentmode:"Razorpay", deliveryaddress  }
+        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), OrderedItems, Price, PaymentId:razorpayPaymentId,PaymentMode:"Razorpay", DeliveryAddress  }
         const finalorder = new OrderModel(userorder)
         await finalorder.save()
         return res.json({ success: true })
@@ -60,10 +60,10 @@ order_router.post("/payment/razorpay/success", authenticatetoken,  async (req, r
 })
 
 order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, async (req, res) => {
-    const { ordereditems, price } = req.neworder
-    const {deliveryaddress} = req.body
+    const { OrderedItems, Price} = req.neworder
+    const {DeliveryAddress} = req.body
     try {
-        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), price, ordereditems, deliveryaddress }
+        const userorder = { Customer: mongoose.Types.ObjectId(req.verifieduser), Price, OrderedItems, DeliveryAddress }
         const finalorder = new OrderModel(userorder)
         await finalorder.save()
         return res.json({ success: true })
@@ -76,7 +76,7 @@ order_router.post("/cash", authenticatetoken, orderauthenticationandgeneration, 
 
 order_router.post("/data/:skip", authenticatetoken, async (req, res) => {
     try {
-        const data = await getorderdata(req.verifieduser, Number(req.params.skip))
+        const data = await getuserorderdata(req.verifieduser, Number(req.params.skip))
         return res.json(data)
     } catch(error) {
         return res.json({error:true})
@@ -87,10 +87,12 @@ order_router.post("/orderdetails/:id", authenticatetoken, async (req, res) => {
     try {
         const order = await OrderModel.aggregate([
             {$match: {Customer: mongoose.Types.ObjectId(req.verifieduser), _id:mongoose.Types.ObjectId(req.params.id) }},
-            {$project:{_id:1, status:1, paymentmode:1, price:1, ordereditems:1, deliveryaddress:1, createdAt:1, paymentid:1}}
+            {$project:{_id:1, Status:1, PaymentMode:1, Price:1, OrderedItems:1, DeliveryAddress:1, CreatedAt:1, PaymentId:1, OrderCancellationTime:1}}
         ])
-
-        return res.json(order)
+        if (order.length == 0) {
+            return res.status(404).json({error:"Data not fetched"})
+        }
+        return res.json(order[0])
     } catch {
         res.status(404).json({error:"Data not fetched"})
     }

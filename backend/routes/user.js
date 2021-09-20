@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 require('dotenv').config()
 const { validate_email, validate_mobile_number, validate_password, verify_mobile_number, verify_email } = require('../middlewares/verification')
 const {authenticatetoken, accesstokengenerator} = require('../middlewares/token');
-const {getorderdata} = require('../middlewares/orders')
+const { getuserordercount} = require('../middlewares/orders')
 
 user_router.post("/signup", async (req, res) => {
     const verifyemail = await verify_email(req.body.Email)
@@ -49,8 +49,8 @@ user_router.post("/login", async (req, res) => {
         if (user != null && isMatching) {
             const token = accesstokengenerator(user._id)
             const {Name, Email, Mobilenumber, Location} = user
-            const userorderdata = await getorderdata(req.verifieduser,0, true)
-            return res.json({ error: "", token, Name, Email, Mobilenumber, Location, userorderdata })
+            const ordercount = await getuserordercount(user._id)
+            return res.json({ error: "", token, Name, Email, Mobilenumber, Location, ordercount })
         }
 
     } catch (error) {
@@ -65,10 +65,9 @@ user_router.post("/profile", authenticatetoken,async (req, res) => {
     try {
 
         const user = await UserModel.findById(req.verifieduser)
-        const userorderdata = await getorderdata(req.verifieduser,0, true)
+        const ordercount = await getuserordercount(user._id)
         const { Name, Mobilenumber, Email, Location } = user
-        return res.json({ Name, Mobilenumber, Email, error: "", Location, userorderdata })
-
+        return res.json({ Name, Mobilenumber, Email, error: "", Location, ordercount })
     } catch {
         return res.json({ error: "User has not loggin in" })
     }
