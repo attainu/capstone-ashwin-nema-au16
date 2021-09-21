@@ -12,8 +12,6 @@ function ordinal(number) {
     return (number + suffix);
 }
 
-
-
 const properformatteddate = (givendate, days) => {
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
@@ -62,6 +60,7 @@ export const checkorderdate = (orderdate, cancellationdate) => {
     if (cancellationdate !== undefined) {
         const ordercancellationdate = new Date(cancellationdate)
         currentorderstatus.ordercancellationdate = properformatteddate(ordercancellationdate,0)
+        currentorderstatus.ordercancellationdatewithtime = properformattedtimewithdate(ordercancellationdate)
     }
 
     if (timepassed >= 3) {

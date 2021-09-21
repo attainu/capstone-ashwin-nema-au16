@@ -3,22 +3,21 @@ import { RadioGroup, FormControlLabel, FormControl } from '@mui/material'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
-import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, preventunauthorisedaccess } from '../../utils'
-import { useState } from "react";
+import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, OnlineContext } from '../../utils'
+import { useState, useContext } from "react";
 import {axiosinstance} from '../../config'
 import {NotificationModal} from '../Notification Modal'
-import {authsetter} from '../../actions'
+import {authsetter, storeordercount} from '../../actions'
 
 export default function PaymentSection({history, DeliveryAddress, PATHS}) {
+    const isonline = useContext(OnlineContext)
     const dispatch = useDispatch()
-    const { Name, Email, Mobilenumber } = useSelector(state => state.Profile)
-    const cart = useSelector(state => state.Cart)
-    const cartprice = useSelector(state => state.CartPrice)
+    const {Profile:{ Name, Email, Mobilenumber }, Cart,CartPrice:cartprice, Userorderdata:{count} } = useSelector(state => state)
     const [modalmessage, changemodalmessage] = useState("")
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState("warning")
     const [paymentmode, changepaymentmode] = useState("Cash")
-    const auth = useSelector(state => state.Auth)
+
     const displaymodal = (message, variant) => {
         showmodalwithmessageandvariant(showmodal, message,changemodalmessage, variant, changemodalvariant)
         if (message === "Your order is successfully placed") {
@@ -54,10 +53,6 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
     }
 
     async function displayRazorpay() {
-        const authenticateuserisloggedin = preventunauthorisedaccess(dispatch,auth)
-        if (authenticateuserisloggedin !== true) {
-            return
-        }
 
         const res = await loadScript(
             "https://checkout.razorpay.com/v1/checkout.js"
@@ -68,7 +63,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
             return;
         }
 
-        const generatedrazorpayorder = await axiosinstance.post('/user/order/payment/razorpay', { items:cart,cartprice})
+        const generatedrazorpayorder = await axiosinstance.post('/user/order/payment/razorpay', { items:Cart,cartprice})
 
         if (!generatedrazorpayorder) {
             displaymodal("You are not online. Please be online if you want to place order", "danger")
@@ -111,6 +106,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
                     const {data:responsedata} = successresponse
                     const {success, error} = responsedata
                     if (success === true) {
+                        dispatch(storeordercount(count + 1))
                         displaymodal("Your order is successfully placed", "warning")
                         return
                     }
@@ -139,11 +135,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
     }
 
     const cashmode = () => {
-        const authenticateuserisloggedin = preventunauthorisedaccess(dispatch,auth)
-        if (authenticateuserisloggedin !== true) {
-            return
-        }
-        axiosinstance.post("/user/order/cash", {items:cart, cartprice, DeliveryAddress}).then(({data}) => {
+        axiosinstance.post("/user/order/cash", {items:Cart, cartprice, DeliveryAddress}).then(({data}) => {
             const loginerror = setloginerror(data.error)
             if (data.error !== undefined && !loginerror) {
                 displaymodal(data.error, "danger")
@@ -153,6 +145,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
             if (loginerror) {
                 return
             }
+            dispatch(storeordercount(count + 1))
             displaymodal("Your order is successfully placed", "warning")
         }).catch(() => {
             displaymodal("Sorry your order could not be placed. Please try again later", "danger")

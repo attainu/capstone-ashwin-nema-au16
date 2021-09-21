@@ -4,35 +4,42 @@ import 'simplebar/dist/simplebar.min.css'
 import './index.css'
 import Pagination from '@mui/material/Pagination';
 import { Alert } from 'react-bootstrap'
-import { checkorderdate, makesubpath, orderstatusmesssages } from '../../utils'
+import { checkorderdate, makesubpath, orderstatusmesssages, OnlineContext, showmodalwithmessageandvariant } from '../../utils'
 import Button from '@mui/material/Button'
 import { NotificationModal } from '../Notification Modal'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { setuserqueryorderdata } from '../../actions'
 import { PATHS } from '../../config'
 import { Link } from "react-router-dom";
 
 const OrderHistory = () => {
     const dispatch = useDispatch()
+    const isonline = useContext(OnlineContext)
     const [modal, showmodal] = useState(false)
+    const [modalmessage, setmodalmessage] = useState("")
+
     const [page, changepage] = useState(1)
     const { count, orderdata } = useSelector(state => state.Userorderdata)
     const { products } = useSelector(state => state.Productsdata)
     const [isdataloaded, changedataloadedstate ] = useState(false)
 
     useEffect(() => {
-        if (isdataloaded === false) {
+        if (isdataloaded === false && isonline === true) {
             dispatch(setuserqueryorderdata(1, showmodal))
             changedataloadedstate(true)
         }
-    }, [isdataloaded, changedataloadedstate.apply, dispatch])
+    }, [isdataloaded, changedataloadedstate.apply, dispatch, isonline])
 
     const getorderdata = (_, value) => {
-        if (page !== value) {
-            dispatch(setuserqueryorderdata(value, showmodal))
+        if (page !== value && isonline === true) {
+            dispatch(setuserqueryorderdata(value, showmodal,setmodalmessage))
+            changepage(value)
+            return
+        }
+        if (page !== value && isonline !== true) {
+            showmodalwithmessageandvariant(showmodal,"You are not online. Please check your internet connection", setmodalmessage)
             changepage(value)
         }
-
     }
 
     const {notshipped, shipped, outfordelivery, delivered} = orderstatusmesssages
@@ -109,7 +116,7 @@ const OrderHistory = () => {
                         <div className="d-flex justify-content-center" >
                             <Pagination page={page} size="large" count={Math.ceil(count / 5)} color="primary" onChange={getorderdata} />
                         </div>
-                        <NotificationModal show={modal} centered={true} currentmodalmessage="Sorry something went wrong order data could not be fetched" onHide={showmodal} alertvariant="danger" successmessage="" />
+                        <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" />
                     </>
             }
         </>

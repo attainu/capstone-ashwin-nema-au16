@@ -12,3 +12,10 @@ export const showmodalwithmessageandvariant = (showmodalfunction, modalmessage, 
     }
     showmodalfunction(true)
 }
+
+export const modalstatesetter = (message,variant, configuration) => {
+    const newconfiguration = [...configuration]
+    newconfiguration[1] = message
+    newconfiguration[3] = variant
+    showmodalwithmessageandvariant(...newconfiguration)
+}

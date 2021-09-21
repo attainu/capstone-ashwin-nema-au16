@@ -1,16 +1,17 @@
 import './index.css'
-import { useRef, useState } from 'react'
+import { useRef, useState, useContext } from 'react'
 import * as yup from 'yup'
 import './index.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { authsetter, setprofile } from '../../actions'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
-import { mobilenumber_validator, showmodalwithmessageandvariant,  checkisuserloggedin } from '../../utils'
+import { mobilenumber_validator, showmodalwithmessageandvariant, OnlineContext } from '../../utils'
 import {NotificationModal} from '../../components'
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
+    const isonline = useContext(OnlineContext)
 
     const [Email, Changeemail] = useState("")
     const [Confirmedpassword, ChangeConfirmedPassword] = useState("")
@@ -23,7 +24,6 @@ export const Signup = ({ history }) => {
     const mobilenumber = useRef("")
 
     const userprofile = useSelector(state => state.Profile)
-    const auth = useSelector(state => state.Auth)
 
     const schema = yup.object().shape({
         Password: yup.string().required(),
@@ -53,8 +53,8 @@ export const Signup = ({ history }) => {
 
     const submithandler = (e) => {
         e.preventDefault()
-        if (checkisuserloggedin(auth) !== true) {
-            window.location.reload()
+        if (isonline !== true) {
+            showmodalwithmessageandvariant(showmodal, "You are not online. Please check your internet connection", changeerrormessage)
             return
         }
 

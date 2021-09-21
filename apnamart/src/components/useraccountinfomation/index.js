@@ -1,7 +1,7 @@
 import './index.css'
 import { Modal, Alert } from 'react-bootstrap'
 import { useState } from 'react'
-import { mobilenumber_validator, showmodalwithmessageandvariant } from '../../utils'
+import { mobilenumber_validator,  modalstatesetter } from '../../utils'
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { axiosinstance } from '../../config'
 import * as yup from 'yup'
@@ -30,6 +30,8 @@ export const UserAccountInformation = () => {
     const [NewPassword, ChangeNewPassword] = useState("")
     const [Password, ChangePassword] = useState("")
 
+    const notificationmodaldisplayconfiguration = [shownotificationmodal,modalnotificationmessage,changemodalnotificationmessage,notificationmodalvariant, changenotificationmodalvariant]
+
     const schema = yup.object().shape({
         Password: yup.string(),
         NewPassword: yup.string(),
@@ -41,10 +43,6 @@ export const UserAccountInformation = () => {
         showmodal(true)
     }
 
-    const setnotificationmodal = (message, variant) => {
-        showmodalwithmessageandvariant(shownotificationmodal, message, changemodalnotificationmessage, variant, changenotificationmodalvariant)
-    }
-
     const setmobilenumber = (e) => {
         const newmobilenumber = Number(e.target.value)
         if (isNaN(newmobilenumber)) {
@@ -52,13 +50,12 @@ export const UserAccountInformation = () => {
         }
 
         if (e.target.value.length > 10) {
-            setnotificationmodal("Mobile Number cannot be of more than 10 digits", "danger")
+            modalstatesetter("Mobile Number cannot be of more than 10 digits", "danger",notificationmodaldisplayconfiguration )
             return
         }
 
-
         if (e.target.value.length === 10 && mobilenumber_validator(newmobilenumber) !== true) {
-            setnotificationmodal("Please provide a valid Indian mobile number", "danger")
+            modalstatesetter("Please provide a valid Indian mobile number", "danger",notificationmodaldisplayconfiguration )
             return
         }
 
@@ -69,7 +66,7 @@ export const UserAccountInformation = () => {
         e.preventDefault()
 
         if (mobilenumber_validator(Number(Mobilenumber)) !== true) {
-            setnotificationmodal("Please provide a valid Indian mobile number", "danger")
+            modalstatesetter("Please provide a valid Indian mobile number", "danger",notificationmodaldisplayconfiguration )
             return
         }
 
@@ -77,21 +74,21 @@ export const UserAccountInformation = () => {
             const response = await axiosinstance.put("/user/profile", { ...userdata, Mobilenumber })
 
             if (response.data.error !== "") {
-                setnotificationmodal(response.data.error, "danger")
+                modalstatesetter(response.data.error, "danger",notificationmodaldisplayconfiguration )
                 return
             }
 
             dispatch(setprofile({ Name, Email, Location, Mobilenumber }))
-            setnotificationmodal("Your profile has successfully been updated", "success")
+            modalstatesetter("Your profile has successfully been updated", "success",notificationmodaldisplayconfiguration )
 
             return
 
         }).catch(function (err) {
             if (err.errors !== undefined && err.errors.length > 0) {
-                setnotificationmodal(err.errors[0], "danger")
+                modalstatesetter(err.errors[0], "danger",notificationmodaldisplayconfiguration )
                 return
             }
-            setnotificationmodal(err.error, "danger")
+            modalstatesetter(err.error, "danger",notificationmodaldisplayconfiguration )
         })
 
     }

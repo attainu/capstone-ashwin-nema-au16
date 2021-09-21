@@ -1,23 +1,21 @@
 import './index.css'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { PATHS, axiosinstance } from '../../config'
 import { authsetter, setprofile,storeordercount } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { Redirect } from 'react-router'
 import * as yup from 'yup'
-import { showmodalwithmessageandvariant, checkisuserloggedin } from '../../utils'
+import { showmodalwithmessageandvariant, OnlineContext } from '../../utils'
 import {NotificationModal} from '../../components'
 
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
-
+    const isonline = useContext(OnlineContext)
     const [Email, Changeemail] = useState("")
     const [Password, Changepassword] = useState("")
     const [errormessage, changeerrormessage] = useState("")
 
     const userprofile = useSelector(state => state.Profile)
-    const auth = useSelector(state => state.Auth)
-
     const [modal, showmodal] = useState(false)
 
     const schema = yup.object().shape({
@@ -28,11 +26,11 @@ export const Login = ({ history }) => {
     const submithandler = (e) => {
         e.preventDefault()
         changeerrormessage("")
-        if (checkisuserloggedin(auth) !== true) {
-            window.location.reload()
+        if (isonline !== true) {
+            showmodalwithmessageandvariant(showmodal, "You are not online. Please check your internet connection", changeerrormessage)
             return
         }
-
+  
         schema.validate({ Password, Email }, { abortEarly: false }).then(async userdata => {
             const response = await axiosinstance.post('/user/login', { ...userdata })
 

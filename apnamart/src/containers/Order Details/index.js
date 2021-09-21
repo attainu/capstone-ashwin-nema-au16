@@ -1,31 +1,39 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { axiosinstance, PATHS } from "../../config"
-import { validateuserpageaccess, checkorderdate, orderstatusmesssages, makesubpath } from '../../utils'
+import { validateuserpageaccess,  orderstatusmesssages, makesubpath, setorderdetailspagedata, modalstatesetter, setorderpagedatatoordercancelled } from '../../utils'
 import { useParams } from "react-router"
-import { OrderDetailsStepper, DetailsTable } from '../../components'
+import { OrderDetailsStepper, DetailsTable, NotificationModal } from '../../components'
 import { Alert } from "react-bootstrap"
 import './index.css'
 import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css';
 import { Link } from "react-router-dom"
+import Button from '@mui/material/Button';
 
 export const Orderdetails = ({ location: { state }, history }) => {
   const dispatch = useDispatch()
   const { orderid } = useParams()
+
   const { Profile, Auth, Productsdata: { products } } = useSelector(state => state)
+
   const [orderdetails, changeorderdetails] = useState(state)
   const [orderdatedata, changeorderdata] = useState(["", "", "", ""])
   const [ordertimeline, changeordertimeline] = useState(0)
   const [orderdisplaydetails, changedisplaydetails] = useState(["", ""])
   const [orderdetailstabledata, changeorderdetailstabledata] = useState([])
+  const [modal, showmodal] = useState(false)
+  const [modalmessage, setmodalmessage] = useState("")
+  const [modalvariant, changemodalvariant] = useState("danger")
+
+  const displaymodalconfiguration = [showmodal, modalmessage, setmodalmessage, modalvariant, changemodalvariant]
 
   useEffect(() => {
     const ispageaccessvalid = validateuserpageaccess(dispatch, history, Profile, Auth)
     if (orderdetails === undefined && ispageaccessvalid) {
+      
       axiosinstance.post(`/user/order/orderdetails/${orderid}`).then(({ data }) => {
-
-        const {error} = data
+        const { error } = data
         if (error !== undefined) {
           history.push(PATHS.HOME)
           return
@@ -35,7 +43,6 @@ export const Orderdetails = ({ location: { state }, history }) => {
         history.push(PATHS.NOTFOUND)
       })
     }
-
     document.body.style.backgroundColor = "#f1f3f6"
     return () => {
       document.body.style.backgroundColor = "white"
@@ -44,52 +51,39 @@ export const Orderdetails = ({ location: { state }, history }) => {
 
   useEffect(() => {
     if (orderdetails !== undefined && orderdatedata[0] === "") {
-
-      const { CreatedAt, Status } = orderdetails
-      if (Status === "Order cancelled") {
-        changeorderdata(["dd", ""])
-        return
-      }
-      const { ordertimestatus, deliverystatus, shippingdate, outfordeliverydate, deliverydate, orderplaceddate, ordereddatewithtime, delivereddatewithtime } = checkorderdate(CreatedAt)
-      const { notshipped, shipped, outfordelivery, delivered } = orderstatusmesssages
-      changeordertimeline(ordertimestatus)
-      changedisplaydetails([deliverystatus, ordereddatewithtime])
-
-      switch (deliverystatus) {
-        case notshipped:
-          changeorderdata([orderplaceddate, "", "", ""])
-          return
-
-        case shipped:
-          changeorderdata([orderplaceddate, shippingdate, "", ""])
-          return
-
-        case outfordelivery:
-          changeorderdata([orderplaceddate, shippingdate, outfordeliverydate, ""])
-          return
-
-        case delivered:
-          changedisplaydetails([deliverystatus, delivereddatewithtime])
-          changeorderdata([orderplaceddate, shippingdate, outfordeliverydate, deliverydate])
-          return
-
-        default:
-          return
-      }
+      setorderdetailspagedata(orderdetails, changedisplaydetails, changeorderdata, changeordertimeline)
     }
   }, [orderdatedata, changeorderdata, orderdetails, ordertimeline, changeordertimeline, changedisplaydetails])
 
   useEffect(() => {
-    if (orderdetails !== undefined ) {
-      const {Name} = Profile
-      const {PaymentMode, Price, PaymentId} = orderdetails
-      let orderdetailstabledata = [{Name},{Price},{"Payment Mode":PaymentMode} ]
+    if (orderdetails !== undefined) {
+      const { Name } = Profile
+      const { PaymentMode, Price, PaymentId } = orderdetails
+      let orderdetailstabledata = [{ Name }, { Price }, { "Payment Mode": PaymentMode }]
       if (PaymentId !== undefined) {
-        orderdetailstabledata.push({"Payment Id":PaymentId})
+        orderdetailstabledata.push({ "Payment Id": PaymentId })
       }
       changeorderdetailstabledata([...orderdetailstabledata])
     }
   }, [orderdetails, Profile, changeorderdetailstabledata])
+
+  const Canceluserorder = () => {
+    if (orderdetails !== undefined) {
+      const { _id } = orderdetails
+      axiosinstance.post(`/user/order/cancelorder/${_id}`).then(({ data }) => {
+        const { error, cancellationtime, success } = data
+        if (error !== undefined || success !== true) {
+          modalstatesetter("Sorry you have been logged out. Please reload the page and sign in again to continue", "danger", displaymodalconfiguration)
+          return
+        }
+        setorderpagedatatoordercancelled(orderdetails.CreatedAt, null, changedisplaydetails, changeorderdata,cancellationtime, state)
+  
+      }).catch(() => {
+        modalstatesetter("Sorry time for cancelling order is over. Now you cannot change your order", "danger", displaymodalconfiguration )
+      })
+    }
+  }
+
   return (
     <>
       {
@@ -100,9 +94,19 @@ export const Orderdetails = ({ location: { state }, history }) => {
               <Alert className="text-break" variant="warning" >
                 <h3 >Order status</h3>
                 <p> {orderdisplaydetails[0]}</p>
+
                 {
-                  orderdisplaydetails[0] === orderstatusmesssages["delivered"] ? <p >Delivered on {orderdisplaydetails[1]} </p> : <p>Ordered on {orderdisplaydetails[1]} </p>
+                  orderdetails.Status !== "Order cancelled" ? <> {
+                    orderdisplaydetails[0] === orderstatusmesssages["delivered"] ? <p >Delivered on {orderdisplaydetails[1]} </p> : <p>Ordered on {orderdisplaydetails[1]} </p>
+                  } </> :
+
+                    <><p> Order cancelled on {orderdisplaydetails[1]} </p> </>
                 }
+
+                {
+                  orderdatedata.length !== 2 && ordertimeline === 0 && <Button onClick={Canceluserorder} variant="contained"  >Cancel Order</Button>
+                }
+
               </Alert>
             </div>
             <div className="orderdetailitems" >
@@ -139,7 +143,7 @@ export const Orderdetails = ({ location: { state }, history }) => {
                 </strong>
 
 
-                <SimpleBar style={{ height: "400px" }}>
+                <SimpleBar style={{ height: "45vh" }}>
                   {
                     Object.keys(orderdetails["OrderedItems"]).map((item, index) => {
                       const { count, price } = orderdetails["OrderedItems"][item]
@@ -163,6 +167,8 @@ export const Orderdetails = ({ location: { state }, history }) => {
               </div>
               <div></div>
             </div>
+
+            <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant={modalvariant} successmessage="Your order is successfully cancelled" />
           </div>
 
         </>

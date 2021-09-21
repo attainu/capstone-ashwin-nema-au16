@@ -3,7 +3,7 @@ import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { changecartstate, changecartprice, getproductsdata } from '../../actions'
 import { PATHS } from '../../config'
-import {  useState } from 'react'
+import { useState } from 'react'
 import { useEffect } from 'react'
 import ReactImageMagnify from 'react-image-magnify'
 import useMeasure from 'react-use-measure'
@@ -142,9 +142,7 @@ const Product = ({ history }) => {
             <hr className="mx-4 mt-5"></hr>
             <div className="productdescription ms-2 text-wrap">
                 <pre className="text-wrap ms-1 me-1">
-                    {
-                        <DetailsTable title="Product description" titlesize="h6" tabledata={description} />
-                    }
+                    <DetailsTable title="Product description" titlesize="h6" tabledata={description} />
                 </pre>
             </div>
             <hr className="mx-4 mt-5"></hr>

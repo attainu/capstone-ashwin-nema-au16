@@ -3,17 +3,18 @@ import { useEffect } from 'react'
 import { useRef, useState, useContext } from 'react'
 import { useMemo, useCallback } from 'react'
 import L from 'leaflet'
-import { SetAddressContext, showmodalwithmessageandvariant } from '../../utils'
+import { SetAddressContext, modalstatesetter, OnlineContext } from '../../utils'
 import { useSelector, useDispatch } from 'react-redux'
 import { getuseraddress, setprofile } from '../../actions'
 import { Alert } from 'react-bootstrap'
 import { axiosinstance } from '../../config'
 import './index.css'
-import {NotificationModal} from '../Notification Modal'
+import { NotificationModal } from '../Notification Modal'
 
 function DisplayPosition({ map, markerref, circleref }) {
     const dispatch = useDispatch()
-
+    const isonline = useContext(OnlineContext)
+    
     const onMove = useCallback(() => {
         const newLatLng = new L.LatLng(map.getCenter().lat, map.getCenter().lng)
 
@@ -25,13 +26,17 @@ function DisplayPosition({ map, markerref, circleref }) {
 
     const onDragend = useCallback(() => {
         const { lat, lng } = map.getCenter()
-        dispatch(getuseraddress(lat, lng))
-    }, [map, dispatch])
+        if (isonline === true) {
+            dispatch(getuseraddress(lat, lng))
+        }
+    }, [map, dispatch, isonline])
 
     const onZoomend = useCallback(() => {
         const { lat, lng } = map.getCenter()
-        dispatch(getuseraddress(lat, lng))
-    }, [map, dispatch])
+        if (isonline === true) {
+            dispatch(getuseraddress(lat, lng))
+        }
+    }, [map, dispatch, isonline])
 
     useEffect(() => {
         map.on('move', onMove)
@@ -54,44 +59,48 @@ function DisplayPosition({ map, markerref, circleref }) {
 
 export default function LocationMap() {
     const dispatch = useDispatch()
+
+    const isonline = useContext(OnlineContext)
+    const addresscontext = useContext(SetAddressContext)
+
     const [map, setMap] = useState(null)
+
     const mapismounted = useRef(false)
     const markerref = useRef()
     const circleref = useRef()
-    const addresscontext = useContext(SetAddressContext)
+    
     const { Name, Mobilenumber, Email, Location } = useSelector(state => state.Profile)
+
     const address = useSelector(state => state.Useraddress)
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState('warning')
     const modalmessage = useRef("")
 
-    const displaymodaltouser = (message, variant) => {
-        showmodalwithmessageandvariant(showmodal, message, undefined, variant, changemodalvariant, modalmessage)
-    }
+    const displaymodalconfiguration = [showmodal, "", undefined, modalvariant, changemodalvariant, modalmessage]
 
     useEffect(() => {
         if (address.length === 0 && addresscontext === undefined) {
             dispatch(getuseraddress(Location[0], Location[1]))
         }
 
-        if (mapismounted.current === false && address.length === 1) {
+        if (mapismounted.current === false && address.length === 1 && isonline === true) {
             mapismounted.current = true
             dispatch(getuseraddress(Location[0], Location[1]))
         }
 
-    }, [address, dispatch, Location, addresscontext])
+    }, [address, dispatch, Location, addresscontext, isonline])
 
     const findcurrentuserlocation = () => {
         navigator.permissions.query({ name: 'geolocation' })
             .then(
                 ({ state }) => {
                     if (state === "denied") {
-                        displaymodaltouser("You have to enable location access in the browser first in order to enable map to find your location", "danger")
+                        modalstatesetter("You have to enable location access in the browser first in order to enable map to find your location", "danger", displaymodalconfiguration)
                     }
                 }
             ).catch(() => {
-                displaymodaltouser("Sorry your current browser does not support location-tracking feature", "danger")
-            }  )
+                modalstatesetter("Sorry your current browser does not support location-tracking feature", "danger", displaymodalconfiguration)
+            })
         if (map !== undefined && map !== null) {
             try {
                 map.locate()
@@ -100,14 +109,17 @@ export default function LocationMap() {
                 })
             }
             catch (error) {
-                displaymodaltouser("Sorry could not fetch your location. Please try again later", "danger")
+                modalstatesetter("Sorry could not fetch your location. Please try again later","danger", displaymodalconfiguration)
                 console.log("Error occurred")
             }
         }
     }
 
-
     const saveuserlocation = () => {
+        if (isonline !== true) {
+            modalstatesetter("You are not online. Please check your Internet connection and try again","danger", displaymodalconfiguration)
+            return
+        }
         if (map !== undefined && map !== null) {
             const { lat, lng } = map.getCenter()
             const data = {
@@ -116,18 +128,17 @@ export default function LocationMap() {
             }
             axiosinstance.put("/user/location", data).then((resp) => {
                 if (resp.data.error !== "") {
-                    displaymodaltouser(resp.data.error, "danger")
+                    modalstatesetter(resp.data.error, "danger", displaymodalconfiguration)
                     return
                 }
-
-                displaymodaltouser("Location saved", "warning")
+                modalstatesetter("Location saved", "warning", displaymodalconfiguration)
                 dispatch(setprofile({ Name, Email, Mobilenumber, Location: [lat, lng] }))
 
                 if (addresscontext !== undefined && addresscontext !== null) {
                     addresscontext(false)
                 }
             }).catch(() => {
-                displaymodaltouser("Sorry your location could not be saved. Please try again later", "warning")
+                modalstatesetter("Sorry your location could not be saved. Please try again later", "warning", displaymodalconfiguration)
             })
         }
     }

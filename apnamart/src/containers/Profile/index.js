@@ -1,6 +1,6 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { UserAccountInformation, LocationMap, NotificationModal, OrderHistory } from '../../components'
 import Usercart from '../Cart'
 import { Alert } from 'react-bootstrap'
@@ -10,11 +10,11 @@ import RoomIcon from '@mui/icons-material/Room';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Logoutuser, deleleteuseraccount, validateuserpageaccess } from '../../utils'
+import { Logoutuser, deleleteuseraccount, validateuserpageaccess, OnlineContext } from '../../utils'
 
-const Profile = ({ history }) => {
+const Profile = ({history}) => {
     const dispatch = useDispatch()
-
+    
     const {Profile, Auth} = useSelector(state => state)
     const { Name } = Profile
 
@@ -26,7 +26,7 @@ const Profile = ({ history }) => {
         return () => {
             document.body.style.backgroundColor = "white"
         }
-    }, [Profile, history, dispatch, Auth])
+    }, [dispatch, history,Profile, Auth])
 
     const [selectcomponenttodisplay, changedisplaycomponent] = useState("accountinformation")
 

@@ -5,7 +5,7 @@ import { getuseraddress } from '../../actions'
 import { Accordion } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Ordersummary, MapAccordion, PaymentSection } from '../../components'
-import { SetAddressContext, preventunauthorisedaccess } from '../../utils'
+import { SetAddressContext } from '../../utils'
 
 const CheckoutPage = ({ history }) => {
     const dispatch = useDispatch()
@@ -26,7 +26,6 @@ const CheckoutPage = ({ history }) => {
             setcurrentaddress(Useraddress)
             setaddress(true)
         }
-        preventunauthorisedaccess(dispatch, auth)
         if (auth === " ") {
             history.push(PATHS.HOME)
         }

@@ -11,9 +11,7 @@ export const Orderhistorypage = ({history}) => {
     useEffect(() => {
         const accessvalidation = validateuserpageaccess(dispatch, history, Profile, Auth)
         if ( pageisloaded === false && accessvalidation) {
-            setTimeout(() => {
-                loadpage(true)
-            }, 300);
+            loadpage(true)
         } 
     },[Profile, dispatch, history, Auth, pageisloaded, loadpage])
 

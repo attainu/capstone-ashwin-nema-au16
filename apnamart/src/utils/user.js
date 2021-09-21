@@ -1,7 +1,7 @@
 import { setprofile, authsetter,  getuserprofile } from '../actions'
 import {setaddress, userorderdata} from '../actionTypes'
 import { axiosinstance, PATHS } from '../config'
-import {getAuthinbrowser} from './auth'
+
 
 export const logouterros = {
     "Token is not provided": true, "Please provide a valid token": true
@@ -38,25 +38,12 @@ export const deleleteuseraccount = (dispatch, modaldisplayfunction) => {
     })
 }
 
-export const preventunauthorisedaccess = (dispatch, token) => {
-    const auth = getAuthinbrowser()
-    if (auth === " " || auth !== token) {
-        console.log(auth === " ", "This condition is helping me")
-        Logoutuser(dispatch)
-        return
-    }
-    return true
-}
 
-export const checkisuserloggedin = (token) => {
-    const verification = getAuthinbrowser() === " " && token === " " && getAuthinbrowser() === token
-    return verification 
-}
 
 export const validateuserpageaccess = (dispatch, history, profile, auth) => {
     const validprofile = Object.keys(profile).length > 0
     if (!validprofile && auth !== " ") {
-        dispatch(getuserprofile())
+        dispatch(getuserprofile(auth))
         return false
     } 
     if (!validprofile) {

@@ -1,34 +1,31 @@
-import { newuserorder, canceluserorder, userorderdata, userordercount } from '../actionTypes'
-import { Logoutuser, logouterros } from '../utils'
+import { userorderdata, userordercount } from '../actionTypes'
+import { Logoutuser, logouterros, showmodalwithmessageandvariant } from '../utils'
 import { axiosinstance } from '../config'
 
-export const addnewordertoorderhistory = (orderdata) => ({ type: newuserorder, payload: orderdata })
 
-export const changeorderstatustocancelled = (orderid) => ({ type: canceluserorder, payload: orderid })
-
-export const setuserqueryorderdata = (currentpage, showmodalfunction) => (dispatch) => {
+export const setuserqueryorderdata = (currentpage, showmodalfunction, messagesetter) => (dispatch) => {
     const itemstobeskipped = (currentpage - 1) * 5
     axiosinstance.post(`/user/order/data/${itemstobeskipped}`).then(({ data }) => {
         const { error } = data
-
         if (logouterros[error] !== undefined) {
             Logoutuser(dispatch)
             return
         }
-
-        if (error !== undefined && showmodalfunction !== undefined) {
-            showmodalfunction(true)
-            return
-        }
-        dispatch({ type: userorderdata, payload: data  })
+        dispatch({ type: userorderdata, payload: data })
     }).catch(() => {
-        if (showmodalfunction !== undefined) {
-            showmodalfunction(true)
+        if (showmodalfunction !== undefined && messagesetter !== undefined) {
+            showmodalwithmessageandvariant(showmodalfunction,"Sorry something went wrong. Your data could not be loaded. Please try again later", messagesetter)
         }
     })
 }
 
 export const storeordercount = (countdata) => {
-    const [{count}] = countdata
-    return {type:userordercount, payload:count } 
+    if (Array.isArray(countdata) === true) {
+        if (countdata.length === 0) {
+            return { type: userordercount, payload: 0 }
+        }
+        const [{ count }] = countdata
+        return { type: userordercount, payload: count }
+    }
+    return { type: userordercount, payload: countdata }
 }
