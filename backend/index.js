@@ -23,6 +23,7 @@ mongoose.connect(MONGODB_URL, {
 }, async (err) => {
     if (err) throw err
     console.log("connected")
+    
 })
 
 app.use("", products_router)

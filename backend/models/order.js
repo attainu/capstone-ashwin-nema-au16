@@ -1,3 +1,5 @@
+const {nanoid} = require('nanoid')
+
 const mongoose = require('mongoose')
 const OrderSchema = new mongoose.Schema({
     Customer:{
@@ -26,7 +28,10 @@ const OrderSchema = new mongoose.Schema({
         default:'Cash on delivery'
     },
 
-    PaymentId:String,
+    PaymentId:{
+        type:String,
+        default:() => nanoid()
+    },
 
     CreatedAt:{
         type:Date,

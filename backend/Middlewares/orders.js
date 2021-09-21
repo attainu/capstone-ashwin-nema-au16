@@ -59,6 +59,7 @@ const getuserordercount = async (id) => {
         { $match: { Customer: mongoose.Types.ObjectId(id) } },
         { $count: "count" }
     ])
+
     return count
 }
 
@@ -75,4 +76,15 @@ const getuserorderdata = async (id, skip) => {
     return userorders
 }
 
-module.exports = { orderauthenticationandgeneration, getuserorderdata, getuserordercount }
+const canorderbeedited = (ordertime) => {
+    const currenttime = new Date()
+    const dividingfactor = 60 * 60 * 24
+    const difference = (currenttime.getTime() - ordertime.getTime()) / 1000
+    const timepassed = difference / dividingfactor
+    if (timepassed < 1) {
+        return true
+    } 
+    return false
+}
+
+module.exports = { orderauthenticationandgeneration, getuserorderdata, getuserordercount, canorderbeedited }

@@ -1,12 +1,13 @@
 const express = require('express')
 const Razorpay = require('razorpay')
 const crypto = require('crypto')
+const axios = require('axios')
 require('dotenv').config()
 const { RAZORPAYKEY, RAZORPAYPASSWORD } = process.env
 const order_router = express.Router()
 order_router.use(express.urlencoded({ extended: true }))
 
-const {  orderauthenticationandgeneration, getuserorderdata } = require('../middlewares/orders')
+const {  orderauthenticationandgeneration, getuserorderdata, canorderbeedited } = require('../middlewares/orders')
 const OrderModel = require('../models/order')
 
 const { authenticatetoken, accesstokengenerator } = require('../middlewares/token')
@@ -92,9 +93,35 @@ order_router.post("/orderdetails/:id", authenticatetoken, async (req, res) => {
         if (order.length == 0) {
             return res.status(404).json({error:"Data not fetched"})
         }
+
         return res.json(order[0])
     } catch {
         res.status(404).json({error:"Data not fetched"})
+    }
+})
+
+order_router.post("/cancelorder/:id", authenticatetoken, async (req, res) => {
+
+    try {
+        const order = await OrderModel.findById(req.params.id)
+        const {CreatedAt, PaymentMode, PaymentId, Status} = order
+        if (canorderbeedited(CreatedAt) == true && Status !== "Order cancelled") {
+            if (PaymentMode == "Razorpay") {
+                const response = await axios.post(`https://${RAZORPAYKEY}:${RAZORPAYPASSWORD}@api.razorpay.com/v1/payments/${PaymentId}/refund`)
+                if (!response) {
+                    return res.status(500).send("Sorry something went wrong")
+                }
+            }
+            order.Status = "Order cancelled"
+            order.OrderCancellationTime = Date.now()
+            await order.save()
+            return res.json({success:true, cancellationtime:order.OrderCancellationTime})
+        }
+        res.status(500).send("Sorry something went wrong")
+
+    } catch(error) {
+        console.log(error)
+        res.status(500).send("Sorry something went wrong")
     }
 })
 
