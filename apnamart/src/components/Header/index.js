@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
-import { getuserprofile, getproductsdata } from '../../actions'
 import { useRef } from 'react';
 import useMeasure from 'react-use-measure'
 import { Logoutuser } from '../../utils'
@@ -13,17 +12,22 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import ListIcon from '@mui/icons-material/List';
 import Badge from '@material-ui/core/Badge';
+import { useOnlineconnectioncheck } from '../../Hooks'
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
+import { Alert } from 'react-bootstrap';
 
 const Header = ({ children, isonline }) => {
     const dispatch = useDispatch()
     const [count, changecount] = useState(0)
     const [ref, bounds] = useMeasure()
     const [childrenmargin, changemargin] = useState("80px")
+    const { Auth, Profile, Productsdata: { products } } = useSelector(state => state)
+    const isuseronline = useOnlineconnectioncheck(dispatch, isonline, Auth, Profile, products)
 
     useEffect(() => {
         changemargin(`${bounds.height}px`)
     }, [bounds])
-    const { Auth, Profile, Productsdata: { products } } = useSelector(state => state)
+
 
     const cart = useSelector(state => state.Cart)
 
@@ -34,21 +38,6 @@ const Header = ({ children, isonline }) => {
     useEffect(() => {
         changecount(cartcount)
     }, [cartcount])
-
-    useEffect(() => {
-        if (Auth !== " " && Object.keys(Profile).length === 0 && isonline === true) {
-            dispatch(getuserprofile(Auth))
-            return
-        }
-
-    }, [Auth, dispatch, Profile,  isonline])
-
-
-    useEffect(() => {
-        if (Object.keys(products).length === 0 && isonline === true) {
-            dispatch(getproductsdata())
-        }
-    }, [products, dispatch, isonline])
 
     const AddToggleclass = () => {
         dropdown.current.classList.add("show")
@@ -121,7 +110,21 @@ const Header = ({ children, isonline }) => {
                 </div>
 
                 <div style={{ marginTop: childrenmargin }} className="children">
-                    {children}
+                    {isuseronline === true ?
+                        <>
+                            {children}
+                        </> :
+                        <>
+                            <div className="d-flex justify-content-center" >
+
+                                <Alert variant="danger">
+                                    <ErrorRoundedIcon style={{ color: "red" }} />
+                                    You are offline. Please check your Internet Connection.
+                                </Alert>
+                            </div>
+                        </>
+                    }
+
                 </div>
 
                 <div className="push"></div>

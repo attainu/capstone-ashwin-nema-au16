@@ -1,24 +1,21 @@
 import {OrderHistory} from '../../components'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import {PATHS} from '../../config'
 import './index.css'
-import {validateuserpageaccess} from '../../utils'
 
 export const Orderhistorypage = ({history}) => {
-    const dispatch = useDispatch()
     const {Profile,Auth} = useSelector(state => state)
-    const [pageisloaded, loadpage] = useState(false)
     useEffect(() => {
-        const accessvalidation = validateuserpageaccess(dispatch, history, Profile, Auth)
-        if ( pageisloaded === false && accessvalidation) {
-            loadpage(true)
-        } 
-    },[Profile, dispatch, history, Auth, pageisloaded, loadpage])
+        if (Object.keys(Profile).length === 0 && Auth === " "){
+            history.push(PATHS.HOME)
+        }
+    },[Profile, history, Auth])
 
     return (
         <>
         {
-        Object.keys(Profile).length > 2 && pageisloaded === true &&        
+        Object.keys(Profile).length > 0 &&      
         <div className="orderhistorygrid">
             <div></div>
             <div>

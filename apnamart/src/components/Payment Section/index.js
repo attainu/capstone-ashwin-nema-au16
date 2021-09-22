@@ -53,7 +53,6 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
     }
 
     async function displayRazorpay() {
-
         const res = await loadScript(
             "https://checkout.razorpay.com/v1/checkout.js"
         );
@@ -135,6 +134,10 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
     }
 
     const cashmode = () => {
+        if (isonline !== true) {
+            displaymodal("You are not online. Please check your Internet connection and try again later", "danger")
+            return
+        }
         axiosinstance.post("/user/order/cash", {items:Cart, cartprice, DeliveryAddress}).then(({data}) => {
             const loginerror = setloginerror(data.error)
             if (data.error !== undefined && !loginerror) {

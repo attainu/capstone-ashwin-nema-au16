@@ -74,9 +74,9 @@ export default function LocationMap() {
     const address = useSelector(state => state.Useraddress)
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState('warning')
-    const modalmessage = useRef("")
+    const [modalmessage, changemodalmessage] = useState("")
 
-    const displaymodalconfiguration = [showmodal, "", undefined, modalvariant, changemodalvariant, modalmessage]
+    const displaymodalconfiguration = [showmodal, modalmessage, changemodalmessage, modalvariant, changemodalvariant]
 
     useEffect(() => {
         if (address.length === 0 && addresscontext === undefined) {
@@ -183,7 +183,7 @@ export default function LocationMap() {
                     Save Location
                 </button>
             </div>
-            <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage.current} onHide={showmodal} alertvariant={modalvariant} successmessage="Location saved" />
+            <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant={modalvariant} successmessage="Location saved" />
         </div>
     )
 }
