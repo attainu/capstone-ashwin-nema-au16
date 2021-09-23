@@ -8,25 +8,21 @@ export const Ordersummary = ({ ordersummaryclass }) => {
     return (
         <>
             <SimpleBar style={{ height: "20vh" }}>
-                {
-                    Object.keys(products).length > 0 && <>
-                        {Object.keys(Cart).map((item, index) => {
-                            const { count } = Cart[item]
-                            const { name, price } = products[item]
-                            return (
-                                <div className={`${mainclass}`} key={index}>
-                                    <div>
-                                        {name} X {count}
-                                    </div>
+                {Object.keys(Cart).map((item, index) => {
+                    const { count } = Cart[item]
+                    const { name, price } = products[item]
+                    return (
+                        <div className={`${mainclass}`} key={index}>
+                            <div>
+                                {name} X {count}
+                            </div>
 
-                                    <div>
-                                        {count * price}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </>
-                }
+                            <div>
+                                {count * price}
+                            </div>
+                        </div>
+                    )
+                })}
 
                 <div className={`${mainclass}`}>
                     <div>

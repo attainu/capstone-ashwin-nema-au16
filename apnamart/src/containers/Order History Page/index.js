@@ -1,8 +1,8 @@
 import { OrderHistory } from '../../components'
 import './index.css'
 import { withAuthentication } from '../../Higher Order Components'
-
 const Orderhistorypage = () => {
+
 
     return (
         <div className="orderhistorygrid">

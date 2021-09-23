@@ -4,7 +4,7 @@ export {deliverydate, checkorderdate} from './date'
 
 export {convertarraydatatoobjectdata, searchdatafilter, makesubpath} from './array string operations'
 
-export {SetAddressContext, OnlineContext} from './contexts'
+export {SetAddressContext, OnlineContext, ProductsdataloadedContext} from './contexts'
 
 export {default as ScrollToTop} from './topscroll'
 

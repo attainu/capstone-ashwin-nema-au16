@@ -4,7 +4,7 @@ import {PATHS, axiosinstance} from '../config'
 
 const { products_data, subcategory_data, category_data} = data
 
-export const getproductsdata = () => (dispatch) => {
+export const getproductsdata = (datafetchedfunction) => (dispatch) => {
     axiosinstance.post("/products").then(resp => {
         const productsdata = convertarraydatatoobjectdata(resp.data.products, PATHS.PRODUCT)
         const subcategorydata = convertarraydatatoobjectdata(resp.data.subcategories, PATHS.SUBCATEGORY)
@@ -13,6 +13,9 @@ export const getproductsdata = () => (dispatch) => {
         dispatch({ type: products_data, payload: productsdata })
         dispatch({ type: subcategory_data, payload: subcategorydata })
         dispatch({ type: category_data, payload: categorydata })
+        if (datafetchedfunction !== undefined) {
+            datafetchedfunction(true)
+        }
         return
     }).catch((error) => {
         console.log(error)

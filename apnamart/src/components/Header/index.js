@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { useRef } from 'react';
 import useMeasure from 'react-use-measure'
-import { Logoutuser } from '../../utils'
+import { Logoutuser, ProductsdataloadedContext } from '../../utils'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import ListIcon from '@mui/icons-material/List';
@@ -22,8 +22,7 @@ const Header = ({ children, isonline }) => {
     const [ref, bounds] = useMeasure()
     const [childrenmargin, changemargin] = useState("80px")
     const { Auth, Profile, Productsdata: { products } } = useSelector(state => state)
-    const isuseronline = useOnlineconnectioncheck(dispatch, isonline, Auth, Profile, products)
-
+    const [isuseronline, isproductsdatafetched] = useOnlineconnectioncheck(dispatch, isonline, Auth, Profile, products)
     useEffect(() => {
         changemargin(`${bounds.height}px`)
     }, [bounds])
@@ -111,9 +110,12 @@ const Header = ({ children, isonline }) => {
 
                 <div style={{ marginTop: childrenmargin }} className="children">
                     {isuseronline === true ?
-                        <>
-                            {children}
-                        </> :
+                        <ProductsdataloadedContext.Provider value={isproductsdatafetched} >
+                            <>
+                                {children}
+                            </>
+                        </ProductsdataloadedContext.Provider>
+                        :
                         <>
                             <div className="d-flex justify-content-center" >
 
