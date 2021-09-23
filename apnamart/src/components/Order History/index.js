@@ -4,7 +4,7 @@ import 'simplebar/dist/simplebar.min.css'
 import './index.css'
 import Pagination from '@mui/material/Pagination';
 import { Alert } from 'react-bootstrap'
-import { checkorderdate, makesubpath, orderstatusmesssages, OnlineContext, showmodalwithmessageandvariant } from '../../utils'
+import { checkorderdate, makesubpath, orderstatusmesssages, OnlineContext, showmodalwithmessageandvariant, userisofflinemessage } from '../../utils'
 import Button from '@mui/material/Button'
 import { NotificationModal } from '../Notification Modal'
 import { useEffect, useState, useContext } from 'react'
@@ -21,7 +21,7 @@ const OrderHistory = () => {
     const [page, changepage] = useState(1)
     const { count, orderdata } = useSelector(state => state.Userorderdata)
     const { products } = useSelector(state => state.Productsdata)
-    const [isdataloaded, changedataloadedstate ] = useState(false)
+    const [isdataloaded, changedataloadedstate] = useState(false)
 
     useEffect(() => {
         if (isdataloaded === false && isonline === true) {
@@ -32,17 +32,17 @@ const OrderHistory = () => {
 
     const getorderdata = (_, value) => {
         if (page !== value && isonline === true) {
-            dispatch(setuserqueryorderdata(value, showmodal,setmodalmessage))
+            dispatch(setuserqueryorderdata(value, showmodal, setmodalmessage))
             changepage(value)
             return
         }
         if (page !== value && isonline !== true) {
-            showmodalwithmessageandvariant(showmodal,"You are not online. Please check your internet connection", setmodalmessage)
+            showmodalwithmessageandvariant(showmodal, userisofflinemessage, setmodalmessage)
             changepage(value)
         }
     }
 
-    const {notshipped, shipped, outfordelivery, delivered} = orderstatusmesssages
+    const { notshipped, shipped, outfordelivery, delivered } = orderstatusmesssages
     return (
         <>
             {
@@ -60,19 +60,19 @@ const OrderHistory = () => {
                                         case notshipped:
                                             currentstatusmessage = orderplaceddate
                                             break
-                                        
+
                                         case shipped:
                                             currentstatusmessage = shippingdate
                                             break
-                                        
+
                                         case outfordelivery:
                                             currentstatusmessage = outfordeliverydate
                                             break
-                                        
+
                                         case delivered:
                                             currentstatusmessage = deliverydate
                                             break
-                                        
+
                                         default:
                                             break
                                     }
@@ -84,20 +84,20 @@ const OrderHistory = () => {
                                                 <Alert className="space-between " variant="warning">
                                                     <div>
                                                         <h6 className="lead">Order Status </h6>
-                                                        {Status !== "Order cancelled" && <> 
-                                                        <p>{deliverystatus} </p>
-                                                        <p>{currentstatusmessage}</p>
+                                                        {Status !== "Order cancelled" && <>
+                                                            <p>{deliverystatus} </p>
+                                                            <p>{currentstatusmessage}</p>
                                                         </>}
                                                         {Status === "Order cancelled" && <p>Order cancelled </p>}
                                                         <div>
-                                                            <img className="ordereditemimage" src={image} alt={name } />
+                                                            <img className="ordereditemimage" src={image} alt={name} />
                                                             {name}</div>
 
                                                     </div>
                                                     <div>
                                                         Total Items({Object.keys(OrderedItems).length})
                                                         <div>₹{Price}</div>
-                                                        <Link to={{pathname:`${makesubpath(PATHS.ORDERDETAILS,_id)}`, state:item } } className="text-decoration-none text-white">
+                                                        <Link to={{ pathname: `${makesubpath(PATHS.ORDERDETAILS, _id)}`, state: item }} className="text-decoration-none text-white">
 
                                                             <Button className="w-100" variant="contained" color="primary">
                                                                 View Details
@@ -115,8 +115,11 @@ const OrderHistory = () => {
                         </SimpleBar>
                         <div className="d-flex justify-content-center" >
                             <Pagination page={page} size="large" count={Math.ceil(count / 5)} color="primary" onChange={getorderdata} />
+
                         </div>
                         <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" />
+
+
                     </>
             }
         </>

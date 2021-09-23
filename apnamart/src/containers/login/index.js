@@ -1,13 +1,12 @@
 import './index.css'
 import { useState, useContext } from 'react'
 import { PATHS, axiosinstance } from '../../config'
-import { authsetter, setprofile,storeordercount } from '../../actions'
-import { useDispatch, useSelector } from 'react-redux'
-import { Redirect } from 'react-router'
+import { authsetter, setprofile,storeordercount, logoutsetter } from '../../actions'
+import { useDispatch } from 'react-redux'
 import * as yup from 'yup'
-import { showmodalwithmessageandvariant, OnlineContext } from '../../utils'
+import { showmodalwithmessageandvariant, OnlineContext, userisofflinemessage } from '../../utils'
 import {NotificationModal} from '../../components'
-
+import {withoutAuthentication} from '../../Higher Order Components'
 export const Login = ({ history }) => {
     const dispatch = useDispatch()
     const isonline = useContext(OnlineContext)
@@ -15,7 +14,6 @@ export const Login = ({ history }) => {
     const [Password, Changepassword] = useState("")
     const [errormessage, changeerrormessage] = useState("")
 
-    const userprofile = useSelector(state => state.Profile)
     const [modal, showmodal] = useState(false)
 
     const schema = yup.object().shape({
@@ -27,7 +25,7 @@ export const Login = ({ history }) => {
         e.preventDefault()
         changeerrormessage("")
         if (isonline !== true) {
-            showmodalwithmessageandvariant(showmodal, "You are not online. Please check your internet connection", changeerrormessage)
+            showmodalwithmessageandvariant(showmodal, userisofflinemessage, changeerrormessage)
             return
         }
   
@@ -35,28 +33,29 @@ export const Login = ({ history }) => {
             const response = await axiosinstance.post('/user/login', { ...userdata })
 
             if (response.data.error !== "") {
-                dispatch(authsetter(" "))
+                dispatch(logoutsetter())
                 showmodalwithmessageandvariant(showmodal, response.data.error, changeerrormessage)
                 return
             }
 
-            const { Name, Email, Mobilenumber, Location, ordercount } = response.data
-            dispatch(authsetter(response.data.token))
+            const { Name, Email, Mobilenumber, Location, ordercount, token } = response.data
+            dispatch(authsetter(token))
             dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
             dispatch(storeordercount(ordercount))
             history.push(PATHS.HOME)
             return
 
         }).catch(function (err) {
-            showmodalwithmessageandvariant(showmodal, err.errors[0], changeerrormessage)
+            if (err.errors !== undefined && err.errors.length > 0) {
+                showmodalwithmessageandvariant(showmodal, err.errors[0], changeerrormessage)
+                return
+            }
+            showmodalwithmessageandvariant(showmodal,"Sorry something went wrong" , changeerrormessage)
         })
     }
 
     return (
         <>
-            {
-                Object.keys(userprofile).length > 0 && <Redirect to={PATHS.HOME} />
-            }
 
             <div className="row container-fluid mt-5">
                 <div className="col-4"></div>
@@ -86,3 +85,5 @@ export const Login = ({ history }) => {
         </>
     )
 }
+
+export default withoutAuthentication(Login)

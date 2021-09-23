@@ -3,29 +3,30 @@ import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css';
 
 export const Ordersummary = ({ ordersummaryclass }) => {
-    const totalcost = useSelector(state => state.CartPrice)
-    const cart = useSelector(state => state.Cart)
+    const { CartPrice, Cart, Productsdata: { products } } = useSelector(state => state)
     const mainclass = ordersummaryclass !== undefined ? ordersummaryclass : ""
-    const Productsdata = useSelector(state => state.Productsdata.products)
-
     return (
         <>
             <SimpleBar style={{ height: "20vh" }}>
-                {Object.keys(cart).map((item, index) => {
-                    const { count } = cart[item]
-                    const { name, price } = Productsdata[item]
-                    return (
-                        <div className={`${mainclass}`} key={index}>
-                            <div>
-                                {name} X {count}
-                            </div>
+                {
+                    Object.keys(products).length > 0 && <>
+                        {Object.keys(Cart).map((item, index) => {
+                            const { count } = Cart[item]
+                            const { name, price } = products[item]
+                            return (
+                                <div className={`${mainclass}`} key={index}>
+                                    <div>
+                                        {name} X {count}
+                                    </div>
 
-                            <div>
-                                {count * price}
-                            </div>
-                        </div>
-                    )
-                })}
+                                    <div>
+                                        {count * price}
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </>
+                }
 
                 <div className={`${mainclass}`}>
                     <div>
@@ -33,7 +34,7 @@ export const Ordersummary = ({ ordersummaryclass }) => {
                     </div>
 
                     <div>
-                        <strong>{totalcost}</strong>
+                        <strong>{CartPrice}</strong>
                     </div>
                 </div>
             </SimpleBar>

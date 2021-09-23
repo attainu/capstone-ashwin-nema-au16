@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { axiosinstance, PATHS } from "../../config"
-import { validateuserpageaccess,  orderstatusmesssages, makesubpath, setorderdetailspagedata, modalstatesetter, setorderpagedatatoordercancelled } from '../../utils'
+import { orderstatusmesssages, makesubpath, setorderdetailspagedata, modalstatesetter, setorderpagedatatoordercancelled } from '../../utils'
 import { useParams } from "react-router"
 import { OrderDetailsStepper, DetailsTable, NotificationModal } from '../../components'
 import { Alert } from "react-bootstrap"
@@ -10,8 +10,9 @@ import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css';
 import { Link } from "react-router-dom"
 import Button from '@mui/material/Button';
+import { withAuthentication } from '../../Higher Order Components'
 
-export const Orderdetails = ({ location: { state }, history }) => {
+const Orderdetails = ({ location: { state }, history }) => {
   const dispatch = useDispatch()
   const { orderid } = useParams()
 
@@ -29,9 +30,7 @@ export const Orderdetails = ({ location: { state }, history }) => {
   const displaymodalconfiguration = [showmodal, modalmessage, setmodalmessage, modalvariant, changemodalvariant]
 
   useEffect(() => {
-    const ispageaccessvalid = validateuserpageaccess(dispatch, history, Profile, Auth)
-    if (orderdetails === undefined && ispageaccessvalid) {
-      
+    if (orderdetails === undefined) {
       axiosinstance.post(`/user/order/orderdetails/${orderid}`).then(({ data }) => {
         const { error } = data
         if (error !== undefined) {
@@ -43,6 +42,7 @@ export const Orderdetails = ({ location: { state }, history }) => {
         history.push(PATHS.NOTFOUND)
       })
     }
+
     document.body.style.backgroundColor = "#f1f3f6"
     return () => {
       document.body.style.backgroundColor = "white"
@@ -76,10 +76,10 @@ export const Orderdetails = ({ location: { state }, history }) => {
           modalstatesetter("Sorry you have been logged out. Please reload the page and sign in again to continue", "danger", displaymodalconfiguration)
           return
         }
-        setorderpagedatatoordercancelled(orderdetails.CreatedAt, null, changedisplaydetails, changeorderdata,cancellationtime, state)
-  
+        setorderpagedatatoordercancelled(orderdetails.CreatedAt, null, changedisplaydetails, changeorderdata, cancellationtime, state)
+
       }).catch(() => {
-        modalstatesetter("Sorry time for cancelling order is over. Now you cannot change your order", "danger", displaymodalconfiguration )
+        modalstatesetter("Sorry time for cancelling order is over. Now you cannot change your order", "danger", displaymodalconfiguration)
       })
     }
   }
@@ -87,7 +87,7 @@ export const Orderdetails = ({ location: { state }, history }) => {
   return (
     <>
       {
-        orderdetails !== undefined &&
+        orderdetails !== undefined && Object.keys(products).length > 0 &&
         <>
           <div className="orderdetailsdivider">
             <div>
@@ -170,9 +170,10 @@ export const Orderdetails = ({ location: { state }, history }) => {
 
             <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant={modalvariant} successmessage="Your order is successfully cancelled" />
           </div>
-
         </>
       }
     </>
   )
 }
+
+export default withAuthentication(Orderdetails)

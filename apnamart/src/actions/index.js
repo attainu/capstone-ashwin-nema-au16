@@ -1,6 +1,6 @@
 export {getuserprofile, setprofile} from './profile'
 
-export {authsetter} from './auth'
+export {authsetter, logoutsetter} from './auth'
 
 export {getuseraddress} from './address'
 

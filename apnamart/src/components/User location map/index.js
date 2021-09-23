@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useRef, useState, useContext } from 'react'
 import { useMemo, useCallback } from 'react'
 import L from 'leaflet'
-import { SetAddressContext, modalstatesetter, OnlineContext } from '../../utils'
+import { SetAddressContext, modalstatesetter, OnlineContext, userisofflinemessage } from '../../utils'
 import { useSelector, useDispatch } from 'react-redux'
 import { getuseraddress, setprofile } from '../../actions'
 import { Alert } from 'react-bootstrap'
@@ -117,7 +117,7 @@ export default function LocationMap() {
 
     const saveuserlocation = () => {
         if (isonline !== true) {
-            modalstatesetter("You are not online. Please check your Internet connection and try again","danger", displaymodalconfiguration)
+            modalstatesetter(userisofflinemessage,"danger", displaymodalconfiguration)
             return
         }
         if (map !== undefined && map !== null) {

@@ -1,33 +1,20 @@
-import {OrderHistory} from '../../components'
-import { useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import {PATHS} from '../../config'
+import { OrderHistory } from '../../components'
 import './index.css'
+import { withAuthentication } from '../../Higher Order Components'
 
-export const Orderhistorypage = ({history}) => {
-    const {Profile,Auth} = useSelector(state => state)
-    useEffect(() => {
-        if (Object.keys(Profile).length === 0 && Auth === " "){
-            history.push(PATHS.HOME)
-        }
-    },[Profile, history, Auth])
+const Orderhistorypage = () => {
 
     return (
-        <>
-        {
-        Object.keys(Profile).length > 0 &&      
         <div className="orderhistorygrid">
             <div></div>
             <div>
-            <OrderHistory /> 
+                <OrderHistory />
             </div>
             <div>
 
             </div>
-            
         </div>
-        
-        }
-        </>
     )
 }
+
+export default withAuthentication(Orderhistorypage)

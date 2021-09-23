@@ -1,4 +1,4 @@
-export const showmodalwithmessageandvariant = (showmodalfunction, modalmessage, messagesetter, modalvariant, variantchanger, messageref) => {
+export const showmodalwithmessageandvariant = (showmodalfunction, modalmessage, messagesetter, modalvariant, variantchanger) => {
     if (messagesetter !== undefined) {
         messagesetter(modalmessage)
     }
@@ -7,9 +7,6 @@ export const showmodalwithmessageandvariant = (showmodalfunction, modalmessage, 
         variantchanger(modalvariant)
     }
 
-    if (messageref !== undefined) {
-        messageref.current = modalmessage
-    }
     showmodalfunction(true)
 }
 

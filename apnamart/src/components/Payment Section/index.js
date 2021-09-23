@@ -3,7 +3,7 @@ import { RadioGroup, FormControlLabel, FormControl } from '@mui/material'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
-import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, OnlineContext } from '../../utils'
+import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, OnlineContext, userisofflinemessage } from '../../utils'
 import { useState, useContext } from "react";
 import {axiosinstance} from '../../config'
 import {NotificationModal} from '../Notification Modal'
@@ -135,7 +135,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
 
     const cashmode = () => {
         if (isonline !== true) {
-            displaymodal("You are not online. Please check your Internet connection and try again later", "danger")
+            displaymodal(userisofflinemessage, "danger")
             return
         }
         axiosinstance.post("/user/order/cash", {items:Cart, cartprice, DeliveryAddress}).then(({data}) => {

@@ -1,5 +1,5 @@
 import { profile } from "../actionTypes"
-import { authsetter } from './auth'
+import {  logoutsetter } from './auth'
 import {axiosinstance} from '../config'
 import {storeordercount} from './order'
 
@@ -15,7 +15,7 @@ export const getuserprofile = (Auth) => (dispatch) => {
             dispatch(storeordercount(ordercount))
             return
         }
-        dispatch(authsetter(" "))
+        dispatch(logoutsetter())
     }).catch((error)=> {
         console.log(error)
     } )

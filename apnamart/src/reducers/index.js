@@ -12,7 +12,7 @@ import Userorderdata from "./userorders";
 const persistConfig = {
     key:'root',
     storage,
-    whitelist:['CartPrice','Cart', 'Auth']
+    whitelist:['CartPrice', 'Cart', 'Auth']
 }
 
 const rootReducer = combineReducers({

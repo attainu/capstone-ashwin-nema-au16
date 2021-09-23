@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { authsetter, setprofile } from '../../actions'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
-import { mobilenumber_validator, showmodalwithmessageandvariant, OnlineContext } from '../../utils'
+import { mobilenumber_validator, showmodalwithmessageandvariant, OnlineContext, userisofflinemessage } from '../../utils'
 import {NotificationModal} from '../../components'
 
 export const Signup = ({ history }) => {
@@ -54,7 +54,7 @@ export const Signup = ({ history }) => {
     const submithandler = (e) => {
         e.preventDefault()
         if (isonline !== true) {
-            showmodalwithmessageandvariant(showmodal, "You are not online. Please check your internet connection", changeerrormessage)
+            showmodalwithmessageandvariant(showmodal, userisofflinemessage, changeerrormessage)
             return
         }
 

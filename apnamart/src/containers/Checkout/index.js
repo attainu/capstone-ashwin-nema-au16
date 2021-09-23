@@ -6,11 +6,11 @@ import { Accordion } from 'react-bootstrap'
 import { PATHS } from '../../config'
 import { Ordersummary, MapAccordion, PaymentSection } from '../../components'
 import { SetAddressContext } from '../../utils'
+import { withAuthentication } from '../../Higher Order Components'
 
 const CheckoutPage = ({ history }) => {
     const dispatch = useDispatch()
-    const {Useraddress, Profile, Productsdata:{products}} = useSelector(state => state)
-    const auth = useSelector(state => state.Auth)
+    const { Useraddress, Profile } = useSelector(state => state)
     const { Location } = Profile
     const [userlocationaddress, setcurrentaddress] = useState([])
     const [isaddressset, setaddress] = useState(false)
@@ -26,47 +26,41 @@ const CheckoutPage = ({ history }) => {
             setcurrentaddress(Useraddress)
             setaddress(true)
         }
-        if (auth === " ") {
-            history.push(PATHS.HOME)
-        }
-    }, [Useraddress, Profile, isaddressset, dispatch, Location, auth, history])
+
+    }, [Useraddress, Profile, isaddressset, dispatch, Location])
 
     return (
         <>
-            {Location !== undefined && count > 0 && Object.keys(products).length > 0 &&
-                <>
-                    <SetAddressContext.Provider value={setaddress} >
-                        <MapAccordion userlocationaddress={userlocationaddress} />
-                    </SetAddressContext.Provider>
+            <SetAddressContext.Provider value={setaddress} >
+                <MapAccordion userlocationaddress={userlocationaddress} />
+            </SetAddressContext.Provider>
 
-                    <div className="checkoutaccordion mt-5">
-                        <Accordion className="w-75" defaultActiveKey="0">
-                            <Accordion.Item eventKey="1">
-                                <Accordion.Header>
-                                    <div>
-                                        <div>
-                                            Order Summary
-                                        </div>
-                                    </div>
-                                </Accordion.Header>
-                                <Accordion.Body>
-                                    <div className="space-between">
-                                        <div><strong>Items({count})</strong> </div>
-                                        <div><strong>Price</strong> </div>
-                                    </div>
+            <div className="checkoutaccordion mt-5">
+                <Accordion className="w-75" defaultActiveKey="0">
+                    <Accordion.Item eventKey="1">
+                        <Accordion.Header>
+                            <div>
+                                <div>
+                                    Order Summary
+                                </div>
+                            </div>
+                        </Accordion.Header>
+                        <Accordion.Body>
+                            <div className="space-between">
+                                <div><strong>Items({count})</strong> </div>
+                                <div><strong>Price</strong> </div>
+                            </div>
 
-                                    <Ordersummary ordersummaryclass="space-between" />
-                                </Accordion.Body>
-                            </Accordion.Item>
+                            <Ordersummary ordersummaryclass="space-between" />
+                        </Accordion.Body>
+                    </Accordion.Item>
 
-                        </Accordion>
-                    </div>
+                </Accordion>
+            </div>
 
-                    <PaymentSection history={history} DeliveryAddress={`${userlocationaddress.join(", ")}`} PATHS={PATHS} />
-                </>
-            }
+            <PaymentSection history={history} DeliveryAddress={`${userlocationaddress.join(", ")}`} PATHS={PATHS} />
         </>
     )
 }
 
-export default CheckoutPage
+export default withAuthentication(CheckoutPage)

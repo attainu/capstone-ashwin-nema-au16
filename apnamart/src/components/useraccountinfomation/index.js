@@ -1,7 +1,7 @@
 import './index.css'
 import { Modal, Alert } from 'react-bootstrap'
-import { useState } from 'react'
-import { mobilenumber_validator,  modalstatesetter } from '../../utils'
+import { useState, useContext } from 'react'
+import { mobilenumber_validator,  modalstatesetter, OnlineContext, userisofflinemessage } from '../../utils'
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { axiosinstance } from '../../config'
 import * as yup from 'yup'
@@ -13,6 +13,7 @@ import { NotificationModal } from '../Notification Modal'
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
+    const isonline = useContext(OnlineContext)
 
     const userprofile = useSelector(state => state.Profile)
     const name = userprofile.Name
@@ -64,6 +65,10 @@ export const UserAccountInformation = () => {
 
     const saveuserdata = (e) => {
         e.preventDefault()
+        if (isonline !== true) {
+            modalstatesetter(userisofflinemessage, "danger",notificationmodaldisplayconfiguration )
+            return
+        }
 
         if (mobilenumber_validator(Number(Mobilenumber)) !== true) {
             modalstatesetter("Please provide a valid Indian mobile number", "danger",notificationmodaldisplayconfiguration )

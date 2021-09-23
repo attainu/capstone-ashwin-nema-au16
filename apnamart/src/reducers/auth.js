@@ -1,15 +1,20 @@
-import {setauth} from './../actionTypes'
+import { setuserloginauth, logoutuser } from './../actionTypes'
 
-const initialstate = " "
+const initialstate = { authtoken: " ", loginstate: false }
 
 const Auth = (state, action) => {
     state = state || initialstate
 
-    if (action.type === setauth) {
-
-        return action.payload
+    switch (action.type) {
+        case setuserloginauth:
+            state = { authtoken: action.payload, loginstate: true }
+            return state
+        case logoutuser:
+            state = { authtoken: action.payload, loginstate: false }
+            return state
+        default:
+            return state
     }
-    return state
 }
 
 export default Auth

@@ -1,14 +1,13 @@
-import { setprofile, authsetter,  getuserprofile } from '../actions'
+import { setprofile, logoutsetter } from '../actions'
 import {setaddress, userorderdata} from '../actionTypes'
-import { axiosinstance, PATHS } from '../config'
-
+import { axiosinstance } from '../config'
 
 export const logouterros = {
     "Token is not provided": true, "Please provide a valid token": true
 }
 
 const resetafterlogout = (dispatch) => {
-    dispatch(authsetter(" "))
+    dispatch(logoutsetter())
     dispatch(setprofile({}))
     dispatch({type:userorderdata, payload:[]})
     dispatch({ type: setaddress, payload: [] })
@@ -39,15 +38,4 @@ export const deleleteuseraccount = (dispatch, modaldisplayfunction) => {
 }
 
 
-
-export const validateuserpageaccess = (dispatch, history, profile, auth) => {
-    const validprofile = Object.keys(profile).length > 0
-    if (!validprofile && auth !== " ") {
-        dispatch(getuserprofile(auth))
-        return false
-    } 
-    if (!validprofile) {
-        history.push(PATHS.HOME)
-    }
-    return validprofile
-}
+export const userisofflinemessage = "You are not online. Please check your Internet Connection and try again later"
