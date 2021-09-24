@@ -1,41 +1,39 @@
-import { useState } from "react";
-import { Card } from "react-bootstrap";
-import { useTransition, animated } from 'react-spring'
 import React from "react";
 import LocationMap from '../User location map'
 import Button from '@mui/material/Button'
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import {StyledAccordionSummary} from '../Accordion Summary'
 
 const MapAccordion = ({ userlocationaddress }) => {
-    const [isvisible, changevisibility] = useState(false)
-    const transition = useTransition(isvisible, {
-        from: { height: "0vh" },
-        enter: { minHeight: "65vh" },
-        leave: { height: "0vh", display: null }
-    })
-
     return (
         <div className="checkoutaccordion mt-5">
-            <Card>
-                <Card.Header>
-                    <div className="space-between checkoutaccordionheader">
-                        <div className="me-3 w-100">
+            <Accordion >
+                <StyledAccordionSummary
+                    aria-controls="panel1a-content"
+                    className="checkoutaccordionheader"
+                >
+                    <div className="space-between w-100 align-items-center">
+                        <div>
                             <h6 >Current delivery address</h6>
                             <div>
                                 {
                                     userlocationaddress.join(", ")
                                 }
                             </div>
+
                         </div>
-                        <div>
-                            <Button className="bg-warning" onClick={() => changevisibility(currenvisbility => !currenvisbility)} variant="contained" color="primary">
-                                Change address
-                            </Button>
-                        </div>
+                        <div > <Button className="bg-warning" variant="contained" color="primary">
+                            Change address
+                        </Button></div>
                     </div>
-                </Card.Header>
-                {transition((style, item) =>
-                    item ? <animated.div style={style} className="checkoutmapcontainer"> {isvisible === true && <LocationMap />} </animated.div> : <></>)}
-            </Card>
+
+                </StyledAccordionSummary>
+                <AccordionDetails>
+                    <LocationMap />
+
+                </AccordionDetails>
+            </Accordion>
 
         </div>
     )

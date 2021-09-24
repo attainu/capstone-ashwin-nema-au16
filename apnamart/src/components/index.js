@@ -10,3 +10,4 @@ export {NotificationModal, CustomModalNotificationComponent} from './Modal Compo
 export {default as OrderHistory} from './Order History'
 export {OrderDetailsStepper} from './Order Details Stepper'
 export {DetailsTable} from './Table Component'
+export {StyledAccordionSummary} from './Accordion Summary'

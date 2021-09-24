@@ -10,7 +10,8 @@ const PATHS = {
     CHECKOUT:'/checkout',
     ORDERHISTORY:'/orderhistory',
     ORDERDETAILS:'/orderdetails/:orderid',
-    NOTFOUND:'/*'
+    FAQ:"/FAQ",
+    NOTFOUND:'/*',
 }
 
 export default PATHS
