@@ -4,7 +4,6 @@ import { useEffect, useState,  useContext } from 'react'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import { Cartitem, Ordersummary } from '../../components';
-import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { NotificationModal, CustomModalNotificationComponent, EmptyCart } from '../../components'

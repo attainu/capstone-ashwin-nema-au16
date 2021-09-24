@@ -1,4 +1,6 @@
 .footer{
   width: 100vw !important;
-  height: 10vh;
+}
+.footer-content {
+  width: 98vw;
 }

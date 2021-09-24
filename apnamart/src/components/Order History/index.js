@@ -48,7 +48,7 @@ const OrderHistory = () => {
             {
                 count === 0 ? <> <h3 className="text-center">You have not placed any order yet</h3> </> :
                     <>
-                        <h3 className="text-center mb-3">My orders</h3>
+                        <h3 className="text-center mt-5 mb-3">My orders</h3>
                         <SimpleBar style={{ height: "60vh" }}>
 
                             {

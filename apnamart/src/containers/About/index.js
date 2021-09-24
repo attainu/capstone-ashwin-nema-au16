@@ -13,11 +13,11 @@ export const AboutMyself = () => {
                 <div>
                     <Alert className="w-75" variant="warning"> 
                     <p className="mt-3"><strong>Hello</strong></p>
-                    <p className="mt-3"><strong>My name is Ashwin Nema. I am currently a trainee at AttainU</strong></p>
+                    <p className="mt-3"><strong>My name is Ashwin Nema. I am currently a trainee at AttainU. I made this project using React and Node.js,</strong></p>
                     <p className="mt-3">
-                        <span className="">
-                            <a href="https://twitter.com/ashwin_nema" target="_blank"><TwitterIcon  color="primary" ></TwitterIcon>  </a>
-                            <a href="https://www.linkedin.com/in/ashwin-nema-4223671a5/" target="_blank"><LinkedInIcon  color="primary" ></LinkedInIcon>  </a>
+                        <span >
+                            <a rel="noreferrer" href="https://twitter.com/ashwin_nema" target="_blank"><TwitterIcon  color="primary" ></TwitterIcon>  </a>
+                            <a rel="noreferrer" href="https://www.linkedin.com/in/ashwin-nema-4223671a5/" target="_blank"><LinkedInIcon  color="primary" ></LinkedInIcon>  </a>
                         </span>
                     </p>
                     </Alert>
@@ -38,7 +38,7 @@ export const AboutMyself = () => {
                     </Alert>
                     <Alert variant="info">
                     <div>Javascript</div>
-                    <div>Node js</div>
+                    <div>Node.js</div>
                     </Alert>
                     <Alert variant="info">
                     <div>React</div>
