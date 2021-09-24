@@ -11,6 +11,7 @@ const PATHS = {
     ORDERHISTORY:'/orderhistory',
     ORDERDETAILS:'/orderdetails/:orderid',
     FAQ:"/FAQ",
+    ABOUT:"/about",
     NOTFOUND:'/*',
 }
 

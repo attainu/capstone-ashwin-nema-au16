@@ -7,7 +7,7 @@ import { Cartitem, Ordersummary } from '../../components';
 import { Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
-import { NotificationModal, CustomModalNotificationComponent } from '../../components'
+import { NotificationModal, CustomModalNotificationComponent, EmptyCart } from '../../components'
 import Button from '@mui/material/Button'
 import { ProductsdataloadedContext } from '../../utils'
 
@@ -45,18 +45,7 @@ const Usercart = ({ nomargin }) => {
                         <div className="usercartsection "></div>
                         <div className={`profilecontentdisplaycolor usercartsectionitems ps-3 me-3 py-3 pe-3 ${nomargin === undefined && "mt-5"}`}>
                             <h5>My Cart{count > 0 ? <>({count}) </> : <></>}</h5>
-                            {count === 0 && <>
-                                <div className="d-flex justify-content-center">
-                                    <div className="d-flex flex-column">
-                                        <div className="emptycartimagecontainer">
-                                            <img className="emptycartimage" src="https://res.cloudinary.com/ash006/image/upload/v1629823207/7077465-removebg-preview_nsotp8.png" alt="empty cart" />
-                                        </div>
-                                        <Alert variant="danger">
-                                            <p>Your car is empty. Please add something to the cart</p>
-                                        </Alert>
-                                    </div>
-                                </div>
-                            </>}
+                            {count === 0 && <EmptyCart />}
 
                             {count > 0 && <>
                                 <SimpleBar style={{ height: "60vh" }}>

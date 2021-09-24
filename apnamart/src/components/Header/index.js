@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../config';
 import { useRef } from 'react';
-import useMeasure from 'react-use-measure'
 import { Logoutuser, ProductsdataloadedContext } from '../../utils'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
@@ -16,17 +15,12 @@ import { useOnlineconnectioncheck } from '../../Hooks'
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Alert } from 'react-bootstrap';
 
-
 const Header = ({ children, isonline }) => {
     const dispatch = useDispatch()
     const [count, changecount] = useState(0)
-    const [ref, bounds] = useMeasure()
-    const [childrenmargin, changemargin] = useState("80px")
     const { Auth, Profile, Productsdata: { products } } = useSelector(state => state)
     const [isuseronline, isproductsdatafetched] = useOnlineconnectioncheck(dispatch, isonline, Auth, Profile, products)
-    useEffect(() => {
-        changemargin(`${bounds.height}px`)
-    }, [bounds])
+
 
     const cart = useSelector(state => state.Cart)
 
@@ -55,7 +49,7 @@ const Header = ({ children, isonline }) => {
         <>
 
             <div className="mainwrapper">
-                <div ref={ref} className="header space-between bg-warning pb-2 w-100">
+                <div  className="header space-between bg-warning pb-2 w-100">
                     <div className="logo">
                         <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
                     </div>
@@ -108,7 +102,7 @@ const Header = ({ children, isonline }) => {
                     </div>
                 </div>
 
-                <div style={{ marginTop: childrenmargin }} className="children">
+                <div className="children">
                     {isuseronline === true ?
                         <ProductsdataloadedContext.Provider value={isproductsdatafetched} >
                             <>

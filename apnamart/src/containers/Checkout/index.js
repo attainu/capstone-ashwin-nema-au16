@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { getuseraddress } from '../../actions'
 import { Accordion } from 'react-bootstrap'
 import { PATHS } from '../../config'
-import { Ordersummary, MapAccordion, PaymentSection } from '../../components'
+import { Ordersummary, MapAccordion, PaymentSection, EmptyCart } from '../../components'
 import { SetAddressContext } from '../../utils'
 import { withAuthentication } from '../../Higher Order Components'
 
@@ -31,6 +31,9 @@ const CheckoutPage = ({ history }) => {
 
     return (
         <>
+        {
+            count > 0 ?
+            <>
             <SetAddressContext.Provider value={setaddress} >
                 <MapAccordion userlocationaddress={userlocationaddress} />
             </SetAddressContext.Provider>
@@ -59,6 +62,9 @@ const CheckoutPage = ({ history }) => {
             </div>
 
             <PaymentSection history={history} DeliveryAddress={`${userlocationaddress.join(", ")}`} PATHS={PATHS} />
+        </> :
+        <EmptyCart /> 
+        }
         </>
     )
 }
