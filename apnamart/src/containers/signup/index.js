@@ -3,11 +3,11 @@ import { useRef, useState, useContext } from 'react'
 import * as yup from 'yup'
 import './index.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { authsetter, setprofile } from '../../actions'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
-import { mobilenumber_validator, showmodalwithmessageandvariant, OnlineContext, userisofflinemessage } from '../../utils'
+import { mobilenumber_validator, showmodalwithmessageandvariant, OnlineContext, userisofflinemessage, saveuserdetailsinclientandredirect } from '../../utils'
 import {NotificationModal} from '../../components'
+import { Link } from 'react-router-dom'
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
@@ -72,14 +72,10 @@ export const Signup = ({ history }) => {
         schema.validate({ Name, Password, Email }, { abortEarly: false }).then(async userdata => {
             const response = await axiosinstance.post('/user/signup', { ...userdata, Mobilenumber: mobilenumber.current })
             if (response.data.error !== "") {
-                dispatch(authsetter(" "))
                 showmodalwithmessageandvariant(showmodal, response.data.error, changeerrormessage)
                 return
             }
-            const { Name, Email, Location, token, Mobilenumber } = response.data
-            dispatch(setprofile({ Name, Email, Location, Mobilenumber }))
-            dispatch(authsetter(token))
-            history.push(PATHS.HOME)
+            saveuserdetailsinclientandredirect(response.data, dispatch, history)
             return
         }).catch(function (err) {
             if (err.errors !== undefined) {
@@ -122,6 +118,9 @@ export const Signup = ({ history }) => {
                                 <button type="submit" className='btn btn-info text-center rounded-pill container-fluid signupbutton'>
                                     Submit
                                 </button>
+                            </div>
+                            <div className="d-flex justify-content-center smalltext">
+                                <Link className="text-decoration-none" to={PATHS.LOGIN}>Already have an account? Click here to login</Link>
                             </div>
                         </form>
                     </div>

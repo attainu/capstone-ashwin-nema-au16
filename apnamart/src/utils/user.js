@@ -1,6 +1,6 @@
-import { setprofile, logoutsetter } from '../actions'
-import {setaddress, userorderdata} from '../actionTypes'
-import { axiosinstance } from '../config'
+import { setprofile, logoutsetter, authsetter, storeordercount } from '../actions'
+import { setaddress, userorderdata } from '../actionTypes'
+import {  PATHS } from '../config'
 
 export const logouterros = {
     "Token is not provided": true, "Please provide a valid token": true
@@ -9,32 +9,32 @@ export const logouterros = {
 const resetafterlogout = (dispatch) => {
     dispatch(logoutsetter())
     dispatch(setprofile({}))
-    dispatch({type:userorderdata, payload:[]})
+    dispatch({ type: userorderdata, payload: [] })
     dispatch({ type: setaddress, payload: [] })
 }
 
-export const gotohome = (dispatch,time=2000) => {
+export const gotohome = (dispatch, time = 2000) => {
     setTimeout(() => {
         resetafterlogout(dispatch)
-    }, time )
+    }, time)
 }
 
 export const Logoutuser = (dispatch) => {
     resetafterlogout(dispatch)
 }
 
-export const deleleteuseraccount = (dispatch, modaldisplayfunction) => {
-    axiosinstance.delete("/user").then(({ data }) => {
-        const {  error } = data
-        if (error !== "" && error !== undefined) {
-            modaldisplayfunction(true)
-            gotohome(dispatch)
-            return
-        }
-        resetafterlogout(dispatch)
-    }).catch(() => {
-        console.log("Error occurred while deleting user account")
-    })
+export const saveuserdetailsinclientandredirect = (data,dispatch, history) => {
+    const { Name, Email, Mobilenumber, Location, ordercount, token } = data
+    dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
+    if (token !== undefined) {
+        dispatch(authsetter(token))
+    }
+    if (ordercount !== undefined) {
+        dispatch(storeordercount(ordercount))
+    }
+    if (history !== undefined) {
+        history.push(PATHS.HOME)
+    }
 }
 
 

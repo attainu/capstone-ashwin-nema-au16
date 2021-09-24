@@ -6,7 +6,7 @@ import { Alert } from "react-bootstrap";
 import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, OnlineContext, userisofflinemessage } from '../../utils'
 import { useState, useContext } from "react";
 import {axiosinstance} from '../../config'
-import {NotificationModal} from '../Notification Modal'
+import {NotificationModal} from '../Modal Components'
 import {authsetter, storeordercount} from '../../actions'
 
 export default function PaymentSection({history, DeliveryAddress, PATHS}) {

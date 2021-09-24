@@ -4,10 +4,18 @@ const user_router = express.Router()
 const opencage = require('opencage-api-client');
 user_router.use(express.urlencoded({ extended: true }))
 const bcrypt = require('bcrypt')
+
 require('dotenv').config()
+const { REACT_APP_GOOGLE_CLIENT_ID } = process.env
+
+const { OAuth2Client } = require('google-auth-library')
+const client = new OAuth2Client(REACT_APP_GOOGLE_CLIENT_ID)
+
+
+
 const { validate_email, validate_mobile_number, validate_password, verify_mobile_number, verify_email } = require('../middlewares/verification')
-const {authenticatetoken, accesstokengenerator} = require('../middlewares/token');
-const { getuserordercount} = require('../middlewares/orders')
+const { authenticatetoken, accesstokengenerator } = require('../middlewares/token');
+const { getuserordercount } = require('../middlewares/orders')
 
 user_router.post("/signup", async (req, res) => {
     const verifyemail = await verify_email(req.body.Email)
@@ -23,7 +31,7 @@ user_router.post("/signup", async (req, res) => {
             error: verifymobilenumber
         })
     }
-    if (typeof req.body.Password !== "string" || req.body.Password.length === 0) return res.json({error:"Passowrd provided is not valid"})
+    if (typeof req.body.Password !== "string" || req.body.Password.length === 0) return res.json({ error: "Passowrd provided is not valid" })
 
     try {
         const salt = await bcrypt.genSalt(10)
@@ -32,8 +40,8 @@ user_router.post("/signup", async (req, res) => {
         const newuser = new UserModel(req.body)
         const finaluser = await newuser.save()
         const token = accesstokengenerator(finaluser._id)
-        const {Name, Email, Mobilenumber, Location} = finaluser
-        return res.json({ error: "", token,Name, Email, Mobilenumber, Location })
+        const { Name, Email, Mobilenumber, Location } = finaluser
+        return res.json({ error: "", token, Name, Email, Mobilenumber, Location })
 
     } catch (error) {
 
@@ -43,25 +51,45 @@ user_router.post("/signup", async (req, res) => {
 
 user_router.post("/login", async (req, res) => {
     try {
-        const {Email, Password} = req.body
+        const { Email, Password } = req.body
         const user = await UserModel.findOne({ Email })
         const isMatching = await bcrypt.compare(Password, user.Password)
         if (user != null && isMatching) {
             const token = accesstokengenerator(user._id)
-            const {Name, Email, Mobilenumber, Location} = user
+            const { Name, Email, Mobilenumber, Location } = user
             const ordercount = await getuserordercount(user._id)
-            return res.json({ error: "", token, Name, Email, Mobilenumber, Location, ordercount })
+            return res.json({ token, Name, Email, Mobilenumber, Location, ordercount })
         }
-
     } catch (error) {
-        console.log(error)
-        return res.json({ error: "Please SignUp to continue" })
+        return res.status(404).send("No such user found")
     }
 
     return res.json({ error: "Password provided was not correct" })
 })
 
-user_router.post("/profile", authenticatetoken,async (req, res) => {
+user_router.post("/login/google", async (req, res) => {
+    try {
+        const { token } = req.body
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: REACT_APP_GOOGLE_CLIENT_ID
+        });
+        const {  email } = ticket.getPayload()
+        const user = await UserModel.findOne({ Email:email })
+        if (user != null ) {
+            const token = accesstokengenerator(user._id)
+            const { Name, Email, Mobilenumber, Location } = user
+            const ordercount = await getuserordercount(user._id)
+            return res.json({  token, Name, Email, Mobilenumber, Location, ordercount })
+        }
+        
+    } catch(error) {
+        console.log(error)
+    }
+    res.status(500).send("Sorry something went wrong")
+})
+
+user_router.post("/profile", authenticatetoken, async (req, res) => {
     try {
 
         const user = await UserModel.findById(req.verifieduser)
@@ -69,12 +97,12 @@ user_router.post("/profile", authenticatetoken,async (req, res) => {
         const { Name, Mobilenumber, Email, Location } = user
         return res.json({ Name, Mobilenumber, Email, error: "", Location, ordercount })
     } catch {
-        return res.json({ error: "User has not loggin in" })
+        return res.json({ error: "User is not loggin in" })
     }
 })
 
-user_router.put("/profile",authenticatetoken ,async (req, res) => {
-    const {Password, NewPassword, Name, Email, Mobilenumber} = req.body
+user_router.put("/profile", authenticatetoken, async (req, res) => {
+    const { Password, NewPassword, Name, Email, Mobilenumber } = req.body
     try {
         if (Object.keys(req.body).length !== 5 || Password === undefined || NewPassword === undefined) {
             return res.json({ error: "Inputs provided are not of valid format" })
@@ -95,7 +123,7 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
 
         let editeduser = {}
 
-        if (typeof Password === "string" && Password.trim() !== "" && typeof NewPassword === "string" && NewPassword.trim() !== ""  ) {
+        if (typeof Password === "string" && Password.trim() !== "" && typeof NewPassword === "string" && NewPassword.trim() !== "") {
             const oldpassword = await validate_password(Password, req.verifieduser)
             if (oldpassword === true) {
                 const salt = await bcrypt.genSalt(10)
@@ -107,7 +135,7 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
         delete req.body.NewPassword
         delete req.body.Password
         editeduser = { ...editeduser, ...req.body }
-        await UserModel.updateOne({ _id:req.verifieduser }, { $set: editeduser })
+        await UserModel.updateOne({ _id: req.verifieduser }, { $set: editeduser })
         return res.json({ error: "" })
 
     } catch (error) {
@@ -116,7 +144,7 @@ user_router.put("/profile",authenticatetoken ,async (req, res) => {
     }
 })
 
-user_router.post("/location", authenticatetoken,async (req, res) => {
+user_router.post("/location", authenticatetoken, async (req, res) => {
     try {
         const location = await opencage.geocode({ q: req.body.location })
         return res.json({ useraddress: location.results[0].components, error: "" })
@@ -127,7 +155,7 @@ user_router.post("/location", authenticatetoken,async (req, res) => {
     }
 })
 
-user_router.put("/location", authenticatetoken,async (req, res) => {
+user_router.put("/location", authenticatetoken, async (req, res) => {
 
     try {
         let user = await UserModel.findById(req.verifieduser)
@@ -144,7 +172,7 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
         return res.json({ error: "" })
     }
 
-    catch(error) {
+    catch (error) {
         console.log("Error occurred while saving new user location")
         return res.json({ error: "Sorry your location could not be saved as some error occurred. Please try again later" })
     }
@@ -153,7 +181,7 @@ user_router.put("/location", authenticatetoken,async (req, res) => {
 user_router.delete("/", authenticatetoken, async (req, res) => {
     try {
         await UserModel.findByIdAndDelete(req.verifieduser)
-        res.json({success:true})
+        res.json({ success: true })
     } catch {
         res.status(400).send("Sorry your account could not be deleted")
     }

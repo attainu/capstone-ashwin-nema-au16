@@ -5,7 +5,7 @@ import { PATHS } from '../../config'
 import { Link } from 'react-router-dom'
 import { deliverydate, showmodalwithmessageandvariant, makesubpath } from '../../utils'
 import { useState } from 'react'
-import { NotificationModal } from '../Notification Modal'
+import { NotificationModal } from '../Modal Components'
 import Button from '@mui/material/Button'
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';

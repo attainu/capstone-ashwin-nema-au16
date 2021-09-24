@@ -16,6 +16,7 @@ import { useOnlineconnectioncheck } from '../../Hooks'
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Alert } from 'react-bootstrap';
 
+
 const Header = ({ children, isonline }) => {
     const dispatch = useDispatch()
     const [count, changecount] = useState(0)
@@ -26,7 +27,6 @@ const Header = ({ children, isonline }) => {
     useEffect(() => {
         changemargin(`${bounds.height}px`)
     }, [bounds])
-
 
     const cart = useSelector(state => state.Cart)
 

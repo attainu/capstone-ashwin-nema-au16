@@ -1,7 +1,8 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { UserAccountInformation, LocationMap, NotificationModal, OrderHistory } from '../../components'
+import {axiosinstance} from '../../config'
+import { UserAccountInformation, LocationMap, NotificationModal, OrderHistory, CustomModalNotificationComponent } from '../../components'
 import Usercart from '../Cart'
 import { Alert } from 'react-bootstrap'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -10,7 +11,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Logoutuser, deleleteuseraccount } from '../../utils'
+import { Logoutuser, showmodalwithmessageandvariant, gotohome } from '../../utils'
 import { withAuthentication } from '../../Higher Order Components'
 
 const Profile = () => {
@@ -18,6 +19,8 @@ const Profile = () => {
     const { Profile } = useSelector(state => state)
     const { Name } = Profile
     const [modal, showmodal] = useState(false)
+    const [modalmessage, changemodalmessage] = useState("")
+
     useEffect(() => {
         document.body.style.backgroundColor = "#f1f3f6"
         return () => {
@@ -30,6 +33,21 @@ const Profile = () => {
             document.body.style.backgroundColor = "#f1f3f6"
         }
     }, [selectcomponenttodisplay])
+
+    const deleleteuseraccount = () => {
+        axiosinstance.delete("/user").then(({ data }) => {
+            const { error } = data
+            if (error !== "" && error !== undefined) {
+                showmodalwithmessageandvariant(showmodal, "Sorry you have been logged out. Please sign in to delete your account", changemodalmessage)
+                gotohome(dispatch, 2500)
+                return
+            }
+            showmodalwithmessageandvariant(showmodal,  "Your account is now deleted", changemodalmessage)
+            gotohome(dispatch,2500)
+        }).catch(() => {
+            showmodalwithmessageandvariant(showmodal, "Sorry something went wrong your account could not be deleted", changemodalmessage)
+        })
+    }
 
     return (
 
@@ -67,7 +85,7 @@ const Profile = () => {
                         Logout<PowerSettingsNewIcon />
                     </Alert>
 
-                    <Alert onClick={() => deleleteuseraccount(dispatch, showmodal)} className="mt-5 p-2 d-flex cursorpointer justify-content-center" variant="danger">
+                    <Alert onClick={() => deleleteuseraccount(dispatch, showmodal, changemodalmessage)} className="mt-5 p-2 d-flex cursorpointer justify-content-center" variant="danger">
                         Delete Account <DeleteIcon />
                     </Alert>
 
@@ -98,7 +116,12 @@ const Profile = () => {
                 </div>
 
             </div>
-            <NotificationModal show={modal} centered={true} currentmodalmessage="Sorry you have been logged out. Please sign in to delete your account" onHide={showmodal} alertvariant="danger" successmessage="" />
+            {
+                modalmessage === "Your account is now deleted" ? 
+                <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="warning" additionalcustomcomponent={true} Customcomponent={<CustomModalNotificationComponent message={modalmessage} />} />:
+                <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" /> 
+            }
+            
         </>
     )
 }

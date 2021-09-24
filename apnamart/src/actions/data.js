@@ -6,9 +6,10 @@ const { products_data, subcategory_data, category_data} = data
 
 export const getproductsdata = (datafetchedfunction) => (dispatch) => {
     axiosinstance.post("/products").then(resp => {
-        const productsdata = convertarraydatatoobjectdata(resp.data.products, PATHS.PRODUCT)
-        const subcategorydata = convertarraydatatoobjectdata(resp.data.subcategories, PATHS.SUBCATEGORY)
-        const categorydata = convertarraydatatoobjectdata(resp.data.categories, PATHS.CATEGORY)
+        const {products, subcategories, categories} = resp.data
+        const productsdata = convertarraydatatoobjectdata(products, PATHS.PRODUCT)
+        const subcategorydata = convertarraydatatoobjectdata(subcategories, PATHS.SUBCATEGORY)
+        const categorydata = convertarraydatatoobjectdata(categories, PATHS.CATEGORY)
 
         dispatch({ type: products_data, payload: productsdata })
         dispatch({ type: subcategory_data, payload: subcategorydata })

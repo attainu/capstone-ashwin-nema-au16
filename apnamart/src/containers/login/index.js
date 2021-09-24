@@ -1,19 +1,21 @@
 import './index.css'
 import { useState, useContext } from 'react'
 import { PATHS, axiosinstance } from '../../config'
-import { authsetter, setprofile,storeordercount, logoutsetter } from '../../actions'
 import { useDispatch } from 'react-redux'
 import * as yup from 'yup'
-import { showmodalwithmessageandvariant, OnlineContext, userisofflinemessage } from '../../utils'
-import {NotificationModal} from '../../components'
-import {withoutAuthentication} from '../../Higher Order Components'
-export const Login = ({ history }) => {
+import { showmodalwithmessageandvariant, OnlineContext, userisofflinemessage, saveuserdetailsinclientandredirect } from '../../utils'
+import { CustomModalNotificationComponent, NotificationModal } from '../../components'
+import { withoutAuthentication } from '../../Higher Order Components'
+import { GoogleLogin } from 'react-google-login';
+import { Link } from 'react-router-dom'
+
+export const Login = ({ history, responseGoogle }) => {
     const dispatch = useDispatch()
     const isonline = useContext(OnlineContext)
     const [Email, Changeemail] = useState("")
     const [Password, Changepassword] = useState("")
     const [errormessage, changeerrormessage] = useState("")
-
+    const { REACT_APP_GOOGLE_CLIENT_ID } = process.env
     const [modal, showmodal] = useState(false)
 
     const schema = yup.object().shape({
@@ -28,21 +30,15 @@ export const Login = ({ history }) => {
             showmodalwithmessageandvariant(showmodal, userisofflinemessage, changeerrormessage)
             return
         }
-  
+
         schema.validate({ Password, Email }, { abortEarly: false }).then(async userdata => {
             const response = await axiosinstance.post('/user/login', { ...userdata })
-
-            if (response.data.error !== "") {
-                dispatch(logoutsetter())
-                showmodalwithmessageandvariant(showmodal, response.data.error, changeerrormessage)
+            const {error} = response.data
+            if (error !== undefined) {
+                showmodalwithmessageandvariant(showmodal,error, changeerrormessage)
                 return
             }
-
-            const { Name, Email, Mobilenumber, Location, ordercount, token } = response.data
-            dispatch(authsetter(token))
-            dispatch(setprofile({ Name, Email, Mobilenumber, Location }))
-            dispatch(storeordercount(ordercount))
-            history.push(PATHS.HOME)
+            saveuserdetailsinclientandredirect(response.data, dispatch, history)
             return
 
         }).catch(function (err) {
@@ -50,10 +46,21 @@ export const Login = ({ history }) => {
                 showmodalwithmessageandvariant(showmodal, err.errors[0], changeerrormessage)
                 return
             }
-            showmodalwithmessageandvariant(showmodal,"Sorry something went wrong" , changeerrormessage)
+            showmodalwithmessageandvariant(showmodal, "You don't have an Apnamart account", changeerrormessage)
         })
     }
 
+    responseGoogle = (response) => {
+        const { error } = response
+        if (error !== undefined) {
+            return
+        }
+        axiosinstance.post("/user/login/google", { token: response.tokenId }).then(({ data }) => {
+            saveuserdetailsinclientandredirect(data, dispatch, history)
+        }).catch(() => {
+            showmodalwithmessageandvariant(showmodal, "You don't have an Apnamart account", changeerrormessage)
+        })
+    }
     return (
         <>
 
@@ -76,12 +83,33 @@ export const Login = ({ history }) => {
                                 </button>
                             </div>
                         </form>
+
+                        <div className="lead d-flex justify-content-center smalltext mt-2">
+                            OR
+                        </div>
+                        <div className="d-flex justify-content-center  mt-3">
+                            <GoogleLogin
+                                clientId={REACT_APP_GOOGLE_CLIENT_ID}
+                                buttonText="Log in with Google"
+                                onSuccess={responseGoogle}
+                                onFailure={responseGoogle}
+                                cookiePolicy={'single_host_origin'}
+                            />
+
+                        </div>
+
+                        <div className="d-flex justify-content-center mt-3 smalltext">
+                            <Link className="text-decoration-none" to={PATHS.SIGNUP}>New to ApnaMart ? Click here to Sign Up</Link>
+                        </div>
                     </div>
+
                 </div>
                 <div className="col-2"></div>
             </div>
 
-            <NotificationModal show={modal} centered={true} currentmodalmessage={errormessage} onHide={showmodal} alertvariant="danger" successmessage="" />
+            {errormessage !== "You don't have an Apnamart account" ? <NotificationModal show={modal} centered={true} currentmodalmessage={errormessage} onHide={showmodal} alertvariant="danger" successmessage="" /> :
+                <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="warning" additionalcustomcomponent={true} Customcomponent={<CustomModalNotificationComponent message="You don't have an Apnamart account." linkmessage="Click Here to " link={PATHS.SIGNUP} linktext="Sign Up" />} />
+            }
         </>
     )
 }

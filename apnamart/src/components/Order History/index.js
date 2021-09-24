@@ -6,7 +6,7 @@ import Pagination from '@mui/material/Pagination';
 import { Alert } from 'react-bootstrap'
 import { checkorderdate, makesubpath, orderstatusmesssages, OnlineContext, showmodalwithmessageandvariant, userisofflinemessage } from '../../utils'
 import Button from '@mui/material/Button'
-import { NotificationModal } from '../Notification Modal'
+import { NotificationModal } from '../Modal Components'
 import { useEffect, useState, useContext } from 'react'
 import { setuserqueryorderdata } from '../../actions'
 import { PATHS } from '../../config'

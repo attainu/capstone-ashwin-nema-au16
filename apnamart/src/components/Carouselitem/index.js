@@ -2,7 +2,7 @@ import './index.css'
 import { changecartstate, changecartprice } from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { NotificationModal } from '../Notification Modal'
+import { NotificationModal } from '../Modal Components'
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 

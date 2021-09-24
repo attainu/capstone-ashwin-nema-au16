@@ -10,7 +10,7 @@ export {default as ScrollToTop} from './topscroll'
 
 export {showmodalwithmessageandvariant, modalstatesetter} from './modal utility'
 
-export {logouterros, Logoutuser, deleleteuseraccount, gotohome, userisofflinemessage} from './user'
+export {logouterros, Logoutuser, gotohome, userisofflinemessage, saveuserdetailsinclientandredirect} from './user'
 
 export {steps, cancellationsteps} from './stepper'
 

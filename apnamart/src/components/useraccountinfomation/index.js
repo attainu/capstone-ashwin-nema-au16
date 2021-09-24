@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setprofile } from '../../actions'
 import EditIcon from '@mui/icons-material/Edit'; 
 import Fab from '@mui/material/Fab';
-import { NotificationModal } from '../Notification Modal'
+import { NotificationModal } from '../Modal Components'
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()

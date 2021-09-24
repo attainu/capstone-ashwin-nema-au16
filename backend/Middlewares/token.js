@@ -14,6 +14,7 @@ async function authenticatetoken(req, res, next) {
         req.verifieduser = verifieduser.id
         next()
     } catch(error) {
+        console.log(req.headers)
         return res.json({error:"Please provide a valid token"})
     }
 }

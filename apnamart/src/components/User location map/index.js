@@ -9,7 +9,7 @@ import { getuseraddress, setprofile } from '../../actions'
 import { Alert } from 'react-bootstrap'
 import { axiosinstance } from '../../config'
 import './index.css'
-import { NotificationModal } from '../Notification Modal'
+import { NotificationModal } from '../Modal Components'
 
 function DisplayPosition({ map, markerref, circleref }) {
     const dispatch = useDispatch()
