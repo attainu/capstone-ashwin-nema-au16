@@ -5,7 +5,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
-import { OrderStepLabelIcon, Orderstepslabelsconnector, OrderTimelineConnector, OrderDetailsIcon } from '../Stepper Component'
+import { OrderStepLabelIcon, Orderstepslabelsconnector, OrderTimelineConnector, OrderDetailsIcon } from '../Custom Stepper Component'
 import {steps, cancellationsteps} from '../../utils'
 
 export const OrderDetailsStepper = ({ orderdatedata, ordertimeline }) => {
