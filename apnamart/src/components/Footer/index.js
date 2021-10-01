@@ -5,11 +5,10 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 const Footer = () => {
-
-
+    // mt-5
     return (
         <>
-            <footer className="footer mt-5 pt-3 bg-warning">
+            <footer className="footer bg-warning  pt-3">
                 <div className="footer-content space-between ms-2">
                     <div className="d-flex flex-column">
                         <strong>Quick Links</strong>

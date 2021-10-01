@@ -12,8 +12,11 @@ import { NotificationModal } from '../../components'
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { DetailsTable } from '../../components'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const Product = ({ history }) => {
+    const bordermarginquery = useMediaQuery('(max-width:400px)')
+    const tablequery = useMediaQuery('(max-width:700px)')
     const { add_new_item, remove_item, increase_item_count, decrease_item_count } = changecartstate
 
     const { productid } = useParams()
@@ -33,7 +36,7 @@ const Product = ({ history }) => {
     const [ref, bounds] = useMeasure()
 
     const count = cartitems[productid] === undefined ? 0 : cartitems[productid].count
-
+    
     useEffect(() => {
         if (Object.keys(Productsdata).length === 0) {
             dispatch(getproductsdata())
@@ -95,65 +98,68 @@ const Product = ({ history }) => {
         },
         enlargedImageContainerStyle: { background: '#fff', zIndex: 9 },
         enlargedImagePosition: 'beside',
-        enlargedImageContainerDimensions: { width: '155%', height: '150%' },
+        enlargedImageContainerDimensions: { width: '155%', height: '125%' },
         shouldUsePositiveSpaceLens: true,
     };
 
     return (
         <>
-            <div className="productcontent space-between mt-3">
-                <div ref={ref} className="productimage">
-                    <ReactImageMagnify {...imageProps} />
+            <div className="productpagegrid text-break">
+                <div className="productcontent mt-3">
+                    <div ref={ref} className="productimage">
+                        <ReactImageMagnify {...imageProps} />
 
-                </div>
-
-                <div className="productinformation">
-                    <div>
-                        <h5>{name}</h5>
-                        <p>M.R.P. ₹ {price}</p>
                     </div>
 
-                    <div>
-                        In stock
-                    </div>
-
-                    <div>
-                        Sold by ApnaMart
-                    </div>
-
-                    <div>
-                        Delivery by {deliverydate}
-                    </div>
-
-                    {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning productbutton">Add to cart</button> : <>
-                        <div className="space-between productbutton">
-                            <div>
-                                <RemoveCircleIcon fontSize="large" className={`${count > 1 ? "cursorpointer" : ""}`} onClick={Remove_from_cart} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
-                            </div>
-                            <div className="itemcarouselcount">{count}</div>
-                            <AddCircleTwoToneIcon fontSize="large" className={`${count < 20 ? "cursorpointer" : ""}`} onClick={Add_to_cart} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
+                    <div className="productinformation">
+                        <div>
+                            <h5 className="text-break">{name}</h5>
+                            <p>M.R.P. ₹ {price}</p>
                         </div>
 
-                    </>}
+                        <div>
+                            In stock
+                        </div>
+
+                        <div>
+                            Sold by ApnaMart
+                        </div>
+
+                        <div>
+                            Delivery by {deliverydate}
+                        </div>
+
+                        {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning productcount w-75">Add to cart</button> : <>
+                            <div className="space-between productcount w-75">
+                                <div>
+                                    <RemoveCircleIcon fontSize="large" className={`${count > 1 ? "cursorpointer" : ""}`} onClick={Remove_from_cart} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
+                                </div>
+                                <div className="itemcarouselcount">{count}</div>
+                                <AddCircleTwoToneIcon fontSize="large" className={`${count < 20 ? "cursorpointer" : ""}`} onClick={Add_to_cart} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
+                            </div>
+
+                        </>}
+                    </div>
                 </div>
-            </div>
-            <div>
-            </div>
-            <hr className="mx-4 mt-5"></hr>
-            <div className="productdescription ms-2 text-wrap">
-                <pre className="text-wrap ms-1 me-1">
-                    <DetailsTable title="Product description" titlesize="h6" tabledata={description} />
-                </pre>
-            </div>
-            <hr className="mx-4 mt-5"></hr>
-            <div className="ms-2">
-                <div className="productdetails w-50 d-flex flex-column">
-                    <DetailsTable title="Details" titlesize="h6" tabledata={details} titletopborder={true} />
+                <div >
+                    <hr className="mx-4 mt-5"></hr>
+                </div>
+                <div className={`productdescription ms-2 text-wrap ${bordermarginquery && 'mt-5'}`}>
+                    <pre className="text-wrap ms-1 me-1">
+                        <DetailsTable title="Product description" titlesize="h6" tabledata={description} />
+                    </pre>
+                </div>
+                <div>
+                    <hr className="mx-4" ></hr>
+                </div>
+                <div className={`ms-2  ${bordermarginquery && 'mt-5 me-4'}`}>
+                    <div className={`productdetails ${tablequery === true && bordermarginquery === true && 'w-100'} ${tablequery === true && bordermarginquery === false && 'w-75'} ${tablequery === false && bordermarginquery === false && 'w-50'} d-flex flex-column mb-5`}>
+                        <DetailsTable title="Details" titlesize="h6" tabledata={details} titletopborder={true} />
+                    </div>
                 </div>
             </div>
             <NotificationModal show={modal} centered={true} currentmodalmessage={`Sorry you cannot order more than 20 items of ${name}`} onHide={showhidemodal} alertvariant="danger" successmessage="" />
         </>
-
     )
 
 

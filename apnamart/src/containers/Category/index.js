@@ -1,13 +1,12 @@
 import { PATHS, axiosinstance } from '../../config'
 import { useParams } from 'react-router'
-import { Carouselitem } from "../../components";
+import {  PageItemsGrid } from "../../components";
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import './index.css'
 
 export const Category = ({ history }) => {
     const { categoryid } = useParams()
-    const Productsdata = useSelector(state => state.Productsdata.products)
     const Categories = useSelector(state => state.Productsdata.categories)
     const [Categorydata, changeCategorydata] = useState([])
     const [currenid, changecurrenid] = useState("")
@@ -32,25 +31,11 @@ export const Category = ({ history }) => {
 
     return (
         <>
-            <div className="categorydata">
+            <div className="categorydata mb-5">
                 {
                     Categories[categoryid] !== undefined &&
-                    <>
-                        <h3 className="mt-3 ms-2">{Categories[categoryid].name}</h3>
+                    <PageItemsGrid headername={Categories[categoryid].name} itemsdata={Categorydata} history={history} />
 
-                        <div className="row">
-                            {
-                                Categorydata.map((item) => {
-                                    const itemdetails = Productsdata[item._id]
-                                    return (
-                                        <div key={Math.random()} className="col-4 mt-5">
-                                            <Carouselitem itemdetails={itemdetails} history={history} />
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </>
                 }
             </div>
 

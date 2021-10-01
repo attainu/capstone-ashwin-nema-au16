@@ -123,8 +123,6 @@ const Header = ({ children, isonline }) => {
 
                 </div>
 
-                <div className="push"></div>
-
             </div>
         </>
     )
