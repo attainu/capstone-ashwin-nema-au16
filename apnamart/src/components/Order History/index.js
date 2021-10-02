@@ -94,10 +94,14 @@ const OrderHistory = () => {
                                                             {name}</div>
 
                                                     </div>
-                                                    <div>
-                                                        Total Items({Object.keys(OrderedItems).length})
-                                                        <div>₹{Price}</div>
-                                                        <Link to={{ pathname: `${makesubpath(PATHS.ORDERDETAILS, _id)}`, state: item }} className="text-decoration-none text-white">
+                                                    <div className="orderhistoryitemdetails">
+                                                        <div>
+                                                            <div>Total Items({Object.keys(OrderedItems).length}) </div>
+                                                            <div className="">₹{Price}</div>
+                                                        </div>
+
+
+                                                        <Link to={{ pathname: `${makesubpath(PATHS.ORDERDETAILS, _id)}`, state: item }} className="text-decoration-none text-white viewdetailsbutton">
 
                                                             <Button className="w-100" variant="contained" color="primary">
                                                                 View Details

@@ -3,3 +3,12 @@
     height: 5%;
     object-fit: contain;
 }
+
+.orderhistoryitemdetails {
+    display: grid;
+
+}
+
+.viewdetailsbutton {
+    align-self: end;
+}

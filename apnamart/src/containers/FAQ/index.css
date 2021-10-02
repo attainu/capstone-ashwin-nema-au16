@@ -1,0 +1,11 @@
+.faqgrid {
+    display: grid;
+    grid-template-columns: 1fr 20fr 1fr;
+}
+
+@media (max-width:450px) {
+    .faqgrid {
+        grid-template-columns: 1fr 20fr 3fr;
+    }
+}
+

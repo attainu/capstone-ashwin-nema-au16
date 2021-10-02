@@ -2,15 +2,16 @@ import { StyledAccordionSummary } from '../../components'
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import './index.css'
 export const FAQ = () => {
     return (
         <>
-            <h3 className="text-center">
+            <h3 className="text-center mt-5 mb-5">
                 Frequently Asked Questions
             </h3>
-            <div className="orderdetailitems">
+            <div className="faqgrid">
                 <div></div>
-                <div>
+                <div >
                     <Accordion className="mb-3">
                         <StyledAccordionSummary expandIcon={<ExpandMoreIcon />}>
                             <strong>Can I cancel my order?</strong>
@@ -100,7 +101,6 @@ export const FAQ = () => {
                             <li>material-ui-search-bar: Search bar used with header </li>
                         </AccordionDetails>
                     </Accordion>
-
                 </div>
                 <div></div>
             </div>
