@@ -89,7 +89,6 @@ export const Cartitem = ({ item, count }) => {
                  </div>
              }
             
-
             <NotificationModal show={showmodalmessage} centered={true} onHide={displaymodalsetter} currentmodalmessage={modalmessage} alertvariant="danger" successmessage="" />
         </>
 
