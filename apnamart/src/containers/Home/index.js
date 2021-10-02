@@ -4,11 +4,10 @@ import './index.css'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import useMeasure from 'react-use-measure'
+import {Redirect} from '../../utils'
 
 export const Home = ({ history }) => {
-    const items = useSelector(state => state.Productsdata.products)
-    const subcategories = useSelector(state => state.Productsdata.subcategories)
-    const categories = useSelector(state => state.Productsdata.categories)
+    const {products, subcategories,categories} = useSelector(state => state.Productsdata)
     const [productsref, productbounds] = useMeasure()
     const breakpoints = [
         { width: 200, itemsToShow: 1 },
@@ -27,9 +26,9 @@ export const Home = ({ history }) => {
                     </div>
                     <Carousel className="displaycarousel" breakPoints={breakpoints}>
                         {
-                            Object.keys(items).map((item, index) => {
+                            Object.keys(products).map((item, index) => {
                                 return (
-                                    <Carouselitem carouselheight={productbounds.height} history={history} key={index} index={index} itemdetails={items[item]} />
+                                    <Carouselitem carouselheight={productbounds.height} history={history} key={index} index={index} itemdetails={products[item]} />
                                 )
                             })
                         }
@@ -45,17 +44,14 @@ export const Home = ({ history }) => {
                         {
                             Object.keys(subcategories).map((item, index) => {
                                 const { image, name, link } = subcategories[item]
-                                const Redirect = () => {
-                                    history.push(`${link}`)
-                                }
 
                                 return (
-                                    <div key={index} className=" ms-2 w-100">
+                                    <div key={index} className="ms-2 w-100">
                                         <div className="categorycarouselimagecontainer  w-100">
-                                            <img onClick={Redirect} src={image} className="cardimage" alt={name} />
+                                            <img onClick={() => Redirect(history, link)} src={image} className="cardimage" alt={name} />
                                         </div>
                                         <div className="w-100">
-                                            <p onClick={Redirect} className="card-text text-center">{name}</p>
+                                            <p onClick={() => Redirect(history, link)} className="card-text text-center">{name}</p>
                                         </div>
                                     </div>
                                 )
@@ -63,32 +59,25 @@ export const Home = ({ history }) => {
                             })
                         }
                     </Carousel>
-
-
                 </div>
 
-                <div className="mt-3 pt-3 ms-2 homecategorygrid mb-5">
+                <div className="mt-3 pt-3 ms-4 homecategorygrid mb-5">
                     {
                         Object.keys(categories).map((item, index) => {
                             const { image, name, link } = categories[item]
 
-                            const Redirect = () => {
-                                history.push(`${link}`)
-                            }
-
                             return (
-                                <div key={index} className="card categorycontainer ms-2 ">
-                                    <div className="categorycarouselimagecontainer w-100">
-                                        <img onClick={Redirect} src={image} className="card-img-top cardimage" alt={name} />
+                                <div key={index} className="border   categorycontainer  ">
+                                    <div className="categorycarouselimagecontainer d-flex justify-content-center w-100">
+                                        <img onClick={() => Redirect(history, link)} src={image} className=" cardimage" alt={name} />
                                     </div>
-                                    <div className="card-body">
-                                        <p onClick={Redirect} className="card-text text-center"><Link className="text-decoration-none text-dark" to={link}>{name}</Link> </p>
+                                    <div className="mb-5">
+                                        <p onClick={() => Redirect(history, link)} className="card-text text-center"><Link className="text-decoration-none text-dark" to={link}>{name}</Link> </p>
                                     </div>
                                 </div>
                             )
                         })
                     }
-
                 </div>
             </div>
         </>

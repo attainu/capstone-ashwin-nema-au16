@@ -10,6 +10,7 @@
 
 .categorycontainer {
     height: 20vw;
+    display: grid;
 }
 
 .carouselcategorycontent p:hover {
@@ -29,6 +30,8 @@
     row-gap: 5vw;
 }
 
+
+
 @media(max-width:600px) {
     .categorycarouselimagecontainer {
         height: 25vw;
@@ -38,6 +41,7 @@
     }
     
 }
+
 @media(max-width:300px) {
     .categorycarouselimagecontainer {
         height: 35vw;

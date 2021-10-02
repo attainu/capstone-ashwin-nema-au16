@@ -32,6 +32,12 @@
     align-self: end;
 }
 
+@media  (min-width:800px) and (max-width:827px) {
+    .productcarousel{
+        height: 40vw;
+    }
+}
+
 @media(max-width:600px) {
     .productcarouselimage {
         height: 25vw;

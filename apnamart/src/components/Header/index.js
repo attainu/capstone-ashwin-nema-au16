@@ -85,7 +85,7 @@ const Header = ({ children, isonline }) => {
                                     <ul onClick={RemoveToggleclass} onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} ref={dropdown} className="dropdown-menu w-75" >
                                         <Link className="text-decoration-none" to={PATHS.PROFILE}><li><p className="dropdown-item" ><AccountCircleIcon color="primary" /> Profile</p></li></Link>
                                         <Link className="text-decoration-none" to={PATHS.ORDERHISTORY}><li><p className="dropdown-item" ><ListIcon color="primary" /> Your orders</p></li></Link>
-                                        <li onClick={() => Logoutuser(dispatch)}><p className="dropdown-item" > <PowerSettingsNewIcon /> Logout</p></li>
+                                        <li onClick={() => Logoutuser(dispatch)}><p className="dropdown-item cursorpointer" > <PowerSettingsNewIcon /> Logout</p></li>
                                     </ul>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@ const Header = ({ children, isonline }) => {
                         </ProductsdataloadedContext.Provider>
                         :
                         <>
-                            <div className="d-flex justify-content-center" >
+                            <div className="d-flex justify-content-center mt-5" >
 
                                 <Alert variant="danger">
                                     <ErrorRoundedIcon style={{ color: "red" }} />
