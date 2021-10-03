@@ -27,7 +27,7 @@ export const PriceDetailsSummary = ({ nomargin, cartlayoutquery }) => {
                     {
                         Object.keys(Profile).length > 0 &&
                         <Link to={PATHS.CHECKOUT} className="text-decoration-none" >
-                            <Button className="bg-warning text-dark" variant="contained" color="primary">
+                            <Button className="bg-warning text-dark p-2" variant="contained" color="primary">
                                 Checkout
                             </Button>
                         </Link>

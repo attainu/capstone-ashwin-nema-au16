@@ -18,9 +18,9 @@ html, body {
 }
 
 .header {
-    padding-top: 1vh;
-    padding-left: 1vh;
-    padding-right: 1vh;
+    padding-top: 1vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
     align-items: center;
     position: sticky;
     width: 100vw;
@@ -40,10 +40,6 @@ html, body {
     flex-grow: 1;
 }
 
-.navspace {
-    height: 10px;
-}
-
 .headerdropdownbutton {
     outline: none;
     border: none;
@@ -57,4 +53,57 @@ html, body {
 
 .children {
     position: static;
+}
+
+.loginsignupgrid {
+    display: grid;
+    justify-content: flex-end;
+    column-gap: 3vw;
+    grid-template-columns: 1fr 1fr;
+}
+
+.shoppingicon {
+    display: grid;
+    align-items: center;
+    height: 100%;
+}
+
+@media (max-width:750px) {
+    .logo {
+        display: grid;
+        align-items: center;
+    }
+
+    .header {
+        padding-top: 3vw;
+    }
+    .loginsignupgrid {
+        margin-right: 3vw;
+    }
+}
+
+.profileandshoppingcarticon {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+@media (max-width:400px) {
+    .header {
+        padding-top: 5vw;
+    }
+}
+
+@media (max-width:250px) {
+    .loginsignupgrid {
+        align-items: center;
+        column-gap: 1.5vw; 
+        margin-left: 3vw;     
+    }
+}
+
+@media (max-width:225px) {
+    .loginsignupgrid {
+        column-gap: 3vw; 
+    }
 }

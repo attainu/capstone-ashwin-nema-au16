@@ -56,7 +56,7 @@ const CartItemContent = ({ setmodalmessage, displaymodalsetter, item, count, car
                         </div>
                     </div>
                     <div className={`${bounds.width <= 300 && "mt-3 d-flex justify-content-center"}`}>
-                        <Button className={`bg-warning text-dark ${bounds.width > 200 && "rounded-pill"}`} onClick={removeitemfromcart} > Remove item </Button>
+                        <Button className={`bg-warning p-2 text-dark ${bounds.width > 200 && "rounded-pill"}`} onClick={removeitemfromcart} > Remove item </Button>
                     </div>
                 </div>
             </div>

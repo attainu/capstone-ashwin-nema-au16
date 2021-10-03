@@ -1,17 +1,14 @@
 import './index.css'
 import SearchBar from "material-ui-search-bar";
 import { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import SimpleBar from "simplebar-react"
 import 'simplebar/dist/simplebar.min.css';
-import { searchdatafilter } from '../../utils'
+import { searchdatafilter } from '../../../utils'
+import { useSelector } from 'react-redux';
 
 export const InputSearchBar = () => {
-    const products = useSelector(state => state.Productsdata.products)
-    const subcategories = useSelector(state => state.Productsdata.subcategories)
-    const categories = useSelector(state => state.Productsdata.categories)
-
+    const {Productsdata:{products, subcategories, categories}} = useSelector(state => state)
     const [searchbar, changesearchvalue] = useState("")
     const [filterdata, changefiltereddata] = useState([])
     const [currentclass, changecurrenclass] = useState(false)
