@@ -3,23 +3,30 @@ import { RadioGroup, FormControlLabel, FormControl } from '@mui/material'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import { useSelector, useDispatch } from "react-redux";
 import { Alert } from "react-bootstrap";
-import { deliverydate,  showmodalwithmessageandvariant, gotohome, logouterros, OnlineContext, userisofflinemessage } from '../../utils'
+import { deliverydate, showmodalwithmessageandvariant, gotohome, logouterros, OnlineContext, userisofflinemessage } from '../../utils'
 import { useState, useContext } from "react";
-import {axiosinstance} from '../../config'
-import {NotificationModal} from '../Modal Components'
-import {authsetter, storeordercount} from '../../actions'
+import { axiosinstance } from '../../config'
+import { NotificationModal } from '../Modal Components'
+import { authsetter, storeordercount } from '../../actions'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
-export default function PaymentSection({history, DeliveryAddress, PATHS}) {
+export default function PaymentSection({ history, DeliveryAddress, PATHS }) {
     const isonline = useContext(OnlineContext)
     const dispatch = useDispatch()
-    const {Profile:{ Name, Email, Mobilenumber }, Cart,CartPrice:cartprice, Userorderdata:{count} } = useSelector(state => state)
+
+    const deliverydatequery = useMediaQuery('(max-width:700px)')
+    const deliverydatequerymobile = useMediaQuery('(max-width:450px)')
+    const formlabelquery = useMediaQuery('(max-width:400px)')
+    const continuebuttonquery = useMediaQuery('(max-width:300px)')
+
+    const { Profile: { Name, Email, Mobilenumber }, Cart, CartPrice: cartprice, Userorderdata: { count } } = useSelector(state => state)
     const [modalmessage, changemodalmessage] = useState("")
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState("warning")
     const [paymentmode, changepaymentmode] = useState("Cash")
 
     const displaymodal = (message, variant) => {
-        showmodalwithmessageandvariant(showmodal, message,changemodalmessage, variant, changemodalvariant)
+        showmodalwithmessageandvariant(showmodal, message, changemodalmessage, variant, changemodalvariant)
         if (message === "Your order is successfully placed") {
             setTimeout(() => {
                 history.push(PATHS.HOME)
@@ -62,7 +69,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
             return;
         }
 
-        const generatedrazorpayorder = await axiosinstance.post('/user/order/payment/razorpay', { items:Cart,cartprice})
+        const generatedrazorpayorder = await axiosinstance.post('/user/order/payment/razorpay', { items: Cart, cartprice })
 
         if (!generatedrazorpayorder) {
             displaymodal("You are not online. Please be online if you want to place order", "danger")
@@ -95,25 +102,25 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
                         razorpaySignature: response.razorpay_signature,
                     };
 
-                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", {OrderedItems, ...data, Price, DeliveryAddress})
+                    const successresponse = await axiosinstance.post("/user/order/payment/razorpay/success", { OrderedItems, ...data, Price, DeliveryAddress })
 
                     if (!successresponse) {
                         displaymodal("Sorry something went wrong your order could not be placed.", "danger")
                         return
                     }
 
-                    const {data:responsedata} = successresponse
-                    const {success, error} = responsedata
+                    const { data: responsedata } = successresponse
+                    const { success, error } = responsedata
                     if (success === true) {
                         dispatch(storeordercount(count + 1))
                         displaymodal("Your order is successfully placed", "warning")
                         return
                     }
-                    const loginerror = setloginerror(error) 
+                    const loginerror = setloginerror(error)
                     if (loginerror === true) {
                         return
                     }
-                    displaymodal(error,"danger")
+                    displaymodal(error, "danger")
                 },
                 prefill: {
                     name: Name,
@@ -121,7 +128,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
                     contact: Mobilenumber,
                 },
                 notes: {
-                    address:DeliveryAddress,
+                    address: DeliveryAddress,
                 },
                 theme: {
                     color: "#ffc107",
@@ -138,7 +145,7 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
             displaymodal(userisofflinemessage, "danger")
             return
         }
-        axiosinstance.post("/user/order/cash", {items:Cart, cartprice, DeliveryAddress}).then(({data}) => {
+        axiosinstance.post("/user/order/cash", { items: Cart, cartprice, DeliveryAddress }).then(({ data }) => {
             const loginerror = setloginerror(data.error)
             if (data.error !== undefined && !loginerror) {
                 displaymodal(data.error, "danger")
@@ -157,36 +164,47 @@ export default function PaymentSection({history, DeliveryAddress, PATHS}) {
         )
     }
 
+    const PaymentModeOptions = ({ alignment }) => {
+        return (
+            <FormControl className="w-100 profilecontentdisplaycolor text-break" component="fieldset">
+                <RadioGroup row aria-label="position" name="position" defaultValue="Cash">
+                    <FormControlLabel
+                        label="Cash on delivery"
+                        value="Cash"
+                        onClick={() => changepaymentmode("Cash")}
+                        control={<Radio color="primary" />}
+                        labelPlacement={alignment}
+                    />
+                    <FormControlLabel
+                        value="Razorpay"
+                        onClick={() => changepaymentmode("Razorpay")}
+                        control={<Radio color="primary" />}
+                        label="Razorpay"
+                        labelPlacement={alignment}
+                    />
+                </RadioGroup>
+            </FormControl>
+        )
+    }
+
     return (
         <>
             <div className="checkoutaccordion mt-5">
                 <div className="w-75 profilecontentdisplaycolor">
-                    <Alert variant="info" className="w-25">
+                    <Alert variant="info" className={`${!deliverydatequery && "w-25"} ${!deliverydatequerymobile && deliverydatequery && "w-50"} ${deliverydatequerymobile && "w-75"} text-break`}>
                         Delivery by {deliverydate}
                     </Alert>
                     <h5>Select mode of payment</h5>
-                    <FormControl className="w-100 profilecontentdisplaycolor" component="fieldset">
-                        <RadioGroup row aria-label="position" name="position" defaultValue="Cash">
-                            <FormControlLabel
-                                label="Cash on delivery"
-                                value="Cash"
-                                onClick={() => changepaymentmode("Cash")}
-                                control={<Radio color="primary" />}
-                                labelPlacement="start"
-                            />
-                            <FormControlLabel
-                                value="Razorpay"
-                                onClick={() => changepaymentmode("Razorpay")}
-                                control={<Radio color="primary" />}
-                                label="Razorpay"
-                                labelPlacement="start"
-                            />
-                        </RadioGroup>
-                    </FormControl>
+
                     {
-                        paymentmode === "Cash" ? <button onClick={cashmode} className="bordernone p-2 rounded-pill bg-warning mt-3" >
+                        formlabelquery === true ? <PaymentModeOptions alignment="end" />:
+                        <PaymentModeOptions alignment="start" />
+                    }
+
+                    {
+                        paymentmode === "Cash" ? <button onClick={cashmode} className={`bordernone p-2 rounded-pill bg-warning mt-3 ${continuebuttonquery && "mb-3"}`} >
                             Continue <DoubleArrowIcon />
-                        </button> : <button onClick={displayRazorpay} className="bordernone p-2 rounded-pill bg-warning mt-3" >
+                        </button> : <button onClick={displayRazorpay} className={`bordernone p-2 rounded-pill bg-warning mt-3 ${continuebuttonquery && "mb-3"}`} >
                             Continue <DoubleArrowIcon />
                         </button>
                     }

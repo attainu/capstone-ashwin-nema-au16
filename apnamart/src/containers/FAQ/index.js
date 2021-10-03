@@ -13,7 +13,7 @@ export const FAQ = () => {
                 <div></div>
                 <div >
                     <Accordion className="mb-3">
-                        <StyledAccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <StyledAccordionSummary  expandIcon={<ExpandMoreIcon />}>
                             <strong>Can I cancel my order?</strong>
                         </StyledAccordionSummary>
 

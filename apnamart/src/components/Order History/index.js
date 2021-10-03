@@ -103,7 +103,7 @@ const OrderHistory = () => {
 
                                                         <Link to={{ pathname: `${makesubpath(PATHS.ORDERDETAILS, _id)}`, state: item }} className="text-decoration-none text-white viewdetailsbutton">
 
-                                                            <Button className="w-100" variant="contained" color="primary">
+                                                            <Button className="w-100 navy" variant="contained" >
                                                                 View Details
                                                             </Button>
 
@@ -117,8 +117,8 @@ const OrderHistory = () => {
                                 })
                             }
                         </SimpleBar>
-                        <div className="d-flex justify-content-center" >
-                            <Pagination page={page} size="large" count={Math.ceil(count / 5)} color="primary" onChange={getorderdata} />
+                        <div className="d-flex justify-content-center w-100 mt-3" >
+                            <Pagination shape="circular"  page={page}  count={Math.ceil(count / 5)} color="primary" onChange={getorderdata} />
 
                         </div>
                         <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" />

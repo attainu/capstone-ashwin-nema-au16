@@ -105,7 +105,7 @@ const Orderdetails = ({ location: { state }, history }) => {
                 }
 
                 {
-                  orderdatedata.length !== 2 && ordertimeline === 0 && <Button onClick={Canceluserorder} variant="contained"  >Cancel Order</Button>
+                  orderdatedata.length !== 2 && ordertimeline === 0 && <Button className="navy text-white p-1" onClick={Canceluserorder} variant="contained"  >Cancel Order</Button>
                 }
 
               </Alert>
