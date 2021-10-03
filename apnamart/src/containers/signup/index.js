@@ -40,7 +40,7 @@ export const Signup = ({ history }) => {
         }
 
         if (e.target.value.length > 10) {
-            showmodalwithmessageandvariant(showmodal, "Mobile number cannot be of more than 10 digit", changeerrormessage)
+            showmodalwithmessageandvariant(showmodal, "Mobile number cannot be of more than 10 digits", changeerrormessage)
             return
         }
 
@@ -116,7 +116,7 @@ export const Signup = ({ history }) => {
                             <input value={Confirmedpassword} onChange={(e) => ChangeConfirmedPassword(e.target.value)} className="form-control mb-3" type="password" />
 
                             <div className="d-flex justify-content-center">
-                                <Button type="submit" className={`bg-info text-dark text-center ${!buttonlayout && "rounded-pill"}`} variant="contained">
+                                <Button type="submit" className={`bg-info text-dark text-center mb-3 ${!buttonlayout && "rounded-pill"}`} variant="contained">
                                     Submit
                                 </Button>
                             </div>

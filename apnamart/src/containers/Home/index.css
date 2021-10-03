@@ -30,8 +30,6 @@
     row-gap: 5vw;
 }
 
-
-
 @media(max-width:600px) {
     .categorycarouselimagecontainer {
         height: 25vw;

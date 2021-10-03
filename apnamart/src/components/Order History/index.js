@@ -46,7 +46,7 @@ const OrderHistory = () => {
     return (
         <>
             {
-                count === 0 ? <> <h3 className="text-center">You have not placed any order yet</h3> </> :
+                count === 0 ? <> <h3 className="text-center mt-5">You have not placed any order yet</h3> </> :
                     <>
                         <h3 className="text-center mt-5 mb-3">My orders</h3>
                         <SimpleBar style={{ height: "60vh" }}>
@@ -103,7 +103,7 @@ const OrderHistory = () => {
 
                                                         <Link to={{ pathname: `${makesubpath(PATHS.ORDERDETAILS, _id)}`, state: item }} className="text-decoration-none text-white viewdetailsbutton">
 
-                                                            <Button className="w-100 navy" variant="contained" >
+                                                            <Button className="w-100 navy p-2" variant="contained" >
                                                                 View Details
                                                             </Button>
 
@@ -118,7 +118,7 @@ const OrderHistory = () => {
                             }
                         </SimpleBar>
                         <div className="d-flex justify-content-center w-100 mt-3" >
-                            <Pagination shape="circular"  page={page}  count={Math.ceil(count / 5)} color="primary" onChange={getorderdata} />
+                            <Pagination  page={page}  count={Math.ceil(count / 5)} color="primary" onChange={getorderdata} />
 
                         </div>
                         <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" />

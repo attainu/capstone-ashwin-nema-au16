@@ -100,12 +100,11 @@ const Orderdetails = ({ location: { state }, history }) => {
                   orderdetails.Status !== "Order cancelled" ? <> {
                     orderdisplaydetails[0] === orderstatusmesssages["delivered"] ? <p >Delivered on {orderdisplaydetails[1]} </p> : <p>Ordered on {orderdisplaydetails[1]} </p>
                   } </> :
-
-                    <><p> Order cancelled on {orderdisplaydetails[1]} </p> </>
+                    <p> Order cancelled on {orderdisplaydetails[1]} </p>
                 }
 
                 {
-                  orderdatedata.length !== 2 && ordertimeline === 0 && <Button className="navy text-white p-1" onClick={Canceluserorder} variant="contained"  >Cancel Order</Button>
+                  orderdatedata.length !== 2 && ordertimeline === 0 && <Button className="navy text-white p-2" onClick={Canceluserorder} variant="contained"  >Cancel Order</Button>
                 }
 
               </Alert>
@@ -131,7 +130,7 @@ const Orderdetails = ({ location: { state }, history }) => {
               </Alert>
 
               <div className={`${orderdetailsmargin && "mb-3"}`}>
-              <DetailsTable title={"Order Details"} tabledata={orderdetailstabledata} />
+                <DetailsTable title={"Order Details"} tabledata={orderdetailstabledata} />
               </div>
 
             </div >

@@ -24,7 +24,6 @@ const CartItemContent = ({ setmodalmessage, displaymodalsetter, item, count, car
     const belowlimitorder = `Sorry you cannot order less than 1 item of ${name}`
 
     const addremovebbuttonconfigration = [count, dispatch, CartPrice, price, item, displaymodalsetter, belowlimitorder, setmodalmessage]
-
     const removeitemfromcart = () => {
         const itemprice = count * price
         dispatch(changecartprice(CartPrice - itemprice))
@@ -69,7 +68,7 @@ const CartItemContent = ({ setmodalmessage, displaymodalsetter, item, count, car
 export const Cartitem = ({ item, count }) => {
     const [modalmessage, setmodalmessage] = useState("")
     const [showmodalmessage, displaymodalsetter] = useState(false)
-    const cartitemlayout = useMediaQuery('(min-width:700px)')
+    const cartitemlayout = useMediaQuery('(min-width:950px)')
     const {  Productsdata: { products } } = useSelector(state => state)
     const { image, name } = products[item]
 
@@ -82,6 +81,7 @@ export const Cartitem = ({ item, count }) => {
                  <div className="maincartitemcontainer">
                      <div className="cartimagecontainer">
                      <Link to={`${makesubpath(PATHS.PRODUCT, item)}`} ><img className="cartimage" src={image} alt={name} /></Link>
+                     
                      </div>
                      <div>
                      <CartItemContent {...props} />

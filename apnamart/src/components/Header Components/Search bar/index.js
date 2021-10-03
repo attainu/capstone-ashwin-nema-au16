@@ -8,7 +8,7 @@ import { searchdatafilter } from '../../../utils'
 import { useSelector } from 'react-redux';
 
 export const InputSearchBar = () => {
-    const {Productsdata:{products, subcategories, categories}} = useSelector(state => state)
+    const { Productsdata: { products, subcategories, categories } } = useSelector(state => state)
     const [searchbar, changesearchvalue] = useState("")
     const [filterdata, changefiltereddata] = useState([])
     const [currentclass, changecurrenclass] = useState(false)
@@ -53,19 +53,22 @@ export const InputSearchBar = () => {
 
     }, [searchbar, products, subcategories, categories])
 
+
+
     return (
         <>
             <div className="dropdown">
                 <span ref={Searchbaref}>
                     <SearchBar className="marginbottomzero" value={searchbar} onClick={AddToggleclass} onMouseLeave={RemoveToggleclass} onChange={setsearchvbarvalue}></SearchBar>
                 </span>
+
                 {
                     currentclass === true && productslength > 0 &&
                     <ul onClick={RemoveToggleclass} onMouseEnter={AddToggleclass} onMouseLeave={RemoveToggleclass} className="marginnegative show dropdown-menu">
-                        <SimpleBar style={{ height: "20vh" }}>
+                        <SimpleBar style={{ height: "35vh" }}>
                             {
                                 filterdata.map((item, index) => {
-                                    const {name, link, image} = item
+                                    const { name, link, image } = item
                                     return (
                                         <Link key={index} to={link} className="dropdown-item space-between text-decoration-none text-dark text-wrap w-100"  >
                                             <img src={image} className="searchbarimage" alt={name} />
