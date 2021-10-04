@@ -48,7 +48,7 @@ const CartItemContent = ({ setmodalmessage, displaymodalsetter, item, count, car
                             <RemoveCircleIcon className={`${count > 1 ? "cursorpointer" : ""}`} onClick={() => Add_Remove_Item_Button_Setter(count, addremovebbuttonconfigration, false)} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
                         </div>
 
-                        <div>{count}</div>
+                        <div className="d-flex justify-content-center">{count}</div>
 
                         <div>
                             <AddCircleTwoToneIcon className={`${count < 20 ? "cursorpointer" : ""}`} onClick={() => Add_Remove_Item_Button_Setter(count, addremovebbuttonconfigration, true, limitreached)} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>

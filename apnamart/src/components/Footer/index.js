@@ -14,6 +14,7 @@ const Footer = () => {
                         <strong>Quick Links</strong>
                         <Link className="text-decoration-none text-dark smalltext" to={PATHS.ABOUT}>About Developer</Link>
                         <Link className="text-decoration-none text-dark smalltext" to={PATHS.FAQ}>FAQs</Link>
+                        <a className="text-decoration-none text-dark smalltext" rel="noreferrer" href="https://docs.google.com/document/d/1YxklTIsA_-LT4kgL1NqV5QiiaFTREqcV4CqnrISY7aA/edit?usp=sharing" target="_blank">Documentation </a>
                     </div>
                     <div className="d-flex flex-column">
                         <strong>Contact us:  </strong>

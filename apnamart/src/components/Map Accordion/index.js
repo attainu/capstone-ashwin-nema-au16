@@ -7,7 +7,7 @@ import { StyledAccordionSummary } from '../Styled Material Ui Components'
 import useMediaQuery from '@mui/material/useMediaQuery'
 const MapAccordion = ({ userlocationaddress }) => {
     const rightpaddingquery = useMediaQuery('(max-width:500px)')
-    const marginquery = useMediaQuery('(max-width:800px) and (min-width:500px)')
+    const marginquery = useMediaQuery('(max-width:1250px) and (min-width:500px)') 
     return (
         <div className="checkoutaccordion mt-5">
             <Accordion>
@@ -16,7 +16,7 @@ const MapAccordion = ({ userlocationaddress }) => {
                     className={`checkoutaccordionheader px-2 ${rightpaddingquery && "pe-4"}`}
                 >
                     <div className="space-between w-100 align-items-center ">
-                        <div className={`${marginquery && "me-3"}`}>
+                        <div className={`${marginquery && "me-3"} `}>
                             <h6 >Current delivery address</h6>
                             <div>
                                 {

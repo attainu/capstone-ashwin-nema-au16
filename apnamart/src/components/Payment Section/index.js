@@ -91,7 +91,7 @@ export default function PaymentSection({ history, DeliveryAddress, PATHS }) {
                 amount: amount.toString(),
                 currency: currency,
                 name: "Apnamart",
-                image: "https://res.cloudinary.com/ash006/image/upload/v1622457972/shop_myswcw.jpg",
+                image: "https://res.cloudinary.com/ash006/image/upload/v1633338159/APNAMART_preview_rev_1_lmweri.jpg",
                 description: "",
                 order_id: order_id,
                 handler: async function (response) {
@@ -173,6 +173,7 @@ export default function PaymentSection({ history, DeliveryAddress, PATHS }) {
                         onClick={() => changepaymentmode("Cash")}
                         control={<Radio color="primary" />}
                         labelPlacement={alignment}
+                        checked={paymentmode === "Cash"}
                     />
                     <FormControlLabel
                         value="Razorpay"
@@ -180,6 +181,7 @@ export default function PaymentSection({ history, DeliveryAddress, PATHS }) {
                         control={<Radio color="primary" />}
                         label="Razorpay"
                         labelPlacement={alignment}
+                        checked={paymentmode === "Razorpay"}
                     />
                 </RadioGroup>
             </FormControl>

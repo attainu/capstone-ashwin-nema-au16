@@ -22,7 +22,9 @@ export const HeaderContentLayout = ({ headersearchbarquery }) => {
         <>
             <>
                 <div className="logo">
-                    <Link className="text-dark text-decoration-none" to={PATHS.HOME} >ApnaMart</Link>
+                    <Link className="text-dark text-decoration-none" to={PATHS.HOME} >
+                        <img className="logoimage" src="https://res.cloudinary.com/ash006/image/upload/v1633338159/APNAMART_preview_rev_1_lmweri.jpg" alt="Apna Mart" />
+                    </Link>
                 </div>
 
                 {

@@ -30,6 +30,24 @@ html, body {
 
 .logo {
     flex-grow: 1;
+    display: grid;
+    align-items: center;
+}
+
+.logoimage {
+    height: 5vw;
+    object-fit: contain;
+}
+
+@media (max-width:1000px) {
+    .logoimage {
+        height: 10vw
+    }
+}
+@media (max-width:600px) {
+    .logoimage {
+        height: 15vw
+    }
 }
 
 .searchbar {
@@ -79,6 +97,7 @@ html, body {
     }
     .loginsignupgrid {
         margin-right: 3vw;
+        align-items: center;
     }
 }
 
@@ -92,11 +111,14 @@ html, body {
     .header {
         padding-top: 5vw;
     }
+
+    .logoimage {
+        height: 20vw;
+    }
 }
 
 @media (max-width:250px) {
     .loginsignupgrid {
-        align-items: center;
         column-gap: 1.5vw; 
         margin-left: 3vw;     
     }
