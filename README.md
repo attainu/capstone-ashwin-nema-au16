@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src="https://res.cloudinary.com/ash006/image/upload/v1633338159/APNAMART_preview_rev_1_lmweri.jpg" alt="Apna Mart" /></div>.
+<div style="display:flex; justify-content:center"><img src="https://res.cloudinary.com/ash006/image/upload/v1633338159/APNAMART_preview_rev_1_lmweri.jpg" alt="Apna Mart" /></div>.
 
 # Introduction
 
