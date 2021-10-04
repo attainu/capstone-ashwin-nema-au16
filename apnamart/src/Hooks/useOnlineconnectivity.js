@@ -15,7 +15,9 @@ export const useOnlineconnectioncheck = (dispatch, isonline, Auth, Profile, prod
     useEffect(() => {
         if (Object.keys(products).length === 0 && isonline === true) {
             dispatch(getproductsdata(changeproductsdatafetchedstate))
+            return
         }
+        
     }, [products, dispatch, isonline])
 
     useEffect(() => {
@@ -27,6 +29,15 @@ export const useOnlineconnectioncheck = (dispatch, isonline, Auth, Profile, prod
             changeuseronlinestatus(true)
         }
     },[isonline, products, isuseronline, changeuseronlinestatus])
+
+    useEffect(() => {
+        if (Object.keys(products).length !== 0 && isproductsdatafetched !== true ) {
+            changeproductsdatafetchedstate(true)
+        }
+
+    },[ products, isproductsdatafetched, changeproductsdatafetchedstate])
+
+    
 
     return [isuseronline, isproductsdatafetched]
 }

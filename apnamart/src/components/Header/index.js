@@ -5,12 +5,15 @@ import { ProductsdataloadedContext } from '../../utils'
 import { useOnlineconnectioncheck } from '../../Hooks'
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import { Alert } from 'react-bootstrap';
-import useMediaQuery from '@mui/material/useMediaQuery'
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Header = ({ children, isonline }) => {
     const dispatch = useDispatch()
+
     const { Auth, Profile, Productsdata: { products } } = useSelector(state => state)
+
     const [isuseronline, isproductsdatafetched] = useOnlineconnectioncheck(dispatch, isonline, Auth, Profile, products)
+
     const headersearchbarquery = useMediaQuery('(min-width:750px)')
 
     return (
@@ -21,8 +24,8 @@ const Header = ({ children, isonline }) => {
                     {
                         headersearchbarquery === true ? <HeaderContentLayout headersearchbarquery={headersearchbarquery} /> :
                             <>
-                                <div className="space-between">
-                                    <HeaderContentLayout headersearchbarquery={headersearchbarquery}  />
+                                <div  className="space-between">
+                                    <HeaderContentLayout headersearchbarquery={headersearchbarquery} />
                                 </div>
                                 <div className="container-fluid d-flex justify-content-center mt-3">
                                     <div className="col-10">
@@ -37,9 +40,9 @@ const Header = ({ children, isonline }) => {
                 <div className="children">
                     {isuseronline === true ?
                         <ProductsdataloadedContext.Provider value={isproductsdatafetched} >
-                            <>
-                                {children}
-                            </>
+                                <>
+                                    {children}
+                                </>
                         </ProductsdataloadedContext.Provider>
                         :
                         <>

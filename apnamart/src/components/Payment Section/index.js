@@ -17,7 +17,6 @@ export default function PaymentSection({ history, DeliveryAddress, PATHS }) {
     const deliverydatequery = useMediaQuery('(max-width:700px)')
     const deliverydatequerymobile = useMediaQuery('(max-width:450px)')
     const formlabelquery = useMediaQuery('(max-width:400px)')
-    const continuebuttonquery = useMediaQuery('(max-width:300px)')
 
     const { Profile: { Name, Email, Mobilenumber }, Cart, CartPrice: cartprice, Userorderdata: { count } } = useSelector(state => state)
     const [modalmessage, changemodalmessage] = useState("")
@@ -202,9 +201,9 @@ export default function PaymentSection({ history, DeliveryAddress, PATHS }) {
                     }
 
                     {
-                        paymentmode === "Cash" ? <button onClick={cashmode} className={`bordernone p-2 rounded-pill bg-warning mt-3 ${continuebuttonquery && "mb-3"}`} >
+                        paymentmode === "Cash" ? <button onClick={cashmode} className="bordernone p-2 rounded-pill bg-warning mt-3 mb-3" >
                             Continue <DoubleArrowIcon />
-                        </button> : <button onClick={displayRazorpay} className={`bordernone p-2 rounded-pill bg-warning mt-3 ${continuebuttonquery && "mb-3"}`} >
+                        </button> : <button onClick={displayRazorpay} className="bordernone p-2 rounded-pill bg-warning mt-3 mb-3" >
                             Continue <DoubleArrowIcon />
                         </button>
                     }

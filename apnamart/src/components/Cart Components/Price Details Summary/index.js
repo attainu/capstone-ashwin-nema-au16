@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { PATHS } from '../../../config'
 
 export const PriceDetailsSummary = ({ nomargin, cartlayoutquery }) => {
-    const { Profile } = useSelector(state => state)
+    const {  Auth:{loginstate} } = useSelector(state => state)
     return (
         <>
             <div className={`profilecontentdisplaycolor pe-3 ps-3 py-3 h-100 usercartpaymentsection  ${cartlayoutquery && "mb-3 w-100"} ${nomargin === undefined && "mt-5"}`}>
@@ -25,13 +25,17 @@ export const PriceDetailsSummary = ({ nomargin, cartlayoutquery }) => {
 
                 <div className="d-flex justify-content-center mt-3">
                     {
-                        Object.keys(Profile).length > 0 &&
-                        <Link to={PATHS.CHECKOUT} className="text-decoration-none" >
-                            <Button className="bg-warning text-dark p-2" variant="contained" color="primary">
-                                Checkout
-                            </Button>
-                        </Link>
-
+                        loginstate === true ?
+                            <Link to={PATHS.CHECKOUT} className="text-decoration-none" >
+                                <Button className="bg-warning text-dark p-2" variant="contained" color="primary">
+                                    Checkout
+                                </Button>
+                            </Link> :
+                            <Link to={PATHS.LOGIN} className="text-decoration-none" >
+                                <Button className="bg-warning text-dark p-2" variant="contained" color="primary">
+                                    Login
+                                </Button>
+                            </Link>
                     }
                 </div>
             </div>

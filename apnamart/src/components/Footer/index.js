@@ -8,11 +8,11 @@ const Footer = () => {
     // mt-5
     return (
         <>
-            <footer className="footer bg-warning  pt-3">
+            <footer className="footer bg-warning  pt-3 text-break">
                 <div className="footer-content space-between ms-2">
                     <div className="d-flex flex-column">
                         <strong>Quick Links</strong>
-                        <Link className="text-decoration-none text-dark smalltext" to={PATHS.ABOUT}>Developer</Link>
+                        <Link className="text-decoration-none text-dark smalltext" to={PATHS.ABOUT}>About Developer</Link>
                         <Link className="text-decoration-none text-dark smalltext" to={PATHS.FAQ}>FAQs</Link>
                     </div>
                     <div className="d-flex flex-column">
