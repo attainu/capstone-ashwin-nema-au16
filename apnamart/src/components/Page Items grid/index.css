@@ -1,0 +1,55 @@
+.itempagegrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 5vw;
+    row-gap: 5vw;
+}
+
+.itempagegriditem {
+    display: grid;
+    grid-template-rows: 1fr 0.1fr 0.1fr;
+    row-gap: 2.5vw;
+}
+
+.itempagegriditemcount {
+    align-self: end;
+}
+
+.itempagegriditemimage {
+    max-height: 10vw;
+    max-width: 100% ;
+    object-fit: contain;
+}
+
+.itempagegriditemimage:hover {
+    cursor: pointer;
+}
+
+.itempagegriditemimagecontainer {
+    display: grid;
+    justify-content: center;
+}
+
+.itempagegriditemdetails {
+    display: grid;
+    align-items: start;
+}
+
+@media (max-width:650px) {
+    .itempagegrid {
+        grid-template-columns: 1fr 1fr;
+        column-gap: 8vw;
+    }
+    .itempagegriditem {
+        grid-template-rows: 1fr 1fr 0.1fr;
+    }
+}
+
+@media (max-width:400px) {
+    .itempagegriditemimage {
+        max-height: 20vw;
+    }
+    .itempagegriditem {
+        grid-template-rows: 0.5fr 1fr 0.1fr;
+    }
+}
