@@ -1,5 +1,5 @@
 import { setprofile, logoutsetter, authsetter, storeordercount } from '../actions'
-import { setaddress, userorderdata } from '../actionTypes'
+import { setaddress } from '../actionTypes'
 import {  PATHS } from '../config'
 
 export const logouterros = {
@@ -9,7 +9,7 @@ export const logouterros = {
 const resetafterlogout = (dispatch) => {
     dispatch(logoutsetter())
     dispatch(setprofile({}))
-    dispatch({ type: userorderdata, payload: [] })
+    dispatch(storeordercount(0))
     dispatch({ type: setaddress, payload: [] })
 }
 

@@ -27,7 +27,7 @@ const CarouselItemContent = ({ history, itemdetails, showhidemodal }) => {
             <div className="productcarouselitemcount">
                 {count === 0 ? <button onClick={() => Add_Remove_Item_Button_Setter(count, Add_Remove_Button_Configuration, true)} className="btn btn-warning w-100">Add to cart</button> : <>
                     <div className="space-between">
-                        <RemoveCircleIcon fontSize="large" className={`${count > 1 ? "cursorpointer" : ""}`} onClick={() => Add_Remove_Item_Button_Setter(count, Add_Remove_Button_Configuration)} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
+                        <RemoveCircleIcon fontSize="large" className="cursorpointer" onClick={() => Add_Remove_Item_Button_Setter(count, Add_Remove_Button_Configuration)} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
                         <div className="itemcarouselcount">{count}</div>
                         <AddCircleTwoToneIcon fontSize="large" className={`${count < 20 ? "cursorpointer " : ""}`} onClick={() => Add_Remove_Item_Button_Setter(count, Add_Remove_Button_Configuration, true)} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
                     </div>

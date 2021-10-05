@@ -132,7 +132,7 @@ const Product = ({ history }) => {
                         {count === 0 ? <button onClick={Add_to_cart} className="btn btn-warning productcount w-75">Add to cart</button> : <>
                             <div className="space-between productcount w-75">
                                 <div>
-                                    <RemoveCircleIcon fontSize="large" className={`${count > 1 ? "cursorpointer" : ""}`} onClick={Remove_from_cart} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
+                                    <RemoveCircleIcon fontSize="large" className="cursorpointer" onClick={Remove_from_cart} style={{ color: "#ffc107" }}> - </RemoveCircleIcon>
                                 </div>
                                 <div className="itemcarouselcount">{count}</div>
                                 <AddCircleTwoToneIcon fontSize="large" className={`${count < 20 ? "cursorpointer" : ""}`} onClick={Add_to_cart} style={{ color: "#ffc107" }}></AddCircleTwoToneIcon>
