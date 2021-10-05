@@ -5,16 +5,16 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 
 const Footer = () => {
-
-
+    // mt-5
     return (
         <>
-            <footer className="footer mt-5 pt-3 bg-warning">
+            <footer className="footer bg-warning  pt-3 text-break">
                 <div className="footer-content space-between ms-2">
                     <div className="d-flex flex-column">
                         <strong>Quick Links</strong>
-                        <Link className="text-decoration-none text-dark smalltext" to={PATHS.ABOUT}>Developer</Link>
+                        <Link className="text-decoration-none text-dark smalltext" to={PATHS.ABOUT}>About Developer</Link>
                         <Link className="text-decoration-none text-dark smalltext" to={PATHS.FAQ}>FAQs</Link>
+                        <a className="text-decoration-none text-dark smalltext" rel="noreferrer" href="https://docs.google.com/document/d/1YxklTIsA_-LT4kgL1NqV5QiiaFTREqcV4CqnrISY7aA/edit?usp=sharing" target="_blank">Documentation </a>
                     </div>
                     <div className="d-flex flex-column">
                         <strong>Contact us:  </strong>

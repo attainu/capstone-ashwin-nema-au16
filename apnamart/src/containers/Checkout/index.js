@@ -7,15 +7,20 @@ import { PATHS } from '../../config'
 import { Ordersummary, MapAccordion, PaymentSection, EmptyCart } from '../../components'
 import { SetAddressContext } from '../../utils'
 import { withAuthentication } from '../../Higher Order Components'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const CheckoutPage = ({ history }) => {
     const dispatch = useDispatch()
+
     const { Useraddress, Profile } = useSelector(state => state)
     const { Location } = Profile
     const [userlocationaddress, setcurrentaddress] = useState([])
     const [isaddressset, setaddress] = useState(false)
+
     const cart = useSelector(state => state.Cart)
     const count = Object.keys(cart).length
+
+    const ordersummaryquery = useMediaQuery('(max-width:550px)')
 
     useEffect(() => {
         if (Useraddress.length === 0 && Object.keys(Profile).length > 0) {
@@ -37,9 +42,9 @@ const CheckoutPage = ({ history }) => {
             <SetAddressContext.Provider value={setaddress} >
                 <MapAccordion userlocationaddress={userlocationaddress} />
             </SetAddressContext.Provider>
-
+            
             <div className="checkoutaccordion mt-5">
-                <Accordion className="w-75" defaultActiveKey="0">
+                <Accordion className={`${ordersummaryquery === true?"w-100":"w-75" } `} defaultActiveKey="0">
                     <Accordion.Item eventKey="1">
                         <Accordion.Header>
                             <div>

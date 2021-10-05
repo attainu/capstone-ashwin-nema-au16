@@ -33,3 +33,13 @@
     border: none;
 }
 
+.usercartmargin {
+    margin-left: 5vw;
+    margin-right: 6vw;
+}
+
+@media  (max-width:700px) {
+    .usercart {
+        display: block;
+    }
+}

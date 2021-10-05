@@ -1,16 +1,16 @@
-.carouselcategorycontent{
-    height: 35vh;
+.homegrid {
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: 1fr 1fr 1fr;
 }
 
-.carouselcategoryimage {
-    width: 100%;
-    height: 30vh;
-    object-fit: contain;
+.categorycarouselimagecontainer {
+    height: 15vw;
 }
 
-.carouselcategoryimage:hover {
-    transform: scale(1.2);
-    cursor: pointer;
+.categorycontainer {
+    height: 20vw;
+    display: grid;
 }
 
 .carouselcategorycontent p:hover {
@@ -20,4 +20,44 @@
 .displaycarousel{
     margin-left: 5vw;
     width: 90vw !important;
+}
+
+.homecategorygrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 80vw;
+    column-gap: 5vw;
+    row-gap: 5vw;
+}
+
+@media(max-width:600px) {
+    .categorycarouselimagecontainer {
+        height: 25vw;
+    }
+    .categorycontainer {
+        height: 33vw;
+    }
+    
+}
+
+@media(max-width:300px) {
+    .categorycarouselimagecontainer {
+        height: 35vw;
+    }
+    .categorycontainer {
+        height: 46vw;
+    }
+    
+}
+
+@media(max-width:900px) {
+    .homecategorygrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:450px) {
+    .homecategorygrid {
+        grid-template-columns: 1fr;
+    }
 }

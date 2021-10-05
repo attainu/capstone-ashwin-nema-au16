@@ -5,13 +5,19 @@
 
 .editinglink {
     font-size: x-small;
-    position: absolute;
+    /* position: absolute;
     right: 10px;
-    top: 0;
+    top: 0; */
 }
 
 .editinglink:hover {
     cursor: pointer;
+}
+
+.editinglinkgrid {
+    display: grid;
+    grid-template-columns: 1fr 0.3fr;
+    align-items: start;
 }
 
 .modalinput{

@@ -10,16 +10,15 @@ import { setprofile } from '../../actions'
 import EditIcon from '@mui/icons-material/Edit'; 
 import Fab from '@mui/material/Fab';
 import { NotificationModal } from '../Modal Components'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 export const UserAccountInformation = () => {
     const dispatch = useDispatch()
     const isonline = useContext(OnlineContext)
 
-    const userprofile = useSelector(state => state.Profile)
-    const name = userprofile.Name
-    const email = userprofile.Email
-    const mobilenumber = userprofile.Mobilenumber
-    const { Location } = userprofile
+    const accountinformationmargin = useMediaQuery('(max-width:800px) and (min-width:550px)')
+ 
+    const {Name:name,Email:email,Mobilenumber:mobilenumber, Location } = useSelector(state => state.Profile)
 
     const [modal, showmodal] = useState(false)
     const [notificationmodal, shownotificationmodal] = useState(false)
@@ -97,22 +96,25 @@ export const UserAccountInformation = () => {
         })
 
     }
+
     return (
         <>
-            <div className="profileseperator2 ps-3 pb-3 pe-3 me-3 profilecontentdisplaycolor w-50">
+            <div className={`profileseperator2 ps-3 pb-3 pe-3 me-3 profilecontentdisplaycolor w-50 ${accountinformationmargin && "mb-3"}`}>
                 <h5 className="pt-2">Account Information</h5>
-                <div className="accountinformation pt-2">
+                <div className="accountinformation pt-2 text-break">
                     <div>
                         <span className="lead fs-6">Name</span>
-                        <p className="mb-3">{name.slice(0, 35)}</p>
+                        <p className="mb-3">{name}</p>
 
                         <span className="lead fs-6">Email</span>
-                        <p>{email.slice(0, 35)}</p>
+                        <p>{email}</p>
                     </div>
 
-                    <div className="relativeimage">
+                    <div className="editinglinkgrid">
+                        <div>
                         <span className="lead fs-6 smalltext">Mobile number</span>
                         <p>{mobilenumber}</p>
+                        </div>
 
                         <div onClick={openmodal} className="editinglink text-danger">
                             Edit
@@ -123,7 +125,7 @@ export const UserAccountInformation = () => {
                                 <CancelRoundedIcon className="closeeditingbutton" onClick={() => showmodal(false)} />
                             </div>
                             <Alert variant="warning">
-                                <h5 className="mb-3 text-center">Edit Information <Fab variant="extended" size="small" color="error" aria-label="edit">
+                                <h5 className="mb-3 text-center">Edit Information <Fab variant="extended" sx={{backgroundColor:"white !important", borderRadius:"50% !important" }} size="small" color="error" aria-label="edit">
                                     <EditIcon />
                                 </Fab> </h5>
 

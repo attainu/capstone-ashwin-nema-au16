@@ -1,6 +1,12 @@
+.profilegrid {
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: 1fr 0.5fr;
+}
+
 .profilebackground {
     background-image: url('https://res.cloudinary.com/ash006/image/upload/v1632487615/marvin-meyer-SYTO3xs06fU-unsplash_fyzka4.jpg');
-    height: 60vh;
+    min-height: 30vw;
     background-repeat: no-repeat;
     background-attachment: fixed;  
     background-size: cover;
@@ -13,15 +19,23 @@
     justify-content: center;
 }
 .profileimage {
+    margin-top: 5%;
     max-width: 100%;
-    max-height: 50vh;
+    max-height: 90%;
     object-fit: contain;
     border: 10px solid wheat;
 }
 
+.skillsalert {
+    min-width: 18vw;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
 .skillsbackground {
     background-image: url('https://res.cloudinary.com/ash006/image/upload/v1632490436/pexels-felix-mittermeier-956981_fqervr.jpg');
-    min-height: 30vh;
+    min-height: 15vw;
     background-repeat: no-repeat;
     background-attachment: fixed;  
     background-size: cover;
@@ -29,6 +43,7 @@
     align-items: center;
     justify-content: center;
     color: white;
+    z-index: 2;
 }
 
 .myskills {
@@ -36,5 +51,25 @@
     grid-template-columns: 1fr 1fr 1fr 1fr;
     column-gap: 5vw;
     justify-content: space-around;
-    max-width: 100vw;
+}
+
+@media(max-width:700px) {
+    .profilebackground {
+        display: block;
+    }
+}
+
+@media(max-width:550px) {
+    .myskills {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:270px) {
+    .myskills {
+        display: block;
+    }
+    .profilegrid {
+        grid-template-rows: 1fr 1fr;
+    }
 }

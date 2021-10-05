@@ -1,4 +1,3 @@
-import './index.css'
 import { useState, useContext } from 'react'
 import { PATHS, axiosinstance } from '../../config'
 import { useDispatch } from 'react-redux'
@@ -8,15 +7,23 @@ import { CustomModalNotificationComponent, NotificationModal } from '../../compo
 import { withoutAuthentication } from '../../Higher Order Components'
 import { GoogleLogin } from 'react-google-login';
 import { Link } from 'react-router-dom'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Button from '@mui/material/Button'
 
 export const Login = ({ history, responseGoogle }) => {
     const dispatch = useDispatch()
+
     const isonline = useContext(OnlineContext)
+
     const [Email, Changeemail] = useState("")
     const [Password, Changepassword] = useState("")
     const [errormessage, changeerrormessage] = useState("")
-    const { REACT_APP_GOOGLE_CLIENT_ID } = process.env
     const [modal, showmodal] = useState(false)
+
+    const { REACT_APP_GOOGLE_CLIENT_ID } = process.env
+
+    const loginlayout = useMediaQuery('(max-width:600px)')
+    const buttonlayout = useMediaQuery('(max-width:250px)')
 
     const schema = yup.object().shape({
         Password: yup.string().required(),
@@ -33,9 +40,9 @@ export const Login = ({ history, responseGoogle }) => {
 
         schema.validate({ Password, Email }, { abortEarly: false }).then(async userdata => {
             const response = await axiosinstance.post('/user/login', { ...userdata })
-            const {error} = response.data
+            const { error } = response.data
             if (error !== undefined) {
-                showmodalwithmessageandvariant(showmodal,error, changeerrormessage)
+                showmodalwithmessageandvariant(showmodal, error, changeerrormessage)
                 return
             }
             saveuserdetailsinclientandredirect(response.data, dispatch, history)
@@ -64,10 +71,9 @@ export const Login = ({ history, responseGoogle }) => {
     return (
         <>
 
-            <div className="row container-fluid mt-5">
-                <div className="col-4"></div>
-                <div className="col-6 container-fluid">
-                    <div className="border p-5">
+            <div className="container-fluid mt-5">
+                <div className={`${loginlayout === true ? "col-12 container-fluid" : "col-6 container-fluid"}`}>
+                    <div className="border p-5 w-100">
                         <h3 className="text-center mb-3">Login</h3>
                         <form onSubmit={submithandler}>
 
@@ -78,9 +84,9 @@ export const Login = ({ history, responseGoogle }) => {
                             <input value={Password} onChange={(e) => Changepassword(e.target.value)} className="form-control mb-3" type="password" />
 
                             <div className="d-flex justify-content-center">
-                                <button type="submit" className='btn btn-info text-center rounded-pill container-fluid loginupbutton'>
+                                <Button type="submit" className={`bg-info text-dark text-center ${!buttonlayout && "rounded-pill"}`} variant="contained">
                                     Submit
-                                </button>
+                                </Button>
                             </div>
                         </form>
 
@@ -104,7 +110,7 @@ export const Login = ({ history, responseGoogle }) => {
                     </div>
 
                 </div>
-                <div className="col-2"></div>
+
             </div>
 
             {errormessage !== "You don't have an Apnamart account" ? <NotificationModal show={modal} centered={true} currentmodalmessage={errormessage} onHide={showmodal} alertvariant="danger" successmessage="" /> :

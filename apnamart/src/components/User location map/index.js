@@ -10,6 +10,7 @@ import { Alert } from 'react-bootstrap'
 import { axiosinstance } from '../../config'
 import './index.css'
 import { NotificationModal } from '../Modal Components'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 function DisplayPosition({ map, markerref, circleref }) {
     const dispatch = useDispatch()
@@ -70,13 +71,31 @@ export default function LocationMap() {
     const circleref = useRef()
     
     const { Name, Mobilenumber, Email, Location } = useSelector(state => state.Profile)
+    
 
     const address = useSelector(state => state.Useraddress)
     const [modal, showmodal] = useState(false)
     const [modalvariant, changemodalvariant] = useState('warning')
     const [modalmessage, changemodalmessage] = useState("")
+    const [mapradius, setmapradius] = useState(200)
 
     const displaymodalconfiguration = [showmodal, modalmessage, changemodalmessage, modalvariant, changemodalvariant]
+    const mapradiusquery1 = useMediaQuery('(max-width:300px)')
+    const mapradiusquery2 = useMediaQuery('(max-width:500px)')
+
+    useEffect(() => {
+        if (mapradiusquery1) {
+            setmapradius(50)
+            return
+        }
+
+        if (mapradiusquery2) {
+            setmapradius(100)
+            return
+        }
+        setmapradius(200)
+    }, [mapradiusquery1, mapradiusquery2, setmapradius])
+    
 
     useEffect(() => {
         if (address.length === 0 && addresscontext === undefined) {
@@ -158,10 +177,10 @@ export default function LocationMap() {
                 <Marker ref={markerref} position={Location} >
 
                 </Marker>
-                <Circle ref={circleref} center={Location} pathOptions={{ fillColor: 'blue' }} radius={200} />
+                <Circle ref={circleref} center={Location} pathOptions={{ fillColor: 'blue' }} radius={mapradius} />
             </MapContainer>
         ),
-        [Location],
+        [Location, mapradius],
     )
 
     return (

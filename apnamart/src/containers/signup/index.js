@@ -1,17 +1,20 @@
-import './index.css'
 import { useRef, useState, useContext } from 'react'
 import * as yup from 'yup'
-import './index.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { PATHS, axiosinstance } from '../../config'
 import { Redirect } from 'react-router'
 import { mobilenumber_validator, showmodalwithmessageandvariant, OnlineContext, userisofflinemessage, saveuserdetailsinclientandredirect } from '../../utils'
-import {NotificationModal} from '../../components'
+import { NotificationModal } from '../../components'
 import { Link } from 'react-router-dom'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import Button from '@mui/material/Button'
 
 export const Signup = ({ history }) => {
     const dispatch = useDispatch()
     const isonline = useContext(OnlineContext)
+
+    const signuplayout = useMediaQuery('(max-width:600px)')
+    const buttonlayout = useMediaQuery('(max-width:250px)')
 
     const [Email, Changeemail] = useState("")
     const [Confirmedpassword, ChangeConfirmedPassword] = useState("")
@@ -22,7 +25,6 @@ export const Signup = ({ history }) => {
     const [modal, showmodal] = useState(false)
 
     const mobilenumber = useRef("")
-
     const userprofile = useSelector(state => state.Profile)
 
     const schema = yup.object().shape({
@@ -38,7 +40,7 @@ export const Signup = ({ history }) => {
         }
 
         if (e.target.value.length > 10) {
-            showmodalwithmessageandvariant(showmodal, "Mobile number cannot be of more than 10 digit", changeerrormessage)
+            showmodalwithmessageandvariant(showmodal, "Mobile number cannot be of more than 10 digits", changeerrormessage)
             return
         }
 
@@ -92,10 +94,9 @@ export const Signup = ({ history }) => {
             {
                 Object.keys(userprofile).length > 0 && <Redirect to={PATHS.HOME} />
             }
-            <div className="row container-fluid mt-5">
-                <div className="col-4"></div>
-                <div className="col-6 container-fluid">
-                    <div className="border p-5">
+            <div className="container-fluid mt-5">
+                <div className={`${signuplayout === true ? "col-12 container-fluid" : "col-6 container-fluid"}`}>
+                    <div className="border p-5 w-100">
                         <h3 className="text-center mb-3">Sign Up</h3>
                         <form onSubmit={submithandler}>
 
@@ -115,9 +116,9 @@ export const Signup = ({ history }) => {
                             <input value={Confirmedpassword} onChange={(e) => ChangeConfirmedPassword(e.target.value)} className="form-control mb-3" type="password" />
 
                             <div className="d-flex justify-content-center">
-                                <button type="submit" className='btn btn-info text-center rounded-pill container-fluid signupbutton'>
+                                <Button type="submit" className={`bg-info text-dark text-center mb-3 ${!buttonlayout && "rounded-pill"}`} variant="contained">
                                     Submit
-                                </button>
+                                </Button>
                             </div>
                             <div className="d-flex justify-content-center smalltext">
                                 <Link className="text-decoration-none" to={PATHS.LOGIN}>Already have an account? Click here to login</Link>
@@ -125,10 +126,9 @@ export const Signup = ({ history }) => {
                         </form>
                     </div>
                 </div>
-                <div className="col-2"></div>
             </div>
 
-            <NotificationModal show={modal} centered={true} onHide={showmodal} currentmodalmessage={errormessage} alertvariant="danger" successmessage=""/>
+            <NotificationModal show={modal} centered={true} onHide={showmodal} currentmodalmessage={errormessage} alertvariant="danger" successmessage="" />
         </>
     )
 }

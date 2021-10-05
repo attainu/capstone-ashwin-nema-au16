@@ -1,7 +1,7 @@
 import './index.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
-import {axiosinstance} from '../../config'
+import { axiosinstance } from '../../config'
 import { UserAccountInformation, LocationMap, NotificationModal, OrderHistory, CustomModalNotificationComponent } from '../../components'
 import Usercart from '../Cart'
 import { Alert } from 'react-bootstrap'
@@ -13,6 +13,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Logoutuser, showmodalwithmessageandvariant, gotohome } from '../../utils'
 import { withAuthentication } from '../../Higher Order Components'
+import useMediaQuery from '@mui/material/useMediaQuery'
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -21,6 +22,7 @@ const Profile = () => {
     const [modal, showmodal] = useState(false)
     const [modalmessage, changemodalmessage] = useState("")
 
+    const ordermarginquery = useMediaQuery('(min-width:750px)')
     useEffect(() => {
         document.body.style.backgroundColor = "#f1f3f6"
         return () => {
@@ -42,8 +44,8 @@ const Profile = () => {
                 gotohome(dispatch, 2500)
                 return
             }
-            showmodalwithmessageandvariant(showmodal,  "Your account is now deleted", changemodalmessage)
-            gotohome(dispatch,2500)
+            showmodalwithmessageandvariant(showmodal, "Your account is now deleted", changemodalmessage)
+            gotohome(dispatch, 2500)
         }).catch(() => {
             showmodalwithmessageandvariant(showmodal, "Sorry something went wrong your account could not be deleted", changemodalmessage)
         })
@@ -54,7 +56,7 @@ const Profile = () => {
         <>
             <h4 className="mb-3 mt-3 ms-5">My Profile </h4>
 
-            <div className="profilecontent mt-5 ms-3">
+            <div className="profilecontent mt-5 ms-3 mb-5">
                 <div className="profileseperator1 me-3 pe-3 ps-3 pb-3">
                     <div onClick={() => changedisplaycomponent("accountinformation")} className={`imageandname pt-2 profilecontentdisplaycolor ${selectcomponenttodisplay === "accountinformation" ? "" : "cursorpointer"}`}>
                         <div className="relativeimage">
@@ -95,8 +97,8 @@ const Profile = () => {
 
                 {
                     selectcomponenttodisplay === "My orders" &&
-                    <div className="profileseperator2 profilecontentdisplaycolor w-50">
-                        <OrderHistory profile={true} />
+                    <div className={`profileseperator2 profilecontentdisplaycolor w-50 ${ordermarginquery && "mb-2"}`}>
+                        <OrderHistory />
                     </div>
                 }
 
@@ -107,7 +109,9 @@ const Profile = () => {
 
                 {selectcomponenttodisplay === "mycart" &&
                     <div className="profileseperator2 w-50">
+
                         <Usercart nomargin={true} />
+
                     </div>
                 }
 
@@ -117,11 +121,11 @@ const Profile = () => {
 
             </div>
             {
-                modalmessage === "Your account is now deleted" ? 
-                <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="warning" additionalcustomcomponent={true} Customcomponent={<CustomModalNotificationComponent message={modalmessage} />} />:
-                <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" /> 
+                modalmessage === "Your account is now deleted" ?
+                    <NotificationModal show={modal} centered={true} onHide={showmodal} alertvariant="warning" additionalcustomcomponent={true} Customcomponent={<CustomModalNotificationComponent message={modalmessage} />} /> :
+                    <NotificationModal show={modal} centered={true} currentmodalmessage={modalmessage} onHide={showmodal} alertvariant="danger" successmessage="" />
             }
-            
+
         </>
     )
 }
