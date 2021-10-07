@@ -1,0 +1,19 @@
+.ordereditemimage {
+    width: 5%;
+    height: 5%;
+    object-fit: contain;
+}
+
+.orderhistoryitemdetails {
+    display: grid;
+
+}
+
+.viewdetailsbutton {
+    align-self: end;
+}
+
+.navy {
+    background-color: #1565c0 !important;
+}
+

@@ -1,0 +1,131 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+* {
+    max-width: 100vw;
+}
+
+.mainwrapper {
+    min-height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+.header {
+    padding-top: 1vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    align-items: center;
+    position: sticky;
+    width: 100vw;
+    top: 0;
+    z-index: 1001;
+}
+
+.logo {
+    flex-grow: 1;
+    display: grid;
+    align-items: center;
+}
+
+.logoimage {
+    height: 5vw;
+    object-fit: contain;
+}
+
+@media (max-width:1000px) {
+    .logoimage {
+        height: 10vw
+    }
+}
+@media (max-width:600px) {
+    .logoimage {
+        height: 15vw
+    }
+}
+
+.searchbar {
+    flex-grow: 6;
+}
+
+.nav-item {
+    flex-grow: 1;
+}
+
+.headerdropdownbutton {
+    outline: none;
+    border: none;
+    background-color: #ffc107;
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.children {
+    position: static;
+}
+
+.loginsignupgrid {
+    display: grid;
+    justify-content: flex-end;
+    column-gap: 3vw;
+    grid-template-columns: 1fr 1fr;
+}
+
+.shoppingicon {
+    display: grid;
+    align-items: center;
+    height: 100%;
+}
+
+@media (max-width:750px) {
+    .logo {
+        display: grid;
+        align-items: center;
+    }
+
+    .header {
+        padding-top: 3vw;
+    }
+    .loginsignupgrid {
+        margin-right: 3vw;
+        align-items: center;
+    }
+}
+
+.profileandshoppingcarticon {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+}
+
+@media (max-width:400px) {
+    .header {
+        padding-top: 5vw;
+    }
+
+    .logoimage {
+        height: 20vw;
+    }
+}
+
+@media (max-width:250px) {
+    .loginsignupgrid {
+        column-gap: 1.5vw; 
+        margin-left: 3vw;     
+    }
+}
+
+@media (max-width:225px) {
+    .loginsignupgrid {
+        column-gap: 3vw; 
+    }
+}

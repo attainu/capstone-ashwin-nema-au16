@@ -1,0 +1,14 @@
+.checkoutaccordion {
+    display: flex;
+    justify-content: center;
+}
+
+.checkoutaccordionheader {
+    min-width: 50vw;
+}
+.checkoutmapcontainer{
+    height: 30vh;
+    position: relative;
+    background-color: white;
+}
+

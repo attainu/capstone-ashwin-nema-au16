@@ -1,0 +1,45 @@
+.usercart {
+    display: flex;
+}
+
+.usercartsection {
+    flex-grow: 1;
+}
+
+.usercartsectionitems {
+    flex-grow: 8;
+}
+
+.usercartpaymentsection {
+    flex-grow: 3;
+    /* height: 30vh; */
+}
+
+.emptycartimagecontainer {
+    height: 25vh;
+}
+
+.emptycartimage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.opacity50 {
+    opacity: 0.5;
+}
+
+.bordernone {
+    border: none;
+}
+
+.usercartmargin {
+    margin-left: 5vw;
+    margin-right: 6vw;
+}
+
+@media  (max-width:700px) {
+    .usercart {
+        display: block;
+    }
+}
